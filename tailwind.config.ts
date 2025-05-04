@@ -29,7 +29,7 @@ export default {
 				cyber: '#22D46B',
 				steel: '#1E1E1E',
 				electric: '#00F0FF',
-				charcoal: '#0E0E0E',
+				charcoal: '#101224',
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
 					foreground: 'hsl(var(--primary-foreground))'
