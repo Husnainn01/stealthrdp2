@@ -1,0 +1,134 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+## Purpose
+Ensure every UI/UX implementation with strictly adheres to the approved design system to maintain consistency and brand integrity.
+
+---
+
+## 1. Color Palette
+
+### Primary Colors
+- **Midnight Blue** `#0B0F2D`
+- **Cyber Green** `#22D46B`
+- **Steel Gray** `#1E1E1E`
+
+### Secondary Colors
+- **Electric Cyan** `#00F0FF`
+- **Dark Charcoal** `#0E0E0E`
+
+**Rule:** Use only these hex values. Do not introduce new colors or variations.
+
+---
+
+## 2. Typography
+- **Headings:** Montserrat Bold
+- **Body Text:** Poppins (400/500) or Inter (400/500)
+
+### Font Sizes
+| Element | Size | Line Height |
+|---------|------|-------------|
+| H1      | 48px | 56px        |
+| H2      | 36px | 44px        |
+| H3      | 28px | 36px        |
+| H4      | 20px | 28px        |
+| Body    | 16px | 24px        |
+| Caption | 12px | 16px        |
+
+**Rule:** Always reference these tokens; do not scale arbitrarily.
+
+---
+
+## 3. Spacing & Layout
+- **Base Unit:** 8px
+- **Grid:** 12-column layout, 24px gutter
+- **Spacing:** Multiples of 8px for margin, padding, and gaps
+
+**Rule:** Never deviate from the 8px grid; maintain consistent whitespace.
+
+---
+
+## 4. Components
+
+### Buttons
+- **Primary:** BG `Electric Cyan` on `Midnight Blue`; uppercase Montserrat Bold; border-radius 8px
+- **Secondary:** BG `Cyber Green` on `Steel Gray`; Montserrat Bold; border-radius 8px
+- **States:**
+  - Default: full opacity
+  - Hover: scale 1.05, shadow elevation
+  - Active: scale 0.95
+  - Disabled: opacity 0.5, cursor not-allowed
+
+### Cards
+- **Background:** `Steel Gray`
+- **Border Radius:** 8px
+- **Box Shadow:** `0 2px 8px rgba(0,0,0,0.2)`
+- **Padding:** 16px
+
+### Forms & Inputs
+- **Inputs/Selects:** BG `Dark Charcoal`; border 1px solid `Midnight Blue`; border-radius 4px; padding 8px
+- **Focus:** outline 2px `Electric Cyan`
+- **Validation:** error border `#FF4D4F`; helper text in caption style
+
+**Rule:** All components must use designated tokens. No custom component styles.
+
+---
+
+## 5. Iconography & Illustrations
+- **Icons:** 2px stroke line icons; colors limited to `Cyber Green` or `Electric Cyan`
+- **Illustrations:** Abstract tech patterns using primary palette colors
+
+**Rule:** Icons and illustrations should reinforce brand colors only.
+
+---
+
+## 6. Interactions & Animations
+- **Transition Duration:** 200ms ease-in-out
+- **Hover Effects:** subtle lift + shadow
+- **Scroll Animations:** fade-in and slide-up on entry, duration 400ms
+
+**Rule:** Do not exceed 300ms for UI transitions; maintain smoothness.
+
+---
+
+## 7. Accessibility
+- **Contrast:** ≥4.5:1 for normal text; ≥3:1 for large text
+- **Focus States:** visible 2px `Electric Cyan` outline
+- **ARIA:** All interactive elements must have appropriate ARIA labels
+
+**Rule:** Validate contrast and keyboard focus on every screen.
+
+---
+
+## 8. Dark Mode
+- **Background:** `Dark Charcoal` base, `Midnight Blue` for accent sections
+- **Text:** `#FFFFFF` or `#E0E0E0`
+- **CTAs:** invert primary button colors
+
+**Rule:** Sync dark and light palettes; never mix.
+
+---
+
+## 9. Code Generation Guidelines
+- Use semantic HTML elements.
+- Apply utility classes that map directly to design tokens.
+- Reference tokens for colors (`$color-midnight-blue`), spacing (`$space-8`), typography (`$font-h1`).
+- Do not hardcode values; always use token variables.
+- Include comments linking components to token names.
+
+**Rule:** Cursor-generated code must import and use shared design token file.
+
+---
+
+## 10. Enforcement & Review
+- Each PR must include a design token audit checklist.
+- Automated linting should flag any hardcoded styles.
+- Design reviews must sign off on token compliance.
+
+**Rule:** No merge without passing the design token audit.
+
+---
+
+*End of Rules File*
