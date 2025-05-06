@@ -49,7 +49,7 @@ const Footer = () => {
         </div>
         
         {/* Secure Checkout Section */}
-        <div className="mt-8 flex justify-center">
+        {/* <div className="mt-8 flex justify-center">
           <div className="bg-white p-4 rounded-lg max-w-md mx-auto">
             <div className="text-center border-b border-gray-200 pb-2 mb-3">
               <p className="text-gray-700 font-montserrat text-sm font-semibold">Guaranteed Safe Checkout</p>
@@ -63,7 +63,7 @@ const Footer = () => {
             </div>
           </div>
         </div>
-        
+         */}
         <div className="border-t border-gray-800 mt-8 pt-6 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-400 text-sm">
             © {new Date().getFullYear()} StealthRDP. All rights reserved.

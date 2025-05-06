@@ -953,40 +953,6 @@ const Index = () => {
             </div>
             
             {/* Additional Cards for Desktop Only */}
-            <div className="hidden lg:block bg-midnight/50 border border-white/10 rounded-lg overflow-hidden">
-              {/* Before - Problem State */}
-              <div className="p-5 border-b border-white/10 bg-charcoal/50">
-                <div className="flex items-start gap-3">
-                  <div className="p-2 rounded-full bg-midnight/80 mt-1">
-                    <X className="h-4 w-4 text-red-500" strokeWidth={2} />
-                  </div>
-                  <div>
-                    <h3 className="text-white/90 font-medium mb-2">Before StealthRDP</h3>
-                    <p className="text-white/60 text-sm">
-                      "Processing our data analytics takes forever on my workstation and interrupts my other tasks."
-                    </p>
-                  </div>
-                </div>
-              </div>
-              {/* After - Solution State */}
-              <div className="p-5">
-                <div className="flex items-start gap-3">
-                  <div className="p-2 rounded-full bg-midnight/80 mt-1">
-                    <Check className="h-4 w-4 text-cyber" strokeWidth={2} />
-                  </div>
-                  <div>
-                    <h3 className="text-white/90 font-medium mb-2">With StealthRDP</h3>
-                    <p className="text-white/60 text-sm">
-                      "Our data processing runs on a dedicated server while I work uninterrupted on my local machine."
-                    </p>
-                    <div className="mt-4 flex items-center">
-                      <Bot className="h-6 w-6 text-electric" strokeWidth={1.5} />
-                      <span className="ml-2 text-xs text-white/80 font-medium">Data Analytics Platform</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
             
             <div className="hidden lg:block bg-midnight/50 border border-white/10 rounded-lg overflow-hidden">
               {/* Before - Problem State */}
@@ -1087,41 +1053,6 @@ const Index = () => {
                     <div className="mt-4 flex items-center">
                       <Repeat className="h-6 w-6 text-electric" strokeWidth={1.5} />
                       <span className="ml-2 text-xs text-white/80 font-medium">Always-On Automation</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <div className="hidden lg:block bg-midnight/50 border border-white/10 rounded-lg overflow-hidden">
-              {/* Before - Problem State */}
-              <div className="p-5 border-b border-white/10 bg-charcoal/50">
-                <div className="flex items-start gap-3">
-                  <div className="p-2 rounded-full bg-midnight/80 mt-1">
-                    <X className="h-4 w-4 text-red-500" strokeWidth={2} />
-                  </div>
-                  <div>
-                    <h3 className="text-white/90 font-medium mb-2">Before StealthRDP</h3>
-                    <p className="text-white/60 text-sm">
-                      "My computer freezes when running resource-intensive applications like 3D rendering."
-                    </p>
-                  </div>
-                </div>
-              </div>
-              {/* After - Solution State */}
-              <div className="p-5">
-                <div className="flex items-start gap-3">
-                  <div className="p-2 rounded-full bg-midnight/80 mt-1">
-                    <Check className="h-4 w-4 text-cyber" strokeWidth={2} />
-                  </div>
-                  <div>
-                    <h3 className="text-white/90 font-medium mb-2">With StealthRDP</h3>
-                    <p className="text-white/60 text-sm">
-                      "I can run intensive applications smoothly with dedicated server resources, even from a basic laptop."
-                    </p>
-                    <div className="mt-4 flex items-center">
-                      <Bot className="h-6 w-6 text-electric" strokeWidth={1.5} />
-                      <span className="ml-2 text-xs text-white/80 font-medium">Resource-Intensive Apps</span>
                     </div>
                   </div>
                 </div>
@@ -1440,43 +1371,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* 5. Social Proof (Testimonial) */}
-      <section className="py-12 md:py-16 bg-midnight">
-         <div className="container">
-           <div className="bg-charcoal rounded-lg p-8 md:p-12 max-w-4xl mx-auto text-center shadow-xl border border-white/10">
-             <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-electric mx-auto mb-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-               <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-2.13a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
-             </svg>
-             <p className="text-xl md:text-2xl text-white/90 italic leading-relaxed mb-6">
-               "Switching to StealthRDP cut our application load times in half. The performance is outstanding, and their support team resolved a complex issue for us within minutes. Highly recommended!"
-             </p>
-             <p className="font-semibold text-white font-montserrat text-lg">
-               - Alex Johnson, Infrastructure Lead at Innovate Solutions
-             </p>
-           </div>
-         </div>
-       </section>
 
-      {/* NEW: Newsletter Signup Section */}
-      <section className="py-12 md:py-16 bg-charcoal">
-        <div className="container">
-          <div className="max-w-2xl mx-auto text-center">
-            <h2 className="text-2xl font-semibold font-montserrat text-white mb-3">Stay Updated</h2>
-            <p className="text-white/70 mb-6">Get occasional emails about special offers, new features, and tech tips.</p>
-            <form className="flex flex-col sm:flex-row gap-3 justify-center" onSubmit={(e) => e.preventDefault()}> 
-              <input 
-                type="email" 
-                placeholder="Enter your email address"
-                className="flex-grow px-4 py-2.5 rounded-md bg-midnight border border-white/20 text-white placeholder:text-white/50 focus:border-electric focus:ring-electric focus:outline-none text-sm"
-                required
-              />
-              <Button type="submit" variant="outline" className="border-electric text-electric hover:bg-electric/10 px-6 py-2.5 text-sm">
-                Subscribe
-                </Button>
-            </form>
-              </div>
-            </div>
-      </section>
       
       {/* Final Call to Action - ZipTap Method */}
       <section className="py-16 md:py-20 bg-gradient-to-t from-charcoal to-midnight relative overflow-hidden">
@@ -1606,119 +1501,7 @@ const Index = () => {
       </section>
 
       {/* Interactive Savings Calculator - Keep the JSX but remove the script tag */}
-      <section className="py-12 md:py-16 bg-midnight">
-        <div className="container">
-          <div className="max-w-3xl mx-auto text-center mb-10">
-            <span className="inline-block px-4 py-1 rounded-full bg-electric/10 text-electric text-sm font-medium mb-4">CALCULATE YOUR SAVINGS</span>
-            <h2 className="text-3xl md:text-4xl font-bold font-montserrat mb-4 text-white">
-              See How Much You Could Save
-            </h2>
-            <p className="text-white/80">
-              Compare your current server costs with StealthRDP and discover your potential savings.
-            </p>
-          </div>
-          
-          <div className="max-w-4xl mx-auto bg-charcoal/50 rounded-xl p-6 md:p-8 border border-white/10">
-            {/* Calculator Form */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {/* Inputs Column */}
-              <div className="space-y-6">
-                <h3 className="text-xl font-semibold text-white mb-4">Your Current Setup</h3>
-                
-                {/* Current Monthly Cost */}
-                <div className="space-y-2">
-                  <label className="text-white/90 text-sm font-medium block">Current Monthly Hosting Cost ($)</label>
-                  <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-white/50">$</span>
-                    <input 
-                      type="number" 
-                      className="w-full px-8 py-2.5 bg-midnight border border-white/20 rounded-md text-white focus:border-electric focus:outline-none"
-                      placeholder="e.g. 50"
-                      id="current-cost"
-                    />
-                  </div>
-                </div>
-                
-                {/* Server Management Hours */}
-                <div className="space-y-2">
-                  <label className="text-white/90 text-sm font-medium block">Hours Spent on Server Management (Monthly)</label>
-                  <input 
-                    type="number" 
-                    className="w-full px-4 py-2.5 bg-midnight border border-white/20 rounded-md text-white focus:border-electric focus:outline-none"
-                    placeholder="e.g. 10"
-                    id="management-hours"
-                  />
-                </div>
-                
-                {/* Hourly Rate */}
-                <div className="space-y-2">
-                  <label className="text-white/90 text-sm font-medium block">Your Hourly Rate ($)</label>
-                  <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-white/50">$</span>
-                    <input 
-                      type="number" 
-                      className="w-full px-8 py-2.5 bg-midnight border border-white/20 rounded-md text-white focus:border-electric focus:outline-none"
-                      placeholder="e.g. 25"
-                      id="hourly-rate"
-                    />
-                  </div>
-                </div>
-                
-                {/* Calculate Button */}
-                <Button 
-                  className="w-full mt-4 bg-cyber text-midnight hover:bg-cyber/90 font-bold" 
-                  onClick={calculateSavings}
-                >
-                  Calculate My Savings
-                </Button>
-              </div>
-              
-              {/* Results Column */}
-              <div className="bg-midnight/50 rounded-lg p-6 border border-white/10 flex flex-col justify-center">
-                <h3 className="text-xl font-semibold text-white mb-6 text-center">Your Potential Savings</h3>
-                
-                <div className="space-y-6">
-                  {/* Monthly Hosting Savings */}
-                  <div className="flex items-center justify-between">
-                    <span className="text-white/70">Monthly Hosting Savings:</span>
-                    <span className="text-white font-mono text-xl font-bold" id="hosting-savings">$0.00</span>
-                  </div>
-                  
-                  {/* Time Savings */}
-                  <div className="flex items-center justify-between">
-                    <span className="text-white/70">Time Value Savings:</span>
-                    <span className="text-white font-mono text-xl font-bold" id="time-savings">$0.00</span>
-                  </div>
-                  
-                  {/* Divider */}
-                  <div className="border-t border-white/10 my-2 py-2"></div>
-                  
-                  {/* Total Annual Savings */}
-                  <div className="flex items-center justify-between">
-                    <span className="text-white/90 font-medium">Total Annual Savings:</span>
-                    <span className="text-electric font-mono text-2xl font-bold" id="total-savings">$0.00</span>
-                  </div>
-                  
-                  {/* StealthRDP Suggested Plan */}
-                  <div className="mt-4 bg-electric/10 rounded-md p-3 border border-electric/20 hidden" id="recommended-plan">
-                    <p className="text-white text-sm font-medium">Recommended Plan:</p>
-                    <p className="text-electric text-lg font-bold" id="plan-name">Silver Plan</p>
-                    <Link to="/plans" className="text-xs text-white/70 underline mt-1 inline-block">View plan details</Link>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          {/* Testimonial about savings */}
-          <div className="mt-10 max-w-2xl mx-auto text-center">
-            <p className="text-white/70 italic text-sm">
-              "We switched to StealthRDP and saved over $3,000 annually compared to our previous dedicated server setup. The performance is better and we spend way less time on maintenance."
-            </p>
-            <p className="text-white font-medium mt-2">— David Chen, CTO at DataTech Systems</p>
-          </div>
-        </div>
-      </section>
+
     </Layout>
   );
 };
