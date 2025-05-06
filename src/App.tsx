@@ -9,6 +9,11 @@ import FAQPage from "./pages/FAQ";
 import Plans from "./pages/Plans";
 import Features from "./pages/Features";
 import NotFound from "./pages/NotFound";
+import AdminLayout from "./admin/components/AdminLayout";
+import Dashboard from "./admin/pages/Dashboard";
+import PlansManager from "./admin/pages/PlansManager";
+import FeaturesManager from "./admin/pages/FeaturesManager";
+import TestimonialsManager from "./admin/pages/TestimonialsManager";
 
 const queryClient = new QueryClient();
 
@@ -20,11 +25,25 @@ const App = () => (
       <BrowserRouter>
         <ScrollToTop />
         <Routes>
+          {/* Public Routes */}
           <Route path="/" element={<Index />} />
           <Route path="/faq" element={<FAQPage />} />
           <Route path="/plans" element={<Plans />} />
           <Route path="/features" element={<Features />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          
+          {/* Admin Routes */}
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<Dashboard />} />
+            {/* Add more admin routes as they are developed */}
+            <Route path="plans" element={<PlansManager />} />
+            <Route path="features" element={<FeaturesManager />} />
+            <Route path="testimonials" element={<TestimonialsManager />} />
+            <Route path="blog" element={<div className="text-white">Blog Management - Coming Soon</div>} />
+            <Route path="media" element={<div className="text-white">Media Library - Coming Soon</div>} />
+            <Route path="settings" element={<div className="text-white">Settings - Coming Soon</div>} />
+          </Route>
+          
+          {/* Catch-all Route */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

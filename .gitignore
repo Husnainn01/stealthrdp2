@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Memory Bank - local documentation
+memory-bank/
+.cursorrules
