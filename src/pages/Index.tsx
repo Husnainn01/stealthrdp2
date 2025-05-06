@@ -1595,7 +1595,7 @@ const Index = () => {
                       <div className="w-8 h-8 bg-electric/10 rounded-full flex items-center justify-center">
                         <Server className="h-4 w-4 text-electric" strokeWidth={1.5} />
                       </div>
-                      <p className="text-white/70 text-xs">Alex M. deployed a test<span className="text-white/40">25 minutes ago</span></p>
+                      <p className="text-white/70 text-xs">TEst Sercer<span className="text-white/40">25 minutes ago</span></p>
                     </div>
                   </div>
                 </div>
