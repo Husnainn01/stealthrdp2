@@ -1,225 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Layout from '../components/Layout';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../components/ui/card';
 import { Check, Shield, Cpu, Database, Server, HardDrive, Settings, Globe, Zap, Clock } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
+import { planApi, PlanApiResponse } from '../lib/api/planApi';
 
 const Plans = () => {
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'quarterly' | 'annually' | 'biannually'>('monthly');
+  const [usaPlans, setUsaPlans] = useState<PlanApiResponse[]>([]);
+  const [euPlans, setEuPlans] = useState<PlanApiResponse[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Calculate discount percentage for each cycle
-  const getDiscount = (cycle) => {
-    switch (cycle) {
-      case 'monthly':
-        return 5; // 5% discount for monthly
-      case 'quarterly':
-        return 10; // 10% discount for quarterly
-      case 'annually':
-        return 20; // 20% discount for annual
-      case 'biannually':
-        return 30; // 30% discount for biannual
-      default:
-        return 0;
-    }
-  };
-
-  // USA VPS plan data
-  const usaPlans = [
-    {
-      name: 'Bronze USA',
-      description: 'Blazing Fast Connectivity',
-      icon: <Cpu className="h-10 w-10 text-electric" />,
-      monthlyPrice: 9.50,
-      regularMonthlyPrice: 10.00, // Original price before discount
-      quarterlyPrice: 27.00, // 3-month price with 10% discount (was €30.00)
-      annuallyPrice: 96.00, // 12-month price with 20% discount (was €120.00)
-      biannuallyPrice: 168.00, // 24-month price with 30% discount (was €240.00)
-      specs: {
-        cpu: '2 Core',
-        ram: '4 GB RAM',
-        storage: '60 GB SSD',
-        bandwidth: 'Unlimited'
-      },
-      features: ['Windows/Linux OS', '24/7 Support', 'Root Access', '99.9% Uptime', 'USA Location', '1Gbps Network', 'Dedicated IP']
-    },
-    {
-      name: 'Silver USA',
-      description: 'Blazing Fast Connectivity',
-      icon: <Server className="h-10 w-10 text-electric" />,
-      monthlyPrice: 18.04,
-      regularMonthlyPrice: 19.00, // Original price before discount
-      quarterlyPrice: 51.30, // 3-month price with 10% discount (was €57.00)
-      annuallyPrice: 182.88, // 12-month price with 20% discount (was €228.00)
-      biannuallyPrice: 319.20, // 24-month price with 30% discount (was €456.00)
-      specs: {
-        cpu: '2 Core',
-        ram: '8 GB RAM',
-        storage: '80 GB SSD',
-        bandwidth: 'Unlimited'
-      },
-      features: ['Windows/Linux OS', '24/7 Support', 'Root Access', '99.9% Uptime', 'USA Location', '1Gbps Network', 'Dedicated IP']
-    },
-    {
-      name: 'Gold USA',
-      description: 'Blazing Fast Connectivity',
-      icon: <HardDrive className="h-10 w-10 text-electric" />,
-      monthlyPrice: 26.59,
-      regularMonthlyPrice: 27.99, // Original price before discount
-      quarterlyPrice: 75.54, // 3-month price with 10% discount (was €83.97)
-      annuallyPrice: 269.88, // 12-month price with 20% discount (was €335.88)
-      biannuallyPrice: 470.16, // 24-month price with 30% discount (was €671.76)
-      specs: {
-        cpu: '4 Core',
-        ram: '16 GB RAM',
-        storage: '100 GB SSD',
-        bandwidth: 'Unlimited'
-      },
-      features: ['Windows/Linux OS', '24/7 Priority Support', 'Root Access', '99.9% Uptime', 'USA Location', '1Gbps Network', 'Dedicated IP']
-    },
-    {
-      name: 'Platinum USA',
-      description: 'Blazing Fast Connectivity',
-      icon: <Database className="h-10 w-10 text-cyber" />,
-      monthlyPrice: 33.24,
-      regularMonthlyPrice: 34.99, // Original price before discount
-      quarterlyPrice: 94.47, // 3-month price with 10% discount (was €104.97)
-      annuallyPrice: 335.88, // 12-month price with 20% discount (was €419.88)
-      biannuallyPrice: 587.76, // 24-month price with 30% discount (was €839.76)
-      specs: {
-        cpu: '6 Core',
-        ram: '16 GB RAM',
-        storage: '100 GB SSD',
-        bandwidth: 'Unlimited'
-      },
-      features: ['Windows/Linux OS', '24/7 Priority Support', 'Root Access', '99.9% Uptime', 'USA Location', '1Gbps Network', 'Dedicated IP']
-    },
-    {
-      name: 'Diamond USA',
-      description: 'Blazing Fast Connectivity',
-      icon: <Shield className="h-10 w-10 text-cyber" />,
-      monthlyPrice: 42.75,
-      regularMonthlyPrice: 45.00, // Original price before discount
-      quarterlyPrice: 121.50, // 3-month price with 10% discount (was €135.00)
-      annuallyPrice: 432.00, // 12-month price with 20% discount (was €540.00)
-      biannuallyPrice: 756.00, // 24-month price with 30% discount (was €1,080.00)
-      specs: {
-        cpu: '6 Core',
-        ram: '32 GB RAM',
-        storage: '150 GB SSD',
-        bandwidth: 'Unlimited'
-      },
-      features: ['Windows/Linux OS', '24/7 Premium Support', 'Root Access', '99.9% Uptime', 'USA Location', '1Gbps Network', 'Dedicated IP']
-    },
-    {
-      name: 'Emerald USA',
-      description: 'Blazing Fast Connectivity',
-      icon: <Server className="h-10 w-10 text-cyber" />,
-      monthlyPrice: 51.30,
-      regularMonthlyPrice: 54.00, // Original price before discount
-      quarterlyPrice: 145.80, // 3-month price with 10% discount (was €162.00)
-      annuallyPrice: 518.40, // 12-month price with 20% discount (was €648.00)
-      biannuallyPrice: 907.20, // 24-month price with 30% discount (was €1,296.00)
-      specs: {
-        cpu: '8 Core',
-        ram: '32 GB RAM',
-        storage: '150 GB SSD',
-        bandwidth: 'Unlimited'
-      },
-      features: ['Windows/Linux OS', '24/7 Premium Support', 'Root Access', '99.9% Uptime', 'USA Location', '1Gbps Network', 'Dedicated IP']
-    }
-  ];
-
-  // EU VPS plan data
-  const euPlans = [
-    {
-      name: 'Bronze EU',
-      description: 'Secure. Fast. Limitless',
-      icon: <Cpu className="h-10 w-10 text-electric" />,
-      monthlyPrice: 9.50,
-      regularMonthlyPrice: 10.00, // Original price before discount
-      quarterlyPrice: 27.00, // 3-month price with 10% discount (was €30.00)
-      annuallyPrice: 96.00, // 12-month price with 20% discount (was €120.00)
-      biannuallyPrice: 168.00, // 24-month price with 30% discount (was €240.00)
-      specs: {
-        cpu: '2 Core',
-        ram: '4 GB RAM',
-        storage: '40 GB SSD',
-        bandwidth: 'Unlimited'
-      },
-      features: ['Windows/Linux OS', '24/7 Support', 'Root Access', '99.9% Uptime', 'Netherlands Location', '1Gbps Network', 'Dedicated IP']
-    },
-    {
-      name: 'Silver EU',
-      description: 'Secure. Fast. Limitless',
-      icon: <Server className="h-10 w-10 text-electric" />,
-      monthlyPrice: 17.10,
-      regularMonthlyPrice: 18.00, // Original price before discount
-      quarterlyPrice: 48.60, // 3-month price with 10% discount (was €54.00)
-      annuallyPrice: 172.80, // 12-month price with 20% discount (was €216.00)
-      biannuallyPrice: 302.40, // 24-month price with 30% discount (was €432.00)
-      specs: {
-        cpu: '4 Core',
-        ram: '8 GB RAM',
-        storage: '80 GB SSD',
-        bandwidth: 'Unlimited'
-      },
-      features: ['Windows/Linux OS', '24/7 Support', 'Root Access', '99.9% Uptime', 'Netherlands Location', '1Gbps Network', 'Dedicated IP']
-    },
-    {
-      name: 'Gold EU',
-      description: 'Secure. Fast. Limitless',
-      icon: <HardDrive className="h-10 w-10 text-electric" />,
-      monthlyPrice: 28.49,
-      regularMonthlyPrice: 29.99, // Original price before discount
-      quarterlyPrice: 80.97, // 3-month price with 10% discount (was €89.97)
-      annuallyPrice: 287.90, // 12-month price with 20% discount (was €359.88)
-      biannuallyPrice: 503.83, // 24-month price with 30% discount (was €719.76)
-      specs: {
-        cpu: '4 Core',
-        ram: '16 GB RAM',
-        storage: '100 GB SSD',
-        bandwidth: 'Unlimited'
-      },
-      features: ['Windows/Linux OS', '24/7 Priority Support', 'Root Access', '99.9% Uptime', 'Netherlands Location', '1Gbps Network', 'Dedicated IP']
-    },
-    {
-      name: 'Platinum EU',
-      description: 'Secure. Fast. Limitless',
-      icon: <Database className="h-10 w-10 text-cyber" />,
-      monthlyPrice: 33.24,
-      regularMonthlyPrice: 34.99, // Original price before discount
-      quarterlyPrice: 94.47, // 3-month price with 10% discount (was €104.97)
-      annuallyPrice: 335.90, // 12-month price with 20% discount (was €419.88)
-      biannuallyPrice: 587.83, // 24-month price with 30% discount (was €839.76)
-      specs: {
-        cpu: '6 Core',
-        ram: '16 GB RAM',
-        storage: '100 GB SSD',
-        bandwidth: 'Unlimited'
-      },
-      features: ['Windows/Linux OS', '24/7 Priority Support', 'Root Access', '99.9% Uptime', 'Netherlands Location', '1Gbps Network', 'Dedicated IP']
-    },
-    {
-      name: 'Diamond EU',
-      description: 'Secure. Fast. Limitless',
-      icon: <Shield className="h-10 w-10 text-cyber" />,
-      monthlyPrice: 37.99,
-      regularMonthlyPrice: 39.99, // Original price before discount
-      quarterlyPrice: 107.97, // 3-month price with 10% discount (was €119.97)
-      annuallyPrice: 383.90, // 12-month price with 20% discount (was €479.88)
-      biannuallyPrice: 671.83, // 24-month price with 30% discount (was €959.76)
-      specs: {
-        cpu: '6 Core',
-        ram: '24 GB RAM',
-        storage: '120 GB SSD',
-        bandwidth: 'Unlimited'
-      },
-      features: ['Windows/Linux OS', '24/7 Premium Support', 'Root Access', '99.9% Uptime', 'Netherlands Location', '1Gbps Network', 'Dedicated IP']
-    }
-  ];
-
-  // Custom VPS plan data
+  // Custom VPS plan data remains static
   const customPlans = [
     {
       name: 'Build Your Own VPS',
@@ -247,19 +41,73 @@ const Plans = () => {
     }
   ];
 
+  useEffect(() => {
+    const fetchPlans = async () => {
+      try {
+        setLoading(true);
+        const [usaData, euData] = await Promise.all([
+          planApi.getPlans('USA'),
+          planApi.getPlans('EU')
+        ]);
+        console.log('Fetched USA Plans:', usaData);
+        console.log('Fetched EU Plans:', euData);
+        setUsaPlans(usaData);
+        setEuPlans(euData);
+        setError(null);
+      } catch (err) {
+        console.error('Error fetching plans:', err);
+        setError('Failed to load plans. Please try again.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPlans();
+  }, []);
+
+  // Calculate discount percentage for each cycle
+  const getDiscount = (plan, cycle) => {
+    if (!plan || !plan.billingOptions) return 0;
+    
+    switch (cycle) {
+      case 'quarterly':
+        return plan.billingOptions?.quarterly?.enabled ? plan.billingOptions.quarterly.discountPercentage : 0;
+      case 'annually':
+        return plan.billingOptions?.annual?.enabled ? plan.billingOptions.annual.discountPercentage : 0;
+      case 'biannually':
+        return plan.billingOptions?.biannual?.enabled ? plan.billingOptions.biannual.discountPercentage : 0;
+      default:
+        return 0;
+    }
+  };
+
   // Helper function to get current price based on billing cycle
   const getCurrentPrice = (plan) => {
-    if (plan.monthlyPrice === null) return null;
+    if (!plan || plan.monthlyPrice === null) return null;
     
     switch (billingCycle) {
       case 'monthly':
         return plan.monthlyPrice;
       case 'quarterly':
-        return plan.quarterlyPrice / 3;
+        if (plan.billingOptions?.quarterly?.enabled) {
+          const discount = plan.billingOptions.quarterly.discountPercentage;
+          const quarterlyTotal = plan.monthlyPrice * 3 * (1 - discount / 100);
+          return quarterlyTotal / 3; // Return monthly equivalent
+        }
+        return plan.monthlyPrice;
       case 'annually':
-        return plan.annuallyPrice / 12;
+        if (plan.billingOptions?.annual?.enabled) {
+          const discount = plan.billingOptions.annual.discountPercentage;
+          const annualTotal = plan.monthlyPrice * 12 * (1 - discount / 100);
+          return annualTotal / 12; // Return monthly equivalent
+        }
+        return plan.monthlyPrice;
       case 'biannually':
-        return plan.biannuallyPrice / 24;
+        if (plan.billingOptions?.biannual?.enabled) {
+          const discount = plan.billingOptions.biannual.discountPercentage;
+          const biannualTotal = plan.monthlyPrice * 24 * (1 - discount / 100);
+          return biannualTotal / 24; // Return monthly equivalent
+        }
+        return plan.monthlyPrice;
       default:
         return plan.monthlyPrice;
     }
@@ -270,26 +118,46 @@ const Plans = () => {
     let totalBilled = 0;
     let originalTotal = 0;
     let billingPeriodText = '';
+    const discount = getDiscount(plan, billingCycle);
 
     switch (billingCycle) {
       case 'quarterly':
-        totalBilled = plan.quarterlyPrice;
-        originalTotal = plan.quarterlyPrice / (1 - getDiscount('quarterly') / 100);
-        billingPeriodText = 'every 3 months';
+        if (plan.billingOptions?.quarterly?.enabled) {
+          totalBilled = plan.monthlyPrice * 3 * (1 - discount / 100);
+          originalTotal = plan.monthlyPrice * 3;
+          billingPeriodText = 'every 3 months';
+        } else {
+          totalBilled = plan.monthlyPrice * 3;
+          originalTotal = plan.monthlyPrice * 3;
+          billingPeriodText = 'every 3 months';
+        }
         break;
       case 'annually':
-        totalBilled = plan.annuallyPrice;
-        originalTotal = plan.annuallyPrice / (1 - getDiscount('annually') / 100);
-        billingPeriodText = 'per year';
+        if (plan.billingOptions?.annual?.enabled) {
+          totalBilled = plan.monthlyPrice * 12 * (1 - discount / 100);
+          originalTotal = plan.monthlyPrice * 12;
+          billingPeriodText = 'per year';
+        } else {
+          totalBilled = plan.monthlyPrice * 12;
+          originalTotal = plan.monthlyPrice * 12;
+          billingPeriodText = 'per year';
+        }
         break;
       case 'biannually':
-        totalBilled = plan.biannuallyPrice;
-        originalTotal = plan.biannuallyPrice / (1 - getDiscount('biannually') / 100);
-        billingPeriodText = 'every 2 years';
+        if (plan.billingOptions?.biannual?.enabled) {
+          totalBilled = plan.monthlyPrice * 24 * (1 - discount / 100);
+          originalTotal = plan.monthlyPrice * 24;
+          billingPeriodText = 'every 2 years';
+        } else {
+          totalBilled = plan.monthlyPrice * 24;
+          originalTotal = plan.monthlyPrice * 24;
+          billingPeriodText = 'every 2 years';
+        }
         break;
       default: // monthly
         totalBilled = plan.monthlyPrice;
-        originalTotal = plan.regularMonthlyPrice;
+        originalTotal = plan.monthlyPrice;
+        billingPeriodText = 'per month';
         break;
     }
 
@@ -394,14 +262,6 @@ const Plans = () => {
       return '#';
     };
 
-    // Define billing options
-    const billingOptions = [
-      { id: 'monthly', label: 'Monthly', discount: getDiscount('monthly') },
-      { id: 'quarterly', label: 'Quarterly', discount: getDiscount('quarterly') },
-      { id: 'annually', label: 'Annually', discount: getDiscount('annually') },
-      { id: 'biannually', label: 'BiAnnually', discount: getDiscount('biannually') },
-    ];
-
     return (
       <Card className={`bg-midnight border border-gray-800 hover:border-electric transition-all duration-300 card-hover flex flex-col ${plan.isCustom ? 'border-cyber' : ''}`}>
                 <CardHeader className="pb-2">
@@ -414,29 +274,12 @@ const Plans = () => {
                 <>
                       <span className="text-sm text-gray-400">Starting at</span>
                       <div className="font-bold text-2xl text-white">
-                    €{currentMonthlyPrice.toFixed(2)}
-                        <span className="text-sm text-gray-400 font-normal">/mo</span>
+                    €{currentMonthlyPrice ? currentMonthlyPrice.toFixed(2) : plan.monthlyPrice.toFixed(2)}
+                        <span className="text-base text-gray-400">/mo</span>
                   </div>
-                  {billingCycle !== 'monthly' && (
-                    <>
-                      <div className="text-sm text-gray-300">
-                        Billed as €{totalBilled.toFixed(2)} {billingPeriodText}
-                      </div>
-                      {totalSavings > 0 && (
-                        <div className="text-sm text-cyber font-medium">
-                          (Save €{totalSavings.toFixed(2)} total)
-                        </div>
-                      )}
-                    </>
-                  )}
-                  {billingCycle === 'monthly' && plan.regularMonthlyPrice && (
-                    <div className="text-sm text-gray-400 line-through">
-                      €{plan.regularMonthlyPrice.toFixed(2)}
-                    </div>
-                  )}
                 </>
               ) : (
-                <div className="font-bold text-xl text-cyber">Custom Pricing</div>
+                <div className="font-bold text-2xl text-white">Custom Pricing</div>
               )}
                     </div>
                   </div>
@@ -467,9 +310,9 @@ const Plans = () => {
                     
                     {/* Features */}
                     <div className="space-y-2">
-                      {plan.features.map((feature, i) => (
+                      {(plan.features || []).map((feature, i) => (
                         <div key={i} className="flex items-center space-x-2">
-                  <Check className={`h-4 w-4 ${plan.isCustom ? 'text-cyber' : 'text-cyber'}`} />
+                          <Check className={`h-4 w-4 ${plan.isCustom ? 'text-cyber' : 'text-cyber'}`} />
                           <span className="text-gray-300 text-sm">{feature}</span>
                         </div>
                       ))}
@@ -481,24 +324,82 @@ const Plans = () => {
           {!plan.isCustom && (
             <div className="w-full mb-4 p-1 bg-gray-800/50 rounded-md">
               <div className="grid grid-cols-2 gap-1">
-                {billingOptions.map((option) => (
-                  <button
-                    key={option.id}
-                    onClick={() => setBillingCycle(option.id as 'monthly' | 'quarterly' | 'annually' | 'biannually')}
-                    className={`px-2 py-1.5 rounded text-xs transition-all ${
-                      billingCycle === option.id
-                        ? 'bg-electric text-midnight font-semibold'
-                        : 'text-gray-300 hover:bg-gray-700/60'
-                    }`}
-                  >
-                    <div className="flex flex-col items-center">
-                      <span>{option.label}</span>
-                      <span className="text-[10px] bg-cyber text-charcoal rounded-full px-1.5 py-0.5 leading-none mt-0.5">
-                        Save {option.discount}%
-                      </span>
+                {plan.billingOptions && (
+                  <>
+                    <div className="flex flex-col space-y-2 mb-4">
+                      <span className="text-sm text-gray-400">Billing Cycle</span>
+                      <div className="bg-gray-800/40 p-1 rounded-md grid grid-cols-2 sm:grid-cols-4 gap-1">
+                        <Button
+                          variant={billingCycle === 'monthly' ? 'default' : 'outline'}
+                          className={`h-auto py-2 text-xs ${billingCycle === 'monthly' ? 'bg-electric text-midnight' : 'bg-transparent text-gray-300'}`}
+                          onClick={() => setBillingCycle('monthly')}
+                        >
+                          Monthly
+                        </Button>
+                        <Button
+                          variant={billingCycle === 'quarterly' ? 'default' : 'outline'}
+                          className={`h-auto py-2 text-xs ${billingCycle === 'quarterly' ? 'bg-electric text-midnight' : 'bg-transparent text-gray-300'}`}
+                          onClick={() => setBillingCycle('quarterly')}
+                          disabled={!plan.billingOptions?.quarterly?.enabled}
+                        >
+                          Quarterly
+                          {plan.billingOptions?.quarterly?.enabled && (
+                            <span className="ml-1 bg-cyber text-midnight text-[10px] rounded px-1">-{plan.billingOptions.quarterly.discountPercentage}%</span>
+                          )}
+                        </Button>
+                        <Button
+                          variant={billingCycle === 'annually' ? 'default' : 'outline'}
+                          className={`h-auto py-2 text-xs ${billingCycle === 'annually' ? 'bg-electric text-midnight' : 'bg-transparent text-gray-300'}`}
+                          onClick={() => setBillingCycle('annually')}
+                          disabled={!plan.billingOptions?.annual?.enabled}
+                        >
+                          Annual
+                          {plan.billingOptions?.annual?.enabled && (
+                            <span className="ml-1 bg-cyber text-midnight text-[10px] rounded px-1">-{plan.billingOptions.annual.discountPercentage}%</span>
+                          )}
+                        </Button>
+                        <Button
+                          variant={billingCycle === 'biannually' ? 'default' : 'outline'}
+                          className={`h-auto py-2 text-xs ${billingCycle === 'biannually' ? 'bg-electric text-midnight' : 'bg-transparent text-gray-300'}`}
+                          onClick={() => setBillingCycle('biannually')}
+                          disabled={!plan.billingOptions?.biannual?.enabled}
+                        >
+                          Biannual
+                          {plan.billingOptions?.biannual?.enabled && (
+                            <span className="ml-1 bg-cyber text-midnight text-[10px] rounded px-1">-{plan.billingOptions.biannual.discountPercentage}%</span>
+                          )}
+                        </Button>
+                      </div>
                     </div>
-                  </button>
-                ))}
+                    
+                    <div className="bg-gray-800/40 p-3 rounded-md mb-4">
+                      <div className="flex justify-between text-sm mb-1">
+                        <span>Monthly price:</span>
+                        <span>€{currentMonthlyPrice ? currentMonthlyPrice.toFixed(2) : ""}</span>
+                      </div>
+                      <div className="flex justify-between text-sm mb-1">
+                        <span>Billing period:</span>
+                        <span>{billingPeriodText}</span>
+                      </div>
+                      {discount > 0 && (
+                        <div className="flex justify-between text-sm mb-1">
+                          <span>Discount:</span>
+                          <span className="text-cyber">-{discount}%</span>
+                        </div>
+                      )}
+                      <div className="flex justify-between text-sm font-bold mt-2 pt-2 border-t border-gray-700">
+                        <span>Total due today:</span>
+                        <span>€{totalBilled.toFixed(2)}</span>
+                      </div>
+                      {discount > 0 && (
+                        <div className="flex justify-between text-sm text-cyber mt-1">
+                          <span>You save:</span>
+                          <span>€{totalSavings.toFixed(2)}</span>
+                        </div>
+                      )}
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           )}
@@ -560,23 +461,43 @@ const Plans = () => {
             
             {/* Tab Content */}
             <TabsContent value="usa" className="mt-0">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-                {usaPlans.map((plan, index) => (
-                  <div key={index}>
-                    {renderPlanCard(plan)}
-                  </div>
-                ))}
-              </div>
+              {loading ? (
+                <div className="text-center py-8">
+                  <p className="text-white/70">Loading plans...</p>
+                </div>
+              ) : error ? (
+                <div className="text-center py-8">
+                  <p className="text-red-500">{error}</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                  {usaPlans.map((plan, index) => (
+                    <div key={index}>
+                      {renderPlanCard(plan)}
+                    </div>
+                  ))}
+                </div>
+              )}
             </TabsContent>
 
             <TabsContent value="eu" className="mt-0">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-                {euPlans.map((plan, index) => (
-                  <div key={index}>
-                    {renderPlanCard(plan)}
-                  </div>
-                ))}
-              </div>
+              {loading ? (
+                <div className="text-center py-8">
+                  <p className="text-white/70">Loading plans...</p>
+                </div>
+              ) : error ? (
+                <div className="text-center py-8">
+                  <p className="text-red-500">{error}</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                  {euPlans.map((plan, index) => (
+                    <div key={index}>
+                      {renderPlanCard(plan)}
+                    </div>
+                  ))}
+                </div>
+              )}
             </TabsContent>
 
             <TabsContent value="custom" className="mt-0">

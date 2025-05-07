@@ -17,6 +17,44 @@ const PlanSchema = new mongoose.Schema({
     required: [true, 'Monthly price is required'],
     min: [0, 'Price cannot be negative'],
   },
+  billingOptions: {
+    quarterly: {
+      enabled: {
+        type: Boolean,
+        default: false,
+      },
+      discountPercentage: {
+        type: Number,
+        default: 10,
+        min: 0,
+        max: 100,
+      }
+    },
+    annual: {
+      enabled: {
+        type: Boolean,
+        default: false,
+      },
+      discountPercentage: {
+        type: Number,
+        default: 20,
+        min: 0,
+        max: 100,
+      }
+    },
+    biannual: {
+      enabled: {
+        type: Boolean,
+        default: false,
+      },
+      discountPercentage: {
+        type: Number,
+        default: 30,
+        min: 0,
+        max: 100,
+      }
+    }
+  },
   specs: {
     cpu: {
       type: String,

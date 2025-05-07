@@ -28,6 +28,10 @@ const TestimonialSchema = new mongoose.Schema({
     type: Number,
     default: 0, // Lower numbers will be displayed first
   },
+  isFaq: {
+    type: Boolean,
+    default: false
+  }
 }, {
   timestamps: true,  // Automatically add createdAt and updatedAt fields
 });

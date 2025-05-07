@@ -47,6 +47,7 @@ const Navbar = () => {
           >
             Network Status
           </a>
+          <Link to="/blog" className="text-white hover:text-electric transition-colors">Blog</Link>
           <Link to="/faq" className="text-white hover:text-electric transition-colors">FAQ</Link>
           <Button asChild className="btn-electric">
             <a 
@@ -103,6 +104,13 @@ const Navbar = () => {
             >
               Network Status
             </a>
+            <Link 
+              to="/blog" 
+              className="text-white hover:text-electric py-2 transition-colors"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Blog
+            </Link>
             <Link 
               to="/faq" 
               className="text-white hover:text-electric py-2 transition-colors"

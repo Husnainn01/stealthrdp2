@@ -8,6 +8,7 @@ export interface ITestimonial extends Document {
   authorCompany?: string;
   avatarUrl?: string;
   displayOrder: number;
+  isFaq?: boolean;  // Add field to identify FAQ items
   createdAt: Date;
   updatedAt: Date;
 }
@@ -40,6 +41,10 @@ const TestimonialSchema: Schema = new Schema({
     type: Number,
     default: 0, // Lower numbers will be displayed first
   },
+  isFaq: {
+    type: Boolean,
+    default: false
+  }
 }, {
   timestamps: true,  // Automatically add createdAt and updatedAt fields
 });

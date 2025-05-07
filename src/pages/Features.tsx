@@ -1,16 +1,80 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Layout from '@/components/Layout';
 import { Check, Shield, Cpu, Database, Server, HardDrive, Globe, Zap, Clock, Cloud, Lock, Users, Laptop, BarChart, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
+import { featureApi } from '@/lib/api/featureApi';
+import { IFeature } from '@/lib/models/Feature';
+
+// Icon mapping component
+const IconComponent: React.FC<{ name: string }> = ({ name }) => {
+  const props = { className: "h-12 w-12 text-cyber mb-4" };
+  switch (name) {
+    case 'Server': return <Server {...props} />;
+    case 'Cloud': return <Cloud {...props} />;
+    case 'Settings': return <Settings {...props} />;
+    case 'Cpu': return <Cpu {...props} />;
+    case 'Database': return <Database {...props} />;
+    case 'HardDrive': return <HardDrive {...props} />;
+    case 'Globe': return <Globe {...props} />;
+    case 'Shield': return <Shield {...props} />;
+    case 'Users': return <Users {...props} />;
+    case 'Lock': return <Lock {...props} />;
+    case 'BarChart': return <BarChart {...props} />;
+    case 'Laptop': return <Laptop {...props} />;
+    case 'Zap': return <Zap {...props} />;
+    case 'Clock': return <Clock {...props} />;
+    default: return <Server {...props} />; // Default icon
+  }
+};
 
 const Features = () => {
-  // Main service categories
-  const serviceCategories = [
+  // State for storing features from API
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [allFeatures, setAllFeatures] = useState<IFeature[]>([]);
+  
+  // Grouped features by category
+  const [coreServices, setCoreServices] = useState<IFeature[]>([]);
+  const [hardwareFeatures, setHardwareFeatures] = useState<IFeature[]>([]);
+  const [additionalFeatures, setAdditionalFeatures] = useState<IFeature[]>([]);
+  const [useCases, setUseCases] = useState<IFeature[]>([]);
+  const [guarantees, setGuarantees] = useState<IFeature[]>([]);
+
+  // Fetch features from API
+  useEffect(() => {
+    const fetchFeatures = async () => {
+      try {
+        setLoading(true);
+        const features = await featureApi.getFeatures();
+        console.log('Fetched features:', features);
+        setAllFeatures(features);
+        
+        // Group features by category
+        setCoreServices(features.filter(f => f.category === 'core-services').sort((a, b) => a.displayOrder - b.displayOrder));
+        setHardwareFeatures(features.filter(f => f.category === 'hardware-resources').sort((a, b) => a.displayOrder - b.displayOrder));
+        setAdditionalFeatures(features.filter(f => f.category === 'security-management').sort((a, b) => a.displayOrder - b.displayOrder));
+        setUseCases(features.filter(f => f.category === 'specialized-use-cases').sort((a, b) => a.displayOrder - b.displayOrder));
+        setGuarantees(features.filter(f => f.category === 'service-guarantees').sort((a, b) => a.displayOrder - b.displayOrder));
+        
+        setError(null);
+      } catch (err) {
+        console.error('Error fetching features:', err);
+        setError('Failed to load features. Please try again.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFeatures();
+  }, []);
+
+  // Fallback service categories if API fails or data is empty
+  const defaultServiceCategories = [
     {
       title: "Remote Desktop Protocol (RDP) Services",
       description: "Dedicated RDP servers with full admin rights for optimal remote computing",
-      icon: <Server className="h-16 w-16 text-electric mb-4" />,
+      iconName: "Server",
       features: [
         "Dedicated servers with full administrative privileges",
         "Multiple locations (USA and Netherlands)",
@@ -22,7 +86,7 @@ const Features = () => {
     {
       title: "Virtual Private Server (VPS) Hosting",
       description: "High-performance cloud infrastructure for businesses and individuals",
-      icon: <Cloud className="h-16 w-16 text-electric mb-4" />,
+      iconName: "Cloud",
       features: [
         "Cloud VPS solutions for versatile applications",
         "Windows VPS hosting with intuitive interface",
@@ -34,7 +98,7 @@ const Features = () => {
     {
       title: "Build Your Own VPS",
       description: "Tailor-made virtual server with flexible resources to match your exact requirements",
-      icon: <Settings className="h-16 w-16 text-cyber mb-4" />,
+      iconName: "Settings",
       features: [
         "Customizable CPU, RAM, and storage options",
         "Select your preferred location (USA or Netherlands)",
@@ -42,157 +106,6 @@ const Features = () => {
         "Scale resources up or down as your needs change",
         "Pay only for what you need with flexible billing"
       ]
-    }
-  ];
-
-  // Hardware resources features
-  const hardwareFeatures = [
-    {
-      title: "CPU Options",
-      description: "Powerful processing capabilities to handle any workload",
-      icon: <Cpu className="h-12 w-12 text-cyber mb-4" />,
-      features: [
-        "Range from 2 cores to 8 cores depending on plan",
-        "Dedicated CPU resources with no overselling",
-        "Optimized for high-performance applications",
-        "Perfect for multi-tasking environments",
-        "Low-latency processing for time-sensitive operations"
-      ]
-    },
-    {
-      title: "Memory (RAM)",
-      description: "Ample memory for smooth multitasking and demanding applications",
-      icon: <Database className="h-12 w-12 text-cyber mb-4" />,
-      features: [
-        "Options from 4GB to 32GB based on your needs",
-        "Guaranteed dedicated RAM allocation",
-        "High-speed memory access",
-        "No resource contention with other users",
-        "Ideal for memory-intensive applications"
-      ]
-    },
-    {
-      title: "Storage",
-      description: "Fast, reliable SSD storage for optimal performance",
-      icon: <HardDrive className="h-12 w-12 text-cyber mb-4" />,
-      features: [
-        "SSD storage ranging from 40GB to 150GB",
-        "High-performance storage solutions",
-        "Fast read/write speeds for demanding applications",
-        "Daily data backups available",
-        "Storage expansion options available"
-      ]
-    },
-    {
-      title: "Network",
-      description: "Robust networking for fast, reliable connections",
-      icon: <Globe className="h-12 w-12 text-cyber mb-4" />,
-      features: [
-        "1Gbps network speeds across all plans",
-        "Unlimited bandwidth for unrestrained usage",
-        "Dedicated IP addresses with each server",
-        "Low-latency connections for real-time applications",
-        "Premium network infrastructure with high availability"
-      ]
-    }
-  ];
-
-  // Security and management features
-  const additionalFeatures = [
-    {
-      title: "Security Features",
-      description: "Enterprise-grade protection for your virtual infrastructure",
-      icon: <Shield className="h-12 w-12 text-electric mb-4" />,
-      features: [
-        "Secure network infrastructure",
-        "Clean, dedicated IPs verified against blacklists",
-        "Private network architecture",
-        "Regular security updates and patches",
-        "Firewall configuration options"
-      ]
-    },
-    {
-      title: "Management Features",
-      description: "Intuitive tools to control and monitor your servers",
-      icon: <Users className="h-12 w-12 text-electric mb-4" />,
-      features: [
-        "Comprehensive control panel for server management",
-        "Ability to reset, stop, and start virtual machines",
-        "Custom OS installation options",
-        "24/7 customer support via ticket system",
-        "Extensive knowledge base resources"
-      ]
-    },
-    {
-      title: "Data Protection",
-      description: "Keep your data safe with robust backup solutions",
-      icon: <Lock className="h-12 w-12 text-electric mb-4" />,
-      features: [
-        "Daily data backups available",
-        "Disaster recovery options",
-        "99.99% uptime guarantee",
-        "Data integrity monitoring",
-        "Robust data storage architecture"
-      ]
-    }
-  ];
-
-  // Specialized use cases
-  const useCases = [
-    {
-      title: "Forex Trading",
-      description: "Optimized infrastructure for trading platforms and algorithms",
-      icon: <BarChart className="h-12 w-12 text-cyber mb-4" />,
-      features: [
-        "Low-latency connections for real-time trading",
-        "Suitable for MetaTrader and EA bots",
-        "High-frequency trading support",
-        "24/7 uptime for global markets",
-        "Proximity to financial exchanges"
-      ]
-    },
-    {
-      title: "Remote Work",
-      description: "Seamless remote access for distributed teams",
-      icon: <Laptop className="h-12 w-12 text-cyber mb-4" />,
-      features: [
-        "Multiple remote access accounts",
-        "Run any software remotely",
-        "Full admin access for complete control",
-        "Secure connections from any location",
-        "Consistent performance regardless of local hardware"
-      ]
-    },
-    {
-      title: "Enterprise Solutions",
-      description: "Scalable infrastructure for business operations",
-      icon: <Server className="h-12 w-12 text-cyber mb-4" />,
-      features: [
-        "Custom enterprise configurations available",
-        "Multiple server deployment options",
-        "Dedicated support channels",
-        "Resource scaling as business grows",
-        "Integration with existing infrastructure"
-      ]
-    }
-  ];
-
-  // Service guarantees
-  const guarantees = [
-    {
-      title: "99.99% Uptime",
-      description: "Our servers maintain exceptional reliability with minimal downtime",
-      icon: <Clock className="h-16 w-16 text-electric mb-4" />
-    },
-    {
-      title: "Instant Activation",
-      description: "Get your server up and running immediately after purchase",
-      icon: <Zap className="h-16 w-16 text-electric mb-4" />
-    },
-    {
-      title: "24/7 Support",
-      description: "Our technical experts are available around the clock to assist you",
-      icon: <Users className="h-16 w-16 text-electric mb-4" />
     }
   ];
 
@@ -218,235 +131,223 @@ const Features = () => {
       </section>
 
       {/* Main Services Section */}
-      <section className="py-16 bg-midnight">
+      <section className="py-16 bg-midnight" id="core-services">
         <div className="container">
           <h2 className="text-3xl md:text-4xl font-bold font-montserrat text-center mb-12 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
             Core Services
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {serviceCategories.map((category, index) => (
-              <div key={index} className="bg-charcoal rounded-xl p-8 card-hover">
-                <div className="flex justify-center">{category.icon}</div>
-                <h3 className="text-2xl font-bold font-montserrat text-white mb-4 text-center">{category.title}</h3>
-                <p className="text-gray-400 mb-8 text-center">{category.description}</p>
-                <div className="space-y-3">
-                  {category.features.map((feature, i) => (
-                    <div key={i} className="flex items-start">
-                      <Check className="h-5 w-5 text-cyber mr-3 mt-0.5 flex-shrink-0" />
-                      <span className="text-gray-300">{feature}</span>
-                    </div>
-                  ))}
+            {loading ? (
+              // Loading skeleton for core services
+              [...Array(3)].map((_, index) => (
+                <div key={index} className="bg-charcoal animate-pulse rounded-xl p-8 card-hover h-[400px]"></div>
+              ))
+            ) : error || coreServices.length === 0 ? (
+              // Fallback to default data if error or empty
+              defaultServiceCategories.map((category, index) => (
+                <div key={index} className="bg-charcoal rounded-xl p-8 card-hover">
+                  <div className="flex justify-center">
+                    <IconComponent name={category.iconName} />
+                  </div>
+                  <h3 className="text-2xl font-bold font-montserrat text-white mb-4 text-center">{category.title}</h3>
+                  <p className="text-gray-400 mb-8 text-center">{category.description}</p>
+                  <div className="space-y-3">
+                    {category.features.map((feature, i) => (
+                      <div key={i} className="flex items-start">
+                        <Check className="h-5 w-5 text-cyber mr-3 mt-0.5 flex-shrink-0" />
+                        <span className="text-gray-300">{feature}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Custom VPS Highlight Section */}
-      <section className="py-16 bg-charcoal">
-        <div className="container">
-          <div className="max-w-6xl mx-auto bg-midnight border border-cyber rounded-xl p-8 md:p-12">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-              <div>
-                <h2 className="text-3xl md:text-4xl font-bold font-montserrat mb-6 text-white">
-                  Build Your <span className="text-cyber">Perfect VPS</span>
-                </h2>
-                <p className="text-gray-300 mb-6">
-                  Don't settle for predefined packages. Our customizable VPS solution allows you to select exactly the resources you need for your specific workload, ensuring optimal performance without overpaying for unused capacity.
-                </p>
-                <ul className="space-y-3 mb-8">
-                  <li className="flex items-start">
-                    <Check className="h-5 w-5 text-cyber mr-3 mt-0.5" />
-                    <span className="text-gray-300">Choose your CPU cores, RAM, and storage</span>
-                  </li>
-                  <li className="flex items-start">
-                    <Check className="h-5 w-5 text-cyber mr-3 mt-0.5" />
-                    <span className="text-gray-300">Select your preferred server location</span>
-                  </li>
-                  <li className="flex items-start">
-                    <Check className="h-5 w-5 text-cyber mr-3 mt-0.5" />
-                    <span className="text-gray-300">Install your choice of operating system</span>
-                  </li>
-                  <li className="flex items-start">
-                    <Check className="h-5 w-5 text-cyber mr-3 mt-0.5" />
-                    <span className="text-gray-300">Scale resources up or down at any time</span>
-                  </li>
-                </ul>
-                <Button asChild className="bg-cyber hover:bg-cyber/90 text-midnight">
-                  <Link to="/plans">Configure Your Custom VPS</Link>
-                </Button>
-              </div>
-              <div className="flex justify-center">
-                <div className="relative">
-                  <div className="w-64 h-64 rounded-full bg-gradient-to-br from-cyber/20 to-electric/20 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 blur-xl"></div>
-                  <Settings className="h-48 w-48 text-cyber relative z-10" />
+              ))
+            ) : (
+              // Dynamic data from API
+              coreServices.map((feature) => (
+                <div key={feature._id.toString()} className="bg-charcoal rounded-xl p-8 card-hover">
+                  <div className="flex justify-center">
+                    <IconComponent name={feature.iconName} />
+                  </div>
+                  <h3 className="text-2xl font-bold font-montserrat text-white mb-4 text-center">{feature.title}</h3>
+                  <p className="text-gray-400 mb-8 text-center">{feature.description}</p>
                 </div>
-              </div>
-            </div>
+              ))
+            )}
           </div>
         </div>
       </section>
 
       {/* Hardware Resources Section */}
-      <section className="py-16 bg-midnight">
+      <section className="py-16 bg-charcoal" id="hardware">
         <div className="container">
-          <h2 className="text-3xl md:text-4xl font-bold font-montserrat text-center mb-12 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
-            Premium Hardware Resources
-          </h2>
+          <div className="max-w-4xl mx-auto text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold font-montserrat mb-4 text-white">Hardware Resources</h2>
+            <p className="text-gray-400">
+              Our high-performance infrastructure provides the power and reliability your applications need to thrive.
+            </p>
+          </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {hardwareFeatures.map((feature, index) => (
-              <div key={index} className="bg-charcoal rounded-xl p-6 card-hover">
-                <div className="flex justify-center">{feature.icon}</div>
-                <h3 className="text-xl font-bold font-montserrat text-white mb-2 text-center">{feature.title}</h3>
-                <p className="text-gray-400 text-sm mb-6 text-center">{feature.description}</p>
-                <div className="space-y-2">
-                  {feature.features.map((item, i) => (
-                    <div key={i} className="flex items-start">
-                      <Check className="h-4 w-4 text-cyber mr-2 mt-0.5 flex-shrink-0" />
-                      <span className="text-gray-300 text-sm">{item}</span>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
+            {loading ? (
+              // Loading skeleton for hardware features
+              [...Array(4)].map((_, index) => (
+                <div key={index} className="bg-midnight animate-pulse rounded-xl p-6 card-hover h-[300px]"></div>
+              ))
+            ) : (
+              // Display hardware features from API or fallback to empty state with CTA
+              hardwareFeatures.length > 0 ? (
+                hardwareFeatures.map((feature) => (
+                  <div key={feature._id.toString()} className="bg-midnight rounded-xl p-6 card-hover">
+                    <div className="flex justify-center">
+                      <IconComponent name={feature.iconName} />
                     </div>
-                  ))}
+                    <h3 className="text-xl font-bold font-montserrat text-white mb-2 text-center">{feature.title}</h3>
+                    <p className="text-gray-400 mb-6 text-center text-sm">{feature.description}</p>
+                  </div>
+                ))
+              ) : (
+                <div className="col-span-full flex flex-col items-center justify-center p-12 bg-midnight/50 rounded-xl border border-white/10">
+                  <p className="text-gray-400 text-center mb-4">Hardware resource information will be available soon.</p>
+                  <Button asChild className="bg-cyber text-midnight hover:bg-cyber/90">
+                    <Link to="/plans">View Available Plans</Link>
+                  </Button>
                 </div>
-              </div>
-            ))}
+              )
+            )}
           </div>
         </div>
       </section>
 
       {/* Security & Management Section */}
-      <section className="py-16 bg-charcoal">
+      <section className="py-16 bg-midnight" id="security">
         <div className="container">
-          <h2 className="text-3xl md:text-4xl font-bold font-montserrat text-center mb-12 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
-            Security & Management
-          </h2>
+          <div className="max-w-4xl mx-auto text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold font-montserrat mb-4 text-white">Security & Management</h2>
+            <p className="text-gray-400">
+              Protecting your data and simplifying server management are our top priorities.
+            </p>
+          </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
-            {additionalFeatures.map((feature, index) => (
-              <div key={index} className="bg-midnight rounded-xl p-6 card-hover">
-                <div className="flex justify-center">{feature.icon}</div>
-                <h3 className="text-xl font-bold font-montserrat text-white mb-2 text-center">{feature.title}</h3>
-                <p className="text-gray-400 text-sm mb-6 text-center">{feature.description}</p>
-                <div className="space-y-2">
-                  {feature.features.map((item, i) => (
-                    <div key={i} className="flex items-start">
-                      <Check className="h-4 w-4 text-cyber mr-2 mt-0.5 flex-shrink-0" />
-                      <span className="text-gray-300 text-sm">{item}</span>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {loading ? (
+              // Loading skeleton
+              [...Array(3)].map((_, index) => (
+                <div key={index} className="bg-charcoal animate-pulse rounded-xl p-6 card-hover h-[300px]"></div>
+              ))
+            ) : (
+              // Display security features from API or empty state
+              additionalFeatures.length > 0 ? (
+                additionalFeatures.map((feature) => (
+                  <div key={feature._id.toString()} className="bg-charcoal rounded-xl p-6 card-hover">
+                    <div className="flex justify-center">
+                      <IconComponent name={feature.iconName} />
                     </div>
-                  ))}
+                    <h3 className="text-xl font-bold font-montserrat text-white mb-2 text-center">{feature.title}</h3>
+                    <p className="text-gray-400 mb-6 text-center text-sm">{feature.description}</p>
+                  </div>
+                ))
+              ) : (
+                <div className="col-span-full flex flex-col items-center justify-center p-12 bg-charcoal/50 rounded-xl border border-white/10">
+                  <p className="text-gray-400 text-center mb-4">Security and management details will be available soon.</p>
                 </div>
-              </div>
-            ))}
+              )
+            )}
           </div>
         </div>
       </section>
 
       {/* Use Cases Section */}
-      <section className="py-16 bg-midnight">
+      <section className="py-16 bg-charcoal" id="use-cases">
         <div className="container">
-          <h2 className="text-3xl md:text-4xl font-bold font-montserrat text-center mb-12 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
-            Specialized Use Cases
-          </h2>
+          <div className="max-w-4xl mx-auto text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold font-montserrat mb-4 text-white">Specialized Use Cases</h2>
+            <p className="text-gray-400">
+              Our servers are optimized for a variety of specific applications and industries.
+            </p>
+          </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
-            {useCases.map((useCase, index) => (
-              <div key={index} className="bg-charcoal rounded-xl p-6 card-hover">
-                <div className="flex justify-center">{useCase.icon}</div>
-                <h3 className="text-xl font-bold font-montserrat text-white mb-2 text-center">{useCase.title}</h3>
-                <p className="text-gray-400 text-sm mb-6 text-center">{useCase.description}</p>
-                <div className="space-y-2">
-                  {useCase.features.map((item, i) => (
-                    <div key={i} className="flex items-start">
-                      <Check className="h-4 w-4 text-cyber mr-2 mt-0.5 flex-shrink-0" />
-                      <span className="text-gray-300 text-sm">{item}</span>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {loading ? (
+              // Loading skeleton
+              [...Array(3)].map((_, index) => (
+                <div key={index} className="bg-midnight animate-pulse rounded-xl p-6 card-hover h-[300px]"></div>
+              ))
+            ) : (
+              // Display use cases from API or empty state
+              useCases.length > 0 ? (
+                useCases.map((feature) => (
+                  <div key={feature._id.toString()} className="bg-midnight rounded-xl p-6 card-hover">
+                    <div className="flex justify-center">
+                      <IconComponent name={feature.iconName} />
                     </div>
-                  ))}
+                    <h3 className="text-xl font-bold font-montserrat text-white mb-2 text-center">{feature.title}</h3>
+                    <p className="text-gray-400 mb-6 text-center text-sm">{feature.description}</p>
+                  </div>
+                ))
+              ) : (
+                <div className="col-span-full flex flex-col items-center justify-center p-12 bg-midnight/50 rounded-xl border border-white/10">
+                  <p className="text-gray-400 text-center mb-4">Specialized use case information will be available soon.</p>
                 </div>
-              </div>
-            ))}
+              )
+            )}
           </div>
         </div>
       </section>
 
       {/* Service Guarantees Section */}
-      <section className="py-16 bg-charcoal">
+      <section className="py-16 bg-midnight" id="guarantees">
         <div className="container">
-          <h2 className="text-3xl md:text-4xl font-bold font-montserrat text-center mb-12 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
-            Our Guarantees
-          </h2>
+          <div className="max-w-4xl mx-auto text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold font-montserrat mb-4 text-white">Our Guarantees</h2>
+            <p className="text-gray-400">
+              We stand behind our service with these core commitments to all customers.
+            </p>
+          </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            {guarantees.map((guarantee, index) => (
-              <div key={index} className="bg-midnight rounded-xl p-8 flex flex-col items-center card-hover">
-                {guarantee.icon}
-                <h3 className="text-xl font-bold font-montserrat text-white mb-3 text-center">{guarantee.title}</h3>
-                <p className="text-gray-400 text-center">{guarantee.description}</p>
-              </div>
-            ))}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {loading ? (
+              // Loading skeleton
+              [...Array(3)].map((_, index) => (
+                <div key={index} className="bg-charcoal/50 animate-pulse rounded-xl p-8 card-hover h-[200px]"></div>
+              ))
+            ) : (
+              // Display guarantees from API or fallback
+              guarantees.length > 0 ? (
+                guarantees.map((feature) => (
+                  <div key={feature._id.toString()} className="bg-charcoal/50 rounded-xl p-8 card-hover text-center">
+                    <div className="flex justify-center">
+                      <IconComponent name={feature.iconName} />
+                    </div>
+                    <h3 className="text-xl font-bold font-montserrat text-white mb-2">{feature.title}</h3>
+                    <p className="text-gray-400">{feature.description}</p>
+                  </div>
+                ))
+              ) : (
+                <div className="col-span-full flex flex-col items-center justify-center p-12 bg-charcoal/50 rounded-xl border border-white/10">
+                  <p className="text-gray-400 text-center mb-4">Our service guarantees will be published soon.</p>
+                </div>
+              )
+            )}
           </div>
         </div>
       </section>
 
-      {/* Server Locations Section */}
-      <section className="py-16 bg-midnight">
+      {/* CTA Section */}
+      <section className="py-16 bg-gradient-to-t from-charcoal to-midnight">
         <div className="container">
-          <h2 className="text-3xl md:text-4xl font-bold font-montserrat text-center mb-12 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
-            Global Server Locations
-          </h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            <div className="bg-charcoal rounded-xl p-8 card-hover">
-              <h3 className="text-2xl font-bold font-montserrat text-white mb-4 text-center">United States</h3>
-              <ul className="space-y-3">
-                <li className="flex items-start">
-                  <Check className="h-5 w-5 text-cyber mr-3 mt-0.5" />
-                  <span className="text-gray-300">Strategic US-based data centers</span>
-                </li>
-                <li className="flex items-start">
-                  <Check className="h-5 w-5 text-cyber mr-3 mt-0.5" />
-                  <span className="text-gray-300">1Gbps network speeds</span>
-                </li>
-                <li className="flex items-start">
-                  <Check className="h-5 w-5 text-cyber mr-3 mt-0.5" />
-                  <span className="text-gray-300">Low-latency connections</span>
-                </li>
-                <li className="flex items-start">
-                  <Check className="h-5 w-5 text-cyber mr-3 mt-0.5" />
-                  <span className="text-gray-300">Ideal for North American clients</span>
-                </li>
-                <li className="flex items-start">
-                  <Check className="h-5 w-5 text-cyber mr-3 mt-0.5" />
-                  <span className="text-gray-300">Advanced security infrastructure</span>
-                </li>
-              </ul>
-            </div>
-            
-            <div className="bg-charcoal rounded-xl p-8 card-hover">
-              <h3 className="text-2xl font-bold font-montserrat text-white mb-4 text-center">Netherlands</h3>
-              <ul className="space-y-3">
-                <li className="flex items-start">
-                  <Check className="h-5 w-5 text-cyber mr-3 mt-0.5" />
-                  <span className="text-gray-300">European data center location</span>
-                </li>
-                <li className="flex items-start">
-                  <Check className="h-5 w-5 text-cyber mr-3 mt-0.5" />
-                  <span className="text-gray-300">Offshore server options</span>
-                </li>
-                <li className="flex items-start">
-                  <Check className="h-5 w-5 text-cyber mr-3 mt-0.5" />
-                  <span className="text-gray-300">1Gbps network connectivity</span>
-                </li>
-                <li className="flex items-start">
-                  <Check className="h-5 w-5 text-cyber mr-3 mt-0.5" />
-                  <span className="text-gray-300">Excellent for European businesses</span>
-                </li>
-                <li className="flex items-start">
-                  <Check className="h-5 w-5 text-cyber mr-3 mt-0.5" />
-                  <span className="text-gray-300">GDPR-compliant infrastructure</span>
-                </li>
-              </ul>
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-3xl md:text-4xl font-bold font-montserrat mb-6 text-white">Ready to Experience These Features?</h2>
+            <p className="text-gray-300 mb-8">
+              Deploy your server today and see why thousands of customers trust StealthRDP for their remote computing needs.
+            </p>
+            <div className="flex flex-col sm:flex-row justify-center gap-4">
+              <Button asChild size="lg" className="bg-cyber text-midnight hover:bg-cyber/90">
+                <Link to="/plans">View Our Plans</Link>
+              </Button>
+              <Button asChild variant="outline" size="lg" className="border-electric text-electric hover:bg-electric/10">
+                <a href="https://stealthrdp.com/dash/submitticket.php" target="_blank" rel="noopener noreferrer">Contact Sales</a>
+              </Button>
             </div>
           </div>
         </div>

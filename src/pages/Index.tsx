@@ -4,6 +4,9 @@ import Slider from 'react-slick';
 import Layout from '@/components/Layout';
 import { Button } from '@/components/ui/button';
 import { Check, Zap, ShieldCheck, Clock, Users, Code, Cpu, HardDrive, Globe, Settings, Laptop, Server, Bot, Gamepad2, Repeat, Disc, Monitor, Terminal, MoveRight, X } from 'lucide-react';
+import { planApi, PlanApiResponse } from '@/lib/api/planApi';
+import { testimonialApi } from '@/lib/api/testimonialApi';
+import { ITestimonial } from '@/lib/models/Testimonial';
 
 // Import slick carousel CSS
 import "slick-carousel/slick/slick.css";
@@ -17,147 +20,6 @@ import { Pagination, Navigation, A11y, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
-
-// USA Plan Data
-const usaPlans = [
-  {
-    name: 'Bronze USA',
-    description: 'Blazing Fast Connectivity',
-    monthlyPrice: 9.50,
-    specs: {
-      cpu: '2 Core',
-      ram: '4 GB RAM',
-      storage: '60 GB SSD',
-      bandwidth: 'Unlimited'
-    },
-    purchaseUrl: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/bronze-usa2&billingcycle=monthly'
-  },
-  {
-    name: 'Silver USA',
-    description: 'Blazing Fast Connectivity',
-    monthlyPrice: 18.04,
-    specs: {
-      cpu: '2 Core',
-      ram: '8 GB RAM',
-      storage: '80 GB SSD',
-      bandwidth: 'Unlimited'
-    },
-    purchaseUrl: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/silver-usa&billingcycle=monthly',
-    popular: true
-  },
-  {
-    name: 'Gold USA',
-    description: 'Blazing Fast Connectivity',
-    monthlyPrice: 26.59,
-    specs: {
-      cpu: '4 Core',
-      ram: '16 GB RAM',
-      storage: '100 GB SSD',
-      bandwidth: 'Unlimited'
-    },
-    purchaseUrl: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/gold-usa&billingcycle=monthly'
-  },
-  {
-    name: 'Platinum USA',
-    description: 'Blazing Fast Connectivity',
-    monthlyPrice: 33.24,
-    specs: {
-      cpu: '6 Core',
-      ram: '16 GB RAM',
-      storage: '100 GB SSD',
-      bandwidth: 'Unlimited'
-    },
-    purchaseUrl: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/platinum-usa&billingcycle=monthly'
-  },
-  {
-    name: 'Diamond USA',
-    description: 'Blazing Fast Connectivity',
-    monthlyPrice: 42.75,
-    specs: {
-      cpu: '6 Core',
-      ram: '32 GB RAM',
-      storage: '150 GB SSD',
-      bandwidth: 'Unlimited'
-    },
-    purchaseUrl: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/diamond-usa&billingcycle=monthly'
-  },
-  {
-    name: 'Emerald USA',
-    description: 'Blazing Fast Connectivity',
-    monthlyPrice: 51.30,
-    specs: {
-      cpu: '8 Core',
-      ram: '32 GB RAM',
-      storage: '150 GB SSD',
-      bandwidth: 'Unlimited'
-    },
-    purchaseUrl: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/emerald-usa&billingcycle=monthly'
-  }
-];
-
-// EU Plan Data
-const euPlans = [
-  {
-    name: 'Bronze EU',
-    description: 'Secure. Fast. Limitless',
-    monthlyPrice: 9.50,
-    specs: {
-      cpu: '2 Core',
-      ram: '4 GB RAM',
-      storage: '40 GB SSD',
-      bandwidth: 'Unlimited'
-    },
-    purchaseUrl: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-eu-rdp-vps/bronze-eu&billingcycle=monthly'
-  },
-  {
-    name: 'Silver EU',
-    description: 'Secure. Fast. Limitless',
-    monthlyPrice: 17.10,
-    specs: {
-      cpu: '4 Core',
-      ram: '8 GB RAM',
-      storage: '80 GB SSD',
-      bandwidth: 'Unlimited'
-    },
-    purchaseUrl: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-eu-rdp-vps/silver-eu&billingcycle=monthly'
-  },
-  {
-    name: 'Gold EU',
-    description: 'Secure. Fast. Limitless',
-    monthlyPrice: 28.49,
-    specs: {
-      cpu: '4 Core',
-      ram: '16 GB RAM',
-      storage: '100 GB SSD',
-      bandwidth: 'Unlimited'
-    },
-    purchaseUrl: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-eu-rdp-vps/gold-eu&billingcycle=monthly'
-  },
-  {
-    name: 'Platinum EU',
-    description: 'Secure. Fast. Limitless',
-    monthlyPrice: 33.24,
-    specs: {
-      cpu: '6 Core',
-      ram: '16 GB RAM',
-      storage: '100 GB SSD',
-      bandwidth: 'Unlimited'
-    },
-    purchaseUrl: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-eu-rdp-vps/platinum-eu&billingcycle=monthly'
-  },
-  {
-    name: 'Diamond EU',
-    description: 'Secure. Fast. Limitless', 
-    monthlyPrice: 37.99,
-    specs: {
-      cpu: '6 Core',
-      ram: '24 GB RAM',
-      storage: '120 GB SSD',
-      bandwidth: 'Unlimited'
-    },
-    purchaseUrl: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-eu-rdp-vps/diamond-eu&billingcycle=monthly'
-  }
-];
 
 // Add custom styles for sliders and components
 const customStyles = `
@@ -541,20 +403,112 @@ const customStyles = `
 `;
 
 const Index = () => {
-  // Swiper settings for plan sliders
-  const planSliderSettings = {
-    modules: [Pagination, Navigation, A11y],
-    spaceBetween: 10,
-    slidesPerView: 1,
-    pagination: false,
-    navigation: true,
-    autoHeight: true,
-    initialSlide: 0
-  };
+  const [usaPlans, setUsaPlans] = useState<PlanApiResponse[]>([]);
+  const [euPlans, setEuPlans] = useState<PlanApiResponse[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [billingCycle, setBillingCycle] = useState<'monthly' | 'quarterly' | 'annually' | 'biannually'>('monthly');
   
   // Add countdown timer state
   const [countdown, setCountdown] = useState("48:00:00");
   
+  const [testimonials, setTestimonials] = useState<ITestimonial[]>([]);
+  const [testimonialsLoading, setTestimonialsLoading] = useState<boolean>(true);
+  
+  // Calculate discount percentage for each cycle
+  const getDiscount = (plan: PlanApiResponse | undefined, cycle: string) => {
+    if (!plan || !plan.billingOptions) return 0;
+    
+    switch (cycle) {
+      case 'quarterly':
+        return plan.billingOptions?.quarterly?.enabled ? plan.billingOptions.quarterly.discountPercentage : 0;
+      case 'annually':
+        return plan.billingOptions?.annual?.enabled ? plan.billingOptions.annual.discountPercentage : 0;
+      case 'biannually':
+        return plan.billingOptions?.biannual?.enabled ? plan.billingOptions.biannual.discountPercentage : 0;
+      default:
+        return 0;
+    }
+  };
+
+  // Helper function to get current price based on billing cycle
+  const getCurrentPrice = (plan: PlanApiResponse | undefined) => {
+    if (!plan || !plan.monthlyPrice) return null;
+    
+    switch (billingCycle) {
+      case 'monthly':
+        return plan.monthlyPrice;
+      case 'quarterly':
+        if (plan.billingOptions?.quarterly?.enabled) {
+          const discount = plan.billingOptions.quarterly.discountPercentage;
+          const quarterlyTotal = plan.monthlyPrice * 3 * (1 - discount / 100);
+          return quarterlyTotal / 3; // Return monthly equivalent
+        }
+        return plan.monthlyPrice;
+      case 'annually':
+        if (plan.billingOptions?.annual?.enabled) {
+          const discount = plan.billingOptions?.annual?.discountPercentage;
+          const annualTotal = plan.monthlyPrice * 12 * (1 - discount / 100);
+          return annualTotal / 12; // Return monthly equivalent
+        }
+        return plan.monthlyPrice;
+      case 'biannually':
+        if (plan.billingOptions?.biannual?.enabled) {
+          const discount = plan.billingOptions?.biannual?.discountPercentage;
+          const biannualTotal = plan.monthlyPrice * 24 * (1 - discount / 100);
+          return biannualTotal / 24; // Return monthly equivalent
+        }
+        return plan.monthlyPrice;
+      default:
+        return plan.monthlyPrice;
+    }
+  };
+
+  // Helper to check if a billing option is enabled for any plan
+  const isBillingOptionEnabled = (cycle: string) => {
+    if (!usaPlans.length) return false;
+    
+    switch (cycle) {
+      case 'quarterly':
+        return usaPlans.some(plan => plan.billingOptions?.quarterly?.enabled);
+      case 'annually':
+        return usaPlans.some(plan => plan.billingOptions?.annual?.enabled);
+      case 'biannually':
+        return usaPlans.some(plan => plan.billingOptions?.biannual?.enabled);
+      default:
+        return true; // Monthly is always enabled
+    }
+  };
+  
+  // Fetch plans from the API
+  useEffect(() => {
+    const fetchPlans = async () => {
+      try {
+        setLoading(true);
+        const [usaData, euData] = await Promise.all([
+          planApi.getPlans('USA'),
+          planApi.getPlans('EU')
+        ]);
+        console.log('Fetched USA Plans for Homepage:', usaData);
+        console.log('Fetched EU Plans for Homepage:', euData);
+        
+        // Sort plans by price to ensure consistent order
+        const sortedUsaData = [...usaData].sort((a, b) => a.monthlyPrice - b.monthlyPrice);
+        const sortedEuData = [...euData].sort((a, b) => a.monthlyPrice - b.monthlyPrice);
+        
+        setUsaPlans(sortedUsaData);
+        setEuPlans(sortedEuData);
+        setError(null);
+      } catch (err) {
+        console.error('Error fetching plans for homepage:', err);
+        setError('Failed to load plans.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPlans();
+  }, []);
+
   // Add countdown timer effect
   useEffect(() => {
     // Set the date we're counting down to (3 days from now)
@@ -596,6 +550,27 @@ const Index = () => {
     
     // Clear interval on component unmount
     return () => clearInterval(timer);
+  }, []);
+
+  // Fetch testimonials data
+  useEffect(() => {
+    const fetchTestimonials = async () => {
+      try {
+        setTestimonialsLoading(true);
+        const data = await testimonialApi.getAllTestimonials();
+        // Filter out any FAQ items that might be in the testimonials collection
+        const actualTestimonials = data.filter(item => !item.isFaq);
+        // Sort by displayOrder
+        actualTestimonials.sort((a, b) => a.displayOrder - b.displayOrder);
+        setTestimonials(actualTestimonials);
+      } catch (error) {
+        console.error('Error fetching testimonials:', error);
+      } finally {
+        setTestimonialsLoading(false);
+      }
+    };
+    
+    fetchTestimonials();
   }, []);
 
   // Add calculateSavings function
@@ -644,6 +619,9 @@ const Index = () => {
     if (recommendedPlanDiv) recommendedPlanDiv.classList.remove('hidden');
   };
 
+  // Get the featured testimonial (first one by display order or a fallback)
+  const featuredTestimonial = testimonials.length > 0 ? testimonials[0] : null;
+
   return (
     <Layout>
       {/* Inject custom styles */}
@@ -687,14 +665,17 @@ const Index = () => {
             </div>
             
             {/* Starting Price Point with Loss Aversion */}
-            <p className="mt-6 text-sm text-white/70 fade-in flex items-center justify-center gap-1" style={{ animationDelay: '0.6s' }}>
-              <span className="text-white/50">Starting at only</span> 
-              <span className="font-mono text-cyber font-bold">$9.50/month</span>
-              <span className="text-white/50 ml-1">·</span>
-              <span className="text-white/70">No hidden fees</span>
-              <span className="text-white/50 ml-1">·</span>
-              <span className="text-white/70">Cancel anytime</span>
-            </p>
+            <div className="flex items-baseline mb-5">
+              <span className="text-3xl font-bold text-white">
+                ${usaPlans.length > 0 ? (getCurrentPrice(usaPlans[0]) || usaPlans[0]?.monthlyPrice).toFixed(2) : '9.50'}
+              </span>
+              <span className="text-white/60 ml-2 text-sm">/month</span>
+              {billingCycle !== 'monthly' && usaPlans.length > 0 && getDiscount(usaPlans[0], billingCycle) > 0 && (
+                <span className="ml-2 text-xs text-cyber bg-cyber/10 px-1.5 py-0.5 rounded">
+                  Save {getDiscount(usaPlans[0], billingCycle)}%
+                </span>
+              )}
+            </div>
           </div>
         </div>
       </section>
@@ -1090,412 +1071,129 @@ const Index = () => {
           <div className="max-w-lg mx-auto mb-10">
             <div className="bg-charcoal/50 rounded-lg p-2 flex items-center">
               <div className="grid grid-cols-4 gap-2 w-full">
-                <div className="bg-midnight border border-electric text-center py-2 px-2 rounded cursor-pointer">
-                  <p className="text-white text-xs font-medium">Monthly</p>
+                <div 
+                  className={`text-center py-2 px-2 rounded cursor-pointer transition-colors ${billingCycle === 'monthly' ? 'bg-midnight border border-electric' : 'hover:bg-midnight/50'}`}
+                  onClick={() => setBillingCycle('monthly')}
+                >
+                  <p className={`text-xs font-medium ${billingCycle === 'monthly' ? 'text-white' : 'text-white/70'}`}>Monthly</p>
                 </div>
-                <div className="text-center py-2 px-2 rounded cursor-pointer hover:bg-midnight/50 transition-colors">
-                  <p className="text-white/70 text-xs">Quarterly <span className="text-cyber text-[10px]">-10%</span></p>
-                </div>
-                <div className="text-center py-2 px-2 rounded cursor-pointer hover:bg-midnight/50 transition-colors">
-                  <p className="text-white/70 text-xs">Annual <span className="text-cyber text-[10px]">-20%</span></p>
-                </div>
-                <div className="text-center py-2 px-2 rounded cursor-pointer hover:bg-midnight/50 transition-colors bg-midnight/20 border border-electric/10">
-                  <p className="text-white/70 text-xs">Biannual <span className="text-cyber text-[10px]">-30%</span></p>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          {/* Pricing Cards - Price Anchoring and Decoy Effect */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            
-            {/* Plan 1: Starter - Decoy */}
-            <div className="bg-midnight border border-white/10 rounded-xl overflow-hidden card-hover transform transition-all duration-300 hover:translate-y-[-8px]">
-              <div className="p-6">
-                <div className="mb-4">
-                  <h3 className="text-xl font-bold font-montserrat text-white mb-1">Bronze</h3>
-                  <p className="text-white/60 text-sm">Personal projects & light workloads</p>
-                </div>
-                
-                <div className="flex items-baseline mb-5">
-                  <span className="text-3xl font-bold text-white">$9.50</span>
-                  <span className="text-white/60 ml-2 text-sm">/month</span>
-                </div>
-                
-                <ul className="space-y-3 mb-6">
-                  <li className="flex items-start">
-                    <Check className="h-5 w-5 text-cyber mr-3 mt-0.5 flex-shrink-0" />
-                    <span className="text-white/80 text-sm">2 CPU Cores</span>
-                  </li>
-                  <li className="flex items-start">
-                    <Check className="h-5 w-5 text-cyber mr-3 mt-0.5 flex-shrink-0" />
-                    <span className="text-white/80 text-sm">4 GB RAM</span>
-                  </li>
-                  <li className="flex items-start">
-                    <Check className="h-5 w-5 text-cyber mr-3 mt-0.5 flex-shrink-0" />
-                    <span className="text-white/80 text-sm">60 GB SSD Storage</span>
-                  </li>
-                  <li className="flex items-start">
-                    <Check className="h-5 w-5 text-cyber mr-3 mt-0.5 flex-shrink-0" />
-                    <span className="text-white/80 text-sm">Unlimited Bandwidth</span>
-                  </li>
-                  <li className="flex items-start opacity-50">
-                    <X className="h-5 w-5 text-red-500 mr-3 mt-0.5 flex-shrink-0" />
-                    <span className="text-white/80 text-sm">Performance Boost</span>
-                  </li>
-                </ul>
-                
-                <Button asChild className="w-full py-3 bg-transparent hover:bg-electric/10 text-electric border border-electric transition-all">
-                  <a href="https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/bronze-usa2&billingcycle=monthly" target="_blank" rel="noopener noreferrer">
-                    Deploy Now
-                  </a>
-                </Button>
-              </div>
-            </div>
-            
-            {/* Plan 2: Value Champion - Target Plan - The Decoy Effect uses this as the intended choice */}
-            <div className="bg-midnight border-2 border-electric rounded-xl overflow-hidden card-hover transform transition-all duration-300 hover:translate-y-[-8px] relative md:scale-105 z-10 shadow-lg shadow-electric/20">
-              <div className="absolute -top-4 left-0 right-0 mx-auto w-40 bg-electric text-midnight text-xs font-bold py-1 px-3 rounded-full text-center">
-                MOST POPULAR
-              </div>
-              
-              <div className="p-6">
-                <div className="mb-4">
-                  <h3 className="text-xl font-bold font-montserrat text-white mb-1">Silver</h3>
-                  <p className="text-white/60 text-sm">Professional applications & multitasking</p>
-                </div>
-                
-                <div className="flex items-baseline mb-5">
-                  <span className="text-3xl font-bold text-white">$18.04</span>
-                  <span className="text-white/60 ml-2 text-sm">/month</span>
-                  <span className="ml-2 text-xs text-cyber bg-cyber/10 px-1.5 py-0.5 rounded">Best Value</span>
-                </div>
-                
-                <ul className="space-y-3 mb-6">
-                  <li className="flex items-start">
-                    <Check className="h-5 w-5 text-cyber mr-3 mt-0.5 flex-shrink-0" />
-                    <span className="text-white/80 text-sm">2 CPU Cores</span>
-                  </li>
-                  <li className="flex items-start">
-                    <Check className="h-5 w-5 text-cyber mr-3 mt-0.5 flex-shrink-0" />
-                    <span className="text-white/80 text-sm">8 GB RAM</span>
-                  </li>
-                  <li className="flex items-start">
-                    <Check className="h-5 w-5 text-cyber mr-3 mt-0.5 flex-shrink-0" />
-                    <span className="text-white/80 text-sm">80 GB SSD Storage</span>
-                  </li>
-                  <li className="flex items-start">
-                    <Check className="h-5 w-5 text-cyber mr-3 mt-0.5 flex-shrink-0" />
-                    <span className="text-white/80 text-sm">Unlimited Bandwidth</span>
-                  </li>
-                  <li className="flex items-start">
-                    <Check className="h-5 w-5 text-cyber mr-3 mt-0.5 flex-shrink-0" />
-                    <span className="text-white/80 text-sm">Performance Boost</span>
-                  </li>
-                </ul>
-                
-                {/* Loss Aversion */}
-                <div className="bg-electric/5 border border-electric/20 rounded-md py-2 px-3 mb-5">
-                  <p className="text-white/80 text-xs flex items-center">
-                    <Clock className="h-3.5 w-3.5 text-electric mr-1.5" />
-                    <span>Deploy in 60 seconds + <span className="text-electric font-medium">FREE migration</span></span>
+                <div 
+                  className={`text-center py-2 px-2 rounded cursor-pointer transition-colors ${!isBillingOptionEnabled('quarterly') ? 'opacity-50 cursor-not-allowed' : billingCycle === 'quarterly' ? 'bg-midnight border border-electric' : 'hover:bg-midnight/50'}`}
+                  onClick={() => isBillingOptionEnabled('quarterly') && setBillingCycle('quarterly')}
+                >
+                  <p className={`text-xs ${billingCycle === 'quarterly' ? 'text-white font-medium' : 'text-white/70'}`}>
+                    Quarterly 
+                    {usaPlans.length > 0 && usaPlans[0].billingOptions?.quarterly?.enabled && (
+                      <span className="text-cyber text-[10px] ml-1">-{usaPlans[0].billingOptions.quarterly.discountPercentage}%</span>
+                    )}
                   </p>
                 </div>
-                
-                <Button asChild className="w-full py-3 bg-electric hover:bg-electric/90 text-midnight transition-all font-bold">
-                  <a href="https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/silver-usa&billingcycle=monthly" target="_blank" rel="noopener noreferrer">
-                    Deploy Now
-                  </a>
-                </Button>
+                <div 
+                  className={`text-center py-2 px-2 rounded cursor-pointer transition-colors ${!isBillingOptionEnabled('annually') ? 'opacity-50 cursor-not-allowed' : billingCycle === 'annually' ? 'bg-midnight border border-electric' : 'hover:bg-midnight/50'}`}
+                  onClick={() => isBillingOptionEnabled('annually') && setBillingCycle('annually')}
+                >
+                  <p className={`text-xs ${billingCycle === 'annually' ? 'text-white font-medium' : 'text-white/70'}`}>
+                    Annual 
+                    {usaPlans.length > 0 && usaPlans[0].billingOptions?.annual?.enabled && (
+                      <span className="text-cyber text-[10px] ml-1">-{usaPlans[0].billingOptions.annual.discountPercentage}%</span>
+                    )}
+                  </p>
+                </div>
+                <div 
+                  className={`text-center py-2 px-2 rounded cursor-pointer transition-colors ${!isBillingOptionEnabled('biannually') ? 'opacity-50 cursor-not-allowed' : billingCycle === 'biannually' ? 'bg-midnight border border-electric' : 'hover:bg-midnight/50'}`}
+                  onClick={() => isBillingOptionEnabled('biannually') && setBillingCycle('biannually')}
+                >
+                  <p className={`text-xs ${billingCycle === 'biannually' ? 'text-white font-medium' : 'text-white/70'}`}>
+                    Biannual 
+                    {usaPlans.length > 0 && usaPlans[0].billingOptions?.biannual?.enabled && (
+                      <span className="text-cyber text-[10px] ml-1">-{usaPlans[0].billingOptions.biannual.discountPercentage}%</span>
+                    )}
+                  </p>
+                </div>
               </div>
             </div>
-            
-            {/* Plan 3: Customizable */}
-            <div className="bg-midnight border border-white/10 rounded-xl overflow-hidden card-hover transform transition-all duration-300 hover:translate-y-[-8px]">
-              <div className="p-6">
-                <div className="mb-4">
-                  <h3 className="text-xl font-bold font-montserrat text-white mb-1">Custom</h3>
-                  <p className="text-white/60 text-sm">Enterprise & specialized workloads</p>
-                </div>
-                
-                <div className="flex items-baseline mb-5">
-                  <span className="text-2xl font-bold text-white">Custom</span>
-                  <span className="text-white/60 ml-2 text-sm">pricing</span>
-                </div>
-                
-                <ul className="space-y-3 mb-6">
-                  <li className="flex items-start">
-                    <Check className="h-5 w-5 text-cyber mr-3 mt-0.5 flex-shrink-0" />
-                    <span className="text-white/80 text-sm">Custom CPU Cores</span>
-                  </li>
-                  <li className="flex items-start">
-                    <Check className="h-5 w-5 text-cyber mr-3 mt-0.5 flex-shrink-0" />
-                    <span className="text-white/80 text-sm">Custom RAM</span>
-                  </li>
-                  <li className="flex items-start">
-                    <Check className="h-5 w-5 text-cyber mr-3 mt-0.5 flex-shrink-0" />
-                    <span className="text-white/80 text-sm">Custom Storage</span>
-                  </li>
-                  <li className="flex items-start">
-                    <Check className="h-5 w-5 text-cyber mr-3 mt-0.5 flex-shrink-0" />
-                    <span className="text-white/80 text-sm">Unlimited Bandwidth</span>
-                  </li>
-                  <li className="flex items-start">
-                    <Check className="h-5 w-5 text-cyber mr-3 mt-0.5 flex-shrink-0" />
-                    <span className="text-white/80 text-sm">Premium Support</span>
-                  </li>
-                </ul>
-                
-                <Button asChild className="w-full py-3 bg-cyber hover:bg-cyber/90 text-midnight transition-all">
-                  <a href="https://stealthrdp.com/dash/index.php?rp=/store/build-your-own-rdp-vps" target="_blank" rel="noopener noreferrer">
-                    Configure & Deploy
-                  </a>
+          </div>
+          
+          {/* Plans Display Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+            {loading ? (
+              // Loading state
+              <>
+                <div className="bg-charcoal/50 border border-white/10 rounded-lg h-96 animate-pulse"></div>
+                <div className="bg-charcoal/50 border border-white/10 rounded-lg h-96 animate-pulse"></div>
+                <div className="bg-charcoal/50 border border-white/10 rounded-lg h-96 animate-pulse"></div>
+              </>
+            ) : error ? (
+              // Error state
+              <div className="col-span-3 text-center py-8">
+                <p className="text-red-400">{error}</p>
+                <Button variant="outline" className="mt-4" onClick={() => window.location.reload()}>
+                  Retry
                 </Button>
               </div>
-            </div>
-            
+            ) : (
+              // Filtered plans from the USA data center
+              usaPlans.slice(0, 3).map((plan, index) => (
+                <div 
+                  key={plan._id} 
+                  className={`bg-charcoal/50 border ${plan.popular ? 'border-electric' : 'border-white/10'} rounded-lg p-6 flex flex-col h-full relative ${plan.popular ? 'transform scale-105' : ''}`}
+                >
+                  {plan.popular && (
+                    <div className="absolute top-0 right-0 bg-electric text-midnight text-xs font-bold py-1 px-3 rounded-bl-lg">
+                      MOST POPULAR
+                    </div>
+                  )}
+                  
+                  <h3 className="text-xl font-bold text-white mb-1">{plan.name}</h3>
+                  <p className="text-white/60 text-sm mb-4">{plan.description}</p>
+                  
+                  <div className="flex items-baseline mb-5">
+                    <span className="text-3xl font-bold text-white">
+                      ${getCurrentPrice(plan)?.toFixed(2)}
+                    </span>
+                    <span className="text-white/60 ml-2 text-sm">/month</span>
+                    {billingCycle !== 'monthly' && getDiscount(plan, billingCycle) > 0 && (
+                      <span className="ml-2 text-xs text-cyber bg-cyber/10 px-1.5 py-0.5 rounded">
+                        Save {getDiscount(plan, billingCycle)}%
+                      </span>
+                    )}
+                  </div>
+                  
+                  <div className="space-y-3 mb-6 flex-grow">
+                    <div className="flex items-start gap-2">
+                      <Cpu className="h-4 w-4 text-electric mt-0.5" />
+                      <span className="text-white/80 text-sm">{plan.specs.cpu}</span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <HardDrive className="h-4 w-4 text-electric mt-0.5" />
+                      <span className="text-white/80 text-sm">{plan.specs.ram}</span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <Server className="h-4 w-4 text-electric mt-0.5" />
+                      <span className="text-white/80 text-sm">{plan.specs.storage}</span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <Globe className="h-4 w-4 text-electric mt-0.5" />
+                      <span className="text-white/80 text-sm">{plan.specs.bandwidth}</span>
+                    </div>
+                  </div>
+                  
+                  <Button asChild className={`${plan.popular ? 'bg-electric text-midnight hover:bg-cyber' : 'bg-midnight hover:bg-charcoal border border-electric text-electric'} w-full`}>
+                    <Link to={plan.purchaseUrl || '/plans'}>
+                      Select Plan
+                    </Link>
+                  </Button>
+                </div>
+              ))
+            )}
           </div>
           
-          {/* Social Proof + Risk Reversal */}
-          <div className="flex flex-col items-center mt-10 gap-5">
-            <Link to="/plans" className="inline-flex items-center gap-2 text-electric hover:text-cyber transition-colors">
-              <span>View All 11 Plans & Features</span>
-              <MoveRight size={16} />
-            </Link>
-            
-            {/* Added Money-Back Guarantee - Risk Reversal */}
-            <div className="bg-electric/5 border border-electric/10 rounded-lg py-3 px-6 flex items-center gap-3">
-              <ShieldCheck size={18} className="text-cyber" />
-              <div className="flex flex-col">
-                <p className="text-white text-sm font-medium">Secure Checkout Protection</p>
-                <p className="text-white/60 text-xs">SSL encrypted payment processing, your data is safe with us</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-      
-      {/* Enhanced Detailed Features Section (from Features.tsx) */}
-      <section className="py-12 md:py-16 bg-charcoal">
-        <div className="container">
-          <h2 className="text-3xl md:text-4xl font-bold font-montserrat text-center mb-10 text-white">
-            Everything You Need for Peak Performance
-              </h2>
-
-          {/* Feature Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-
-            {/* Feature: High-Performance CPU -> Benefit */}
-            <div className="flex items-start gap-4 p-6 rounded-lg bg-midnight/50 border border-white/10 card-hover">
-              <Cpu className="h-8 w-8 text-cyber flex-shrink-0 mt-1" strokeWidth={1.5} />
-              <div>
-                <h3 className="text-lg font-semibold font-montserrat text-white mb-1">Powerful Processing</h3>
-                <p className="text-white/70 text-sm leading-relaxed">
-                  Handle demanding workloads smoothly with dedicated high-performance CPU cores.
-                </p>
-                <Link to="/features#hardware" className="text-electric/80 text-xs hover:text-electric font-medium mt-2 inline-block">Learn More →</Link>
-              </div>
-            </div>
-
-            {/* Feature: NVMe SSD Storage -> Benefit */}
-            <div className="flex items-start gap-4 p-6 rounded-lg bg-midnight/50 border border-white/10 card-hover">
-              <HardDrive className="h-8 w-8 text-electric flex-shrink-0 mt-1" strokeWidth={1.5} />
-              <div>
-                <h3 className="text-lg font-semibold font-montserrat text-white mb-1">Ultra-Fast NVMe Storage</h3>
-                <p className="text-white/70 text-sm leading-relaxed">
-                  Experience rapid load times and file access with cutting-edge NVMe SSD technology.
-                </p>
-                 <Link to="/features#hardware" className="text-electric/80 text-xs hover:text-electric font-medium mt-2 inline-block">Learn More →</Link>
-             </div>
-            </div>
-
-            {/* Feature: Robust Network -> Benefit */}
-            <div className="flex items-start gap-4 p-6 rounded-lg bg-midnight/50 border border-white/10 card-hover">
-              <Globe className="h-8 w-8 text-cyber flex-shrink-0 mt-1" strokeWidth={1.5} />
-              <div>
-                <h3 className="text-lg font-semibold font-montserrat text-white mb-1">Unrestricted Network</h3>
-                <p className="text-white/70 text-sm leading-relaxed">
-                  Enjoy high-speed 1Gbps connectivity and unlimited bandwidth without limitations.
-                </p>
-                 <Link to="/features#hardware" className="text-electric/80 text-xs hover:text-electric font-medium mt-2 inline-block">Learn More →</Link>
-             </div>
-            </div>
-
-            {/* Feature: Advanced Security -> Benefit */}
-            <div className="flex items-start gap-4 p-6 rounded-lg bg-midnight/50 border border-white/10 card-hover">
-              <ShieldCheck className="h-8 w-8 text-electric flex-shrink-0 mt-1" strokeWidth={1.5} />
-              <div>
-                <h3 className="text-lg font-semibold font-montserrat text-white mb-1">Stay Secure & Protected</h3>
-                <p className="text-white/70 text-sm leading-relaxed">
-                  Benefit from multi-layered DDoS protection, clean IPs, and configurable firewalls.
-                </p>
-                 <Link to="/features#security" className="text-electric/80 text-xs hover:text-electric font-medium mt-2 inline-block">Learn More →</Link>
-             </div>
-            </div>
-
-            {/* Feature: Full Control -> Benefit */}
-            <div className="flex items-start gap-4 p-6 rounded-lg bg-midnight/50 border border-white/10 card-hover">
-              <Settings className="h-8 w-8 text-cyber flex-shrink-0 mt-1" strokeWidth={1.5} />
-              <div>
-                <h3 className="text-lg font-semibold font-montserrat text-white mb-1">Complete Server Control</h3>
-                <p className="text-white/70 text-sm leading-relaxed">
-                  Gain full root/admin access and manage your server easily via our intuitive control panel.
-                </p>
-                 <Link to="/features#management" className="text-electric/80 text-xs hover:text-electric font-medium mt-2 inline-block">Learn More →</Link>
-             </div>
-            </div>
-
-            {/* Feature: OS Choice -> Benefit */}
-            <div className="flex items-start gap-4 p-6 rounded-lg bg-midnight/50 border border-white/10 card-hover">
-              <Laptop className="h-8 w-8 text-electric flex-shrink-0 mt-1" strokeWidth={1.5} />
-              <div>
-                <h3 className="text-lg font-semibold font-montserrat text-white mb-1">Choose Your Environment</h3>
-                <p className="text-white/70 text-sm leading-relaxed">
-                  Select your preferred OS (Windows Server or Linux distros) during instant setup.
-                </p>
-                 <Link to="/features#management" className="text-electric/80 text-xs hover:text-electric font-medium mt-2 inline-block">Learn More →</Link>
-             </div>
-            </div>
-
-          </div>
-
-          {/* Add CTA for help/guidance */}
-          <div className="text-center mt-12">
-            <h3 className="text-xl font-semibold text-white mb-3">Not Sure Which Plan Fits?</h3>
-            <p className="text-white/70 mb-5 max-w-lg mx-auto">Let our experts help you find the perfect solution for your needs.</p>
+          <div className="text-center mt-8">
             <Button asChild variant="outline" className="border-electric text-electric hover:bg-electric/10">
-              <a href="https://stealthrdp.com/dash/submitticket.php" target="_blank" rel="noopener noreferrer">Contact Support</a>
-                </Button>
-          </div>
-
-        </div>
-      </section>
-
-
-      
-      {/* Final Call to Action - ZipTap Method */}
-      <section className="py-16 md:py-20 bg-gradient-to-t from-charcoal to-midnight relative overflow-hidden">
-        {/* Background pattern */}
-        <div className="absolute inset-0 z-0 opacity-20 bg-[radial-gradient(#00F0FF1A_1px,transparent_1px)] [background-size:16px_16px]"></div>
-        
-        <div className="container relative z-10">
-          <div className="max-w-6xl mx-auto">
-            {/* Two-column layout for better CTA hierarchy */}
-            <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-center">
-              {/* Left column: Conversion content */}
-              <div className="lg:col-span-3">
-                <span className="inline-block px-3 py-1 rounded-full bg-electric/10 text-electric text-xs font-medium mb-4">JOIN 10,877+ SERVER OWNERS</span>
-                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold font-montserrat mb-4 text-white leading-tight">
-                  Ready to Stop <span className="text-electric relative">Wasting Time<span className="absolute bottom-1 left-0 w-full h-2 bg-cyber/20 -rotate-1"></span></span> on Server Management?
-                </h2>
-                
-                <p className="text-white/80 text-lg mb-8 max-w-xl">
-                  Deploy your high-performance VPS in the next 60 seconds and focus on what matters — your actual work.
-                </p>
-
-                {/* ZipTap Bullets - Zero Risk, Instant, Proof points */}
-                <div className="space-y-4 mb-8">
-                  <div className="flex items-start gap-2">
-                    <div className="p-1 rounded-full bg-cyber/20 mt-1">
-                      <ShieldCheck className="h-4 w-4 text-cyber" strokeWidth={2} />
-                    </div>
-                    <div>
-                      <h3 className="text-white font-medium">Secure Transactions</h3>
-                      <p className="text-white/60 text-sm">Bank-level encryption keeps your payment information protected.</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start gap-2">
-                    <div className="p-1 rounded-full bg-electric/20 mt-1">
-                      <Clock className="h-4 w-4 text-electric" strokeWidth={2} />
-                    </div>
-                    <div>
-                      <h3 className="text-white font-medium">Instant Deployment</h3>
-                      <p className="text-white/60 text-sm">Full server access within 60 seconds of purchase. No waiting.</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start gap-2">
-                    <div className="p-1 rounded-full bg-cyber/20 mt-1">
-                      <Users className="h-4 w-4 text-cyber" strokeWidth={2} />
-                    </div>
-                    <div>
-                      <h3 className="text-white font-medium">Expert Support</h3>
-                      <p className="text-white/60 text-sm">24/7 technical assistance with average response under 2 hours.</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Primary CTA */}
-                <div className="flex flex-col sm:flex-row gap-4 mb-6">
-                  <Button asChild size="lg" className="bg-cyber text-midnight hover:bg-cyber/90 font-bold uppercase text-base px-8 py-3.5">
-                    <Link to="/plans">Deploy Your Server Now</Link>
-                  </Button>
-                  <Button asChild variant="outline" size="lg" className="border-electric text-electric hover:bg-electric/10 text-base">
-                    <a href="https://stealthrdp.com/dash/submitticket.php" target="_blank" rel="noopener noreferrer">Ask a Pre-Sales Question</a>
-                  </Button>
-                </div>
-                
-                {/* Price anchor + Scarcity */}
-                <p className="text-white/60 text-sm flex items-center gap-2">
-                  <span>Starting at just</span>
-                  <span className="text-cyber font-mono font-bold">$9.50/month</span>
-                  <span className="text-white/40">·</span>
-                  <span>Cancel anytime</span>
-                </p>
-              </div>
-              
-              {/* Right column: Authority + Testimonial */}
-              <div className="lg:col-span-2 bg-midnight/50 rounded-xl p-6 border border-white/10">
-                {/* Expert testimonial - Authority */}
-                <div className="mb-6">
-                  <div className="flex items-center gap-3 mb-4">
-                    <img src="/images/customer-avatar.png" alt="Enterprise Customer" className="w-12 h-12 rounded-full border-2 border-electric" />
-                    <div>
-                      <h4 className="text-white font-medium">Michael Robertson</h4>
-                      <p className="text-white/50 text-xs">CTO at TechFlow Solutions</p>
-                    </div>
-                  </div>
-                  <blockquote className="text-white/80 text-sm italic mb-4">
-                    "We migrated our entire development infrastructure to StealthRDP and reduced our hosting costs by 40% while improving performance. The migration was seamless, and we've had zero downtime in 8 months."
-                  </blockquote>
-                  
-                  {/* Stars */}
-                  <div className="flex items-center gap-1">
-                    {[...Array(5)].map((_, i) => (
-                      <svg key={i} xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-cyber" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                      </svg>
-                    ))}
-                  </div>
-                </div>
-                
-                {/* Recent activity feed - Social Proof */}
-                <div className="border-t border-white/10 pt-4">
-                  <h4 className="text-white/90 text-xs uppercase tracking-wider mb-3">Recent Customer Activity</h4>
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 bg-electric/10 rounded-full flex items-center justify-center">
-                        <Server className="h-4 w-4 text-electric" strokeWidth={1.5} />
-                      </div>
-                      <p className="text-white/70 text-xs">Ryan S. deployed a Silver plan <span className="text-white/40">3 minutes ago</span></p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 bg-cyber/10 rounded-full flex items-center justify-center">
-                        <ShieldCheck className="h-4 w-4 text-cyber" strokeWidth={1.5} />
-                      </div>
-                      <p className="text-white/70 text-xs">Jamie T. renewed for 12 months <span className="text-white/40">17 minutes ago</span></p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 bg-electric/10 rounded-full flex items-center justify-center">
-                        <Server className="h-4 w-4 text-electric" strokeWidth={1.5} />
-                      </div>
-                      <p className="text-white/70 text-xs">TEst Sercer<span className="text-white/40">25 minutes ago</span></p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+              <Link to="/plans" className="flex items-center gap-2">
+                View All Plans <MoveRight className="h-4 w-4" />
+              </Link>
+            </Button>
           </div>
         </div>
       </section>
