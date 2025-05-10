@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Test Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    button {
+      padding: 10px;
+      margin: 5px;
+      cursor: pointer;
+    }
+    pre {
+      background-color: #f5f5f5;
+      padding: 15px;
+      border-radius: 5px;
+      overflow: auto;
+    }
+    .server-group {
+      margin-bottom: 20px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>StealthRDP API Test</h1>
+  
+  <div class="server-group">
+    <h2>Regular Server (Port 5001)</h2>
+    <button onclick="testRegularServer()">Test Regular Server</button>
+    <button onclick="testRegularServerWithoutApi()">Test Regular Server (without /api prefix)</button>
+  </div>
+  
+  <div class="server-group">
+    <h2>Debug Server (Port 5005)</h2>
+    <button onclick="testDebugServer()">Test Debug Server</button>
+  </div>
+  
+  <div class="server-group">
+    <h2>Test Server (Port 5002)</h2>
+    <button onclick="testTestServer()">Test Test Server</button>
+  </div>
+  
+  <div>
+    <h3>Response:</h3>
+    <pre id="response">Click a button to test the API</pre>
+  </div>
+
+  <script>
+    async function makeRequest(url) {
+      try {
+        const responseElement = document.getElementById('response');
+        responseElement.textContent = 'Loading...';
+        
+        console.log(`Making request to: ${url}`);
+        const response = await fetch(url, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MWEzYzI0YjJjMDliYWVhMzE4MWZhOCIsImlhdCI6MTc0Njg0NjEzNywiZXhwIjoxNzQ2OTMyNTM3fQ.HJ0iAw7nV-X44HdWIoTNRM9C2_2qw9wP5_CUqbXK-LA'
+          }
+        });
+        
+        console.log('Response status:', response.status);
+        
+        const data = await response.json();
+        console.log('Response data:', data);
+        
+        responseElement.textContent = JSON.stringify(data, null, 2);
+      } catch (error) {
+        console.error('Error making request:', error);
+        document.getElementById('response').textContent = `Error: ${error.message}`;
+      }
+    }
+    
+    function testRegularServer() {
+      makeRequest('http://localhost:5001/api/privacy-policy/all');
+    }
+    
+    function testRegularServerWithoutApi() {
+      makeRequest('http://localhost:5001/privacy-policy/all');
+    }
+    
+    function testDebugServer() {
+      makeRequest('http://localhost:5005/api/privacy-policy/all');
+    }
+    
+    function testTestServer() {
+      makeRequest('http://localhost:5002/api/privacy-policy/all');
+    }
+  </script>
+</body>
+</html> 

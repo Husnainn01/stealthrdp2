@@ -214,6 +214,13 @@ const adminMenuCategories: MenuCategory[] = [
         href: '/admin/faqs',
         description: 'Manage frequently asked questions',
         badge: { variant: 'new' }
+      },
+      { 
+        icon: <FileText className="h-5 w-5" />, 
+        label: 'Privacy Policy', 
+        href: '/admin/privacy-policy',
+        description: 'Manage privacy policy content',
+        badge: { variant: 'new' }
       }
     ]
   },

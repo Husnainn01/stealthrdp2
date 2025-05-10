@@ -125,13 +125,12 @@ const Login: React.FC = () => {
         localStorage.setItem('auth_token', data.token);
         localStorage.setItem('user_data', JSON.stringify(data));
         
-        // Navigate to admin dashboard
-        setDebugInfo(prev => prev + `\nRedirecting to dashboard...`);
+        // Set user state in the auth context - critical for proper login state
+        await login(username, password);
         
-        // Short delay to ensure token is stored before navigation
-        setTimeout(() => {
-          navigate('/admin');
-        }, 500);
+        // Navigate to admin dashboard after state is updated
+        setDebugInfo(prev => prev + `\nRedirecting to dashboard...`);
+        navigate('/admin');
       } else {
         setDebugInfo(prev => prev + `\nLogin failed. HTTP status: ${response.status}`);
         setFormError(`Login failed: ${response.statusText}`);
@@ -146,6 +145,8 @@ const Login: React.FC = () => {
       setDebugInfo(prev => prev + '\nFalling back to normal login method...');
       try {
         await login(username, password);
+        // After successful login via auth context, navigate to admin dashboard
+        navigate('/admin');
       } catch (loginErr) {
         console.error('Fallback login also failed:', loginErr);
       }

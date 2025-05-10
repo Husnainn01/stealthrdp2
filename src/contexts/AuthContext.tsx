@@ -96,11 +96,28 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setIsLoading(true);
       setError(null);
       
-      // Make login request
+      // Check if we already have a token and userData from the direct login
+      const existingToken = localStorage.getItem('auth_token');
+      const existingUserData = localStorage.getItem('user_data');
+      
+      if (existingToken && existingUserData) {
+        try {
+          // Use the existing user data
+          const userData = JSON.parse(existingUserData);
+          setUser({ ...userData, token: existingToken });
+          return;
+        } catch (parseErr) {
+          console.error('Error parsing existing user data:', parseErr);
+          // Continue with regular login if parsing fails
+        }
+      }
+      
+      // Make login request if we don't have existing data
       const data = await authApi.login({ username, password });
       
       // Save token to localStorage
       localStorage.setItem('auth_token', data.token);
+      localStorage.setItem('user_data', JSON.stringify(data));
       
       // Set user state
       setUser(data);
@@ -110,6 +127,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to login');
       setUser(null);
+      throw err; // Re-throw to handle in the component
     } finally {
       setIsLoading(false);
     }

@@ -247,7 +247,7 @@ const ServerStatus: React.FC = () => {
             )}
           </h2>
           <div className="flex space-x-3">
-            <motion.button
+            {/* <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={testApiConnection}
@@ -255,7 +255,7 @@ const ServerStatus: React.FC = () => {
               disabled={refreshing || loading}
             >
               Test API
-            </motion.button>
+            </motion.button> */}
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}

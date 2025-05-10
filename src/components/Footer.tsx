@@ -42,7 +42,7 @@ const Footer = () => {
             <ul className="space-y-2">
               <li><Link to="/about" className="text-gray-400 hover:text-electric transition-colors">About Us</Link></li>
               <li><a href="https://stealthrdp.com/dash/submitticket.php" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-electric transition-colors">Contact Support</a></li>
-              <li><a href="https://docs.stealthrdp.com/hc/stealth-rdp-docs/en/categories/terms-and-conditions" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-electric transition-colors">Privacy Policy</a></li>
+              <li><Link to="/privacy-policy" className="text-gray-400 hover:text-electric transition-colors">Privacy Policy</Link></li>
               <li><a href="https://docs.stealthrdp.com/hc/stealth-rdp-docs/en/categories/terms-and-conditions" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-electric transition-colors">Terms of Service</a></li>
             </ul>
           </div>

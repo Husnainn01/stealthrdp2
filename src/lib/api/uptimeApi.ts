@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // API endpoints - Using our simplified proxy server endpoint
-const BASE_URL = 'http://localhost:5002/api/uptime';
+const BASE_URL = 'http://localhost:5001/api/uptime';
 
 // Interface for monitor data
 export interface Monitor {

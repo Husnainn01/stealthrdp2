@@ -13,6 +13,7 @@ const planController = require('../controllers/planController');
 const faqController = require('../controllers/faqController');
 const blogController = require('../controllers/blogController');
 const mediaController = require('../controllers/mediaController');
+const privacyPolicyController = require('../controllers/privacyPolicyController');
 
 // Testimonial routes
 router.route('/testimonials')
@@ -92,6 +93,18 @@ router.route('/media')
 
 router.route('/media/:id')
   .delete(mediaController.deleteMedia);
+
+// Privacy Policy routes
+router.route('/privacy-policy')
+  .get(privacyPolicyController.getPrivacyPolicy)
+  .post(privacyPolicyController.updatePrivacyPolicy);
+
+router.route('/privacy-policy/all')
+  .get(privacyPolicyController.getAllPrivacyPolicies);
+
+router.route('/privacy-policy/:id')
+  .put(privacyPolicyController.updatePrivacyPolicy)
+  .delete(privacyPolicyController.deletePrivacyPolicy);
 
 // UptimeRobot API proxy endpoint
 router.post('/uptime', async (req, res) => {

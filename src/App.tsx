@@ -13,6 +13,7 @@ import BlogDetailPage from "./pages/BlogDetailPage";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import ServerStatusPage from "./pages/ServerStatus";
+import PrivacyPolicyPage from "./pages/PrivacyPolicy";
 import AdminLayout from "./admin/components/AdminLayout";
 import Dashboard from "./admin/pages/Dashboard";
 import PlansManager from "./admin/pages/PlansManager";
@@ -21,6 +22,7 @@ import TestimonialsManager from "./admin/pages/TestimonialsManager";
 import FAQManager from "./admin/pages/FAQManager";
 import BlogManager from "./admin/pages/BlogManager";
 import MediaManager from "./admin/pages/MediaManager";
+import PrivacyPolicyManager from "./admin/pages/PrivacyPolicyManager";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./contexts/AuthContext";
 
@@ -43,6 +45,7 @@ const App = () => (
             <Route path="/blog" element={<BlogPage />} />
             <Route path="/blog/:slug" element={<BlogDetailPage />} />
             <Route path="/server-status" element={<ServerStatusPage />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
             <Route path="/login" element={<Login />} />
             
             {/* Protected Admin Routes */}
@@ -55,6 +58,7 @@ const App = () => (
                 <Route path="faqs" element={<FAQManager />} />
                 <Route path="blog" element={<BlogManager />} />
                 <Route path="media" element={<MediaManager />} />
+                <Route path="privacy-policy" element={<PrivacyPolicyManager />} />
                 <Route path="settings" element={<div className="text-white">Settings - Coming Soon</div>} />
               </Route>
             </Route>
