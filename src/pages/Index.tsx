@@ -7,6 +7,9 @@ import { Check, Zap, ShieldCheck, Clock, Users, Code, Cpu, HardDrive, Globe, Set
 import { planApi, PlanApiResponse } from '@/lib/api/planApi';
 import { testimonialApi } from '@/lib/api/testimonialApi';
 import { ITestimonial } from '@/lib/models/Testimonial';
+import DeploymentCTA from '@/components/sections/DeploymentCTA';
+import TestimonialCard from '@/components/sections/TestimonialCard';
+import { generateRecentActivities, sampleRecentActivities } from '@/lib/data/recentActivity';
 
 // Import slick carousel CSS
 import "slick-carousel/slick/slick.css";
@@ -415,6 +418,12 @@ const Index = () => {
   const [testimonials, setTestimonials] = useState<ITestimonial[]>([]);
   const [testimonialsLoading, setTestimonialsLoading] = useState<boolean>(true);
   
+  // Add state for random activities
+  const [recentActivities, setRecentActivities] = useState(sampleRecentActivities);
+  
+  // Add state for current testimonial index
+  const [currentTestimonialIndex, setCurrentTestimonialIndex] = useState(0);
+  
   // Calculate discount percentage for each cycle
   const getDiscount = (plan: PlanApiResponse | undefined, cycle: string) => {
     if (!plan || !plan.billingOptions) return 0;
@@ -573,6 +582,30 @@ const Index = () => {
     fetchTestimonials();
   }, []);
 
+  // Add useEffect to periodically refresh activity data
+  useEffect(() => {
+    // Initial random activities
+    setRecentActivities(generateRecentActivities(3));
+    
+    // Refresh activities every 30 seconds
+    const interval = setInterval(() => {
+      setRecentActivities(generateRecentActivities(3));
+    }, 30000);
+    
+    return () => clearInterval(interval);
+  }, []);
+
+  // Add useEffect to rotate testimonials with animation-friendly timing
+  useEffect(() => {
+    if (testimonials.length > 1) {
+      const interval = setInterval(() => {
+        setCurrentTestimonialIndex(prev => (prev + 1) % testimonials.length);
+      }, 10000); // Rotate every 10 seconds to allow animations to complete and users to read content
+      
+      return () => clearInterval(interval);
+    }
+  }, [testimonials.length]);
+
   // Add calculateSavings function
   const calculateSavings = () => {
     // Get input values
@@ -619,8 +652,34 @@ const Index = () => {
     if (recommendedPlanDiv) recommendedPlanDiv.classList.remove('hidden');
   };
 
-  // Get the featured testimonial (first one by display order or a fallback)
-  const featuredTestimonial = testimonials.length > 0 ? testimonials[0] : null;
+  // Get current testimonial safely with fallback
+  const getCurrentTestimonial = () => {
+    if (testimonials.length === 0) return null;
+    return testimonials[currentTestimonialIndex];
+  };
+
+  // Add handlers for testimonial navigation
+  const handlePreviousTestimonial = () => {
+    if (testimonials.length > 1) {
+      setCurrentTestimonialIndex(prev => 
+        prev === 0 ? testimonials.length - 1 : prev - 1
+      );
+    }
+  };
+  
+  const handleNextTestimonial = () => {
+    if (testimonials.length > 1) {
+      setCurrentTestimonialIndex(prev => 
+        (prev + 1) % testimonials.length
+      );
+    }
+  };
+  
+  const goToTestimonial = (index: number) => {
+    if (testimonials.length > 1 && index >= 0 && index < testimonials.length) {
+      setCurrentTestimonialIndex(index);
+    }
+  };
 
   return (
     <Layout>
@@ -665,17 +724,14 @@ const Index = () => {
             </div>
             
             {/* Starting Price Point with Loss Aversion */}
-            <div className="flex items-baseline mb-5">
-              <span className="text-3xl font-bold text-white">
-                ${usaPlans.length > 0 ? (getCurrentPrice(usaPlans[0]) || usaPlans[0]?.monthlyPrice).toFixed(2) : '9.50'}
-              </span>
-              <span className="text-white/60 ml-2 text-sm">/month</span>
-              {billingCycle !== 'monthly' && usaPlans.length > 0 && getDiscount(usaPlans[0], billingCycle) > 0 && (
-                <span className="ml-2 text-xs text-cyber bg-cyber/10 px-1.5 py-0.5 rounded">
-                  Save {getDiscount(usaPlans[0], billingCycle)}%
-                </span>
-              )}
-            </div>
+            <p className="mt-6 text-sm text-white/70 fade-in flex items-center justify-center gap-1" style={{ animationDelay: '0.6s' }}>
+              <span className="text-white/50">Starting at only</span> 
+              <span className="font-mono text-cyber font-bold">$9.50/month</span>
+              <span className="text-white/50 ml-1">·</span>
+              <span className="text-white/70">No hidden fees</span>
+              <span className="text-white/50 ml-1">·</span>
+              <span className="text-white/70">Cancel anytime</span>
+            </p>
           </div>
         </div>
       </section>
@@ -1054,12 +1110,14 @@ const Index = () => {
       </section>
       
       {/* Pricing Section - Advanced Pricing Psychology */}
-      <section className="py-16 md:py-24 bg-midnight relative">
-        <div className="plans-background"></div>
-        <div className="container mx-auto px-4 max-w-6xl">
-          <div className="text-center mb-16">
+      <section className="py-16 md:py-24 bg-midnight relative overflow-hidden before:content-[''] before:absolute before:inset-0 before:bg-[radial-gradient(circle_at_50%_-20%,#0B0F2D,#090C24_70%)] before:z-0">
+        <div className="absolute inset-0 z-0 opacity-20 bg-[radial-gradient(#00F0FF10_1px,transparent_1px)] [background-size:24px_24px]"></div>
+        <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-electric/5 blur-[150px] rounded-full"></div>
+        <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-cyber/5 blur-[150px] rounded-full"></div>
+        <div className="container mx-auto px-4 max-w-6xl relative z-10">
+          <div className="text-center mb-10">
             <span className="inline-block px-4 py-1 rounded-full bg-electric/10 text-electric text-sm font-medium mb-4">Tailored Server Solutions</span>
-            <h2 className="text-3xl md:text-4xl font-bold font-montserrat mb-4 text-white">
+            <h2 className="text-3xl md:text-5xl font-bold font-montserrat mb-4 text-white">
               Select Your Performance Level
             </h2>
             <p className="text-white/80 max-w-2xl mx-auto text-lg">
@@ -1068,54 +1126,45 @@ const Index = () => {
           </div>
           
           {/* Pricing Toggle - Price Anchoring */}
-          <div className="max-w-lg mx-auto mb-10">
-            <div className="bg-charcoal/50 rounded-lg p-2 flex items-center">
-              <div className="grid grid-cols-4 gap-2 w-full">
-                <div 
-                  className={`text-center py-2 px-2 rounded cursor-pointer transition-colors ${billingCycle === 'monthly' ? 'bg-midnight border border-electric' : 'hover:bg-midnight/50'}`}
+          <div className="max-w-md mx-auto mb-12">
+            <div className="flex justify-center">
+              <div className="inline-flex bg-[#0A0E24] rounded-full p-1.5 border border-white/5 shadow-lg">
+                <button 
+                  className={`px-5 py-2 text-sm font-medium rounded-full transition-all ${billingCycle === 'monthly' ? 'bg-[#0F1533] text-white shadow-sm border border-[#1A2348]' : 'text-white/60 hover:text-white/80'}`}
                   onClick={() => setBillingCycle('monthly')}
                 >
-                  <p className={`text-xs font-medium ${billingCycle === 'monthly' ? 'text-white' : 'text-white/70'}`}>Monthly</p>
-                </div>
-                <div 
-                  className={`text-center py-2 px-2 rounded cursor-pointer transition-colors ${!isBillingOptionEnabled('quarterly') ? 'opacity-50 cursor-not-allowed' : billingCycle === 'quarterly' ? 'bg-midnight border border-electric' : 'hover:bg-midnight/50'}`}
+                  Monthly
+                </button>
+                <button 
+                  className={`px-5 py-2 text-sm font-medium rounded-full transition-all ${!isBillingOptionEnabled('quarterly') ? 'opacity-50 cursor-not-allowed' : billingCycle === 'quarterly' ? 'bg-[#0F1533] text-white shadow-sm border border-[#1A2348]' : 'text-white/60 hover:text-white/80'}`}
                   onClick={() => isBillingOptionEnabled('quarterly') && setBillingCycle('quarterly')}
+                  disabled={!isBillingOptionEnabled('quarterly')}
                 >
-                  <p className={`text-xs ${billingCycle === 'quarterly' ? 'text-white font-medium' : 'text-white/70'}`}>
-                    Quarterly 
-                    {usaPlans.length > 0 && usaPlans[0].billingOptions?.quarterly?.enabled && (
-                      <span className="text-cyber text-[10px] ml-1">-{usaPlans[0].billingOptions.quarterly.discountPercentage}%</span>
-                    )}
-                  </p>
-                </div>
-                <div 
-                  className={`text-center py-2 px-2 rounded cursor-pointer transition-colors ${!isBillingOptionEnabled('annually') ? 'opacity-50 cursor-not-allowed' : billingCycle === 'annually' ? 'bg-midnight border border-electric' : 'hover:bg-midnight/50'}`}
+                  Quarterly
+                  <span className="ml-1 text-xs text-white/60">-10%</span>
+                </button>
+                <button 
+                  className={`px-5 py-2 text-sm font-medium rounded-full transition-all ${!isBillingOptionEnabled('annually') ? 'opacity-50 cursor-not-allowed' : billingCycle === 'annually' ? 'bg-[#0F1533] text-white shadow-sm border border-[#1A2348]' : 'text-white/60 hover:text-white/80'}`}
                   onClick={() => isBillingOptionEnabled('annually') && setBillingCycle('annually')}
+                  disabled={!isBillingOptionEnabled('annually')}
                 >
-                  <p className={`text-xs ${billingCycle === 'annually' ? 'text-white font-medium' : 'text-white/70'}`}>
-                    Annual 
-                    {usaPlans.length > 0 && usaPlans[0].billingOptions?.annual?.enabled && (
-                      <span className="text-cyber text-[10px] ml-1">-{usaPlans[0].billingOptions.annual.discountPercentage}%</span>
-                    )}
-                  </p>
-                </div>
-                <div 
-                  className={`text-center py-2 px-2 rounded cursor-pointer transition-colors ${!isBillingOptionEnabled('biannually') ? 'opacity-50 cursor-not-allowed' : billingCycle === 'biannually' ? 'bg-midnight border border-electric' : 'hover:bg-midnight/50'}`}
+                  Annual
+                  <span className="ml-1 text-xs text-cyber">-25%</span>
+                </button>
+                <button 
+                  className={`px-5 py-2 text-sm font-medium rounded-full transition-all ${!isBillingOptionEnabled('biannually') ? 'opacity-50 cursor-not-allowed' : billingCycle === 'biannually' ? 'bg-[#0F1533] text-white shadow-sm border border-[#1A2348]' : 'text-white/60 hover:text-white/80'}`}
                   onClick={() => isBillingOptionEnabled('biannually') && setBillingCycle('biannually')}
+                  disabled={!isBillingOptionEnabled('biannually')}
                 >
-                  <p className={`text-xs ${billingCycle === 'biannually' ? 'text-white font-medium' : 'text-white/70'}`}>
-                    Biannual 
-                    {usaPlans.length > 0 && usaPlans[0].billingOptions?.biannual?.enabled && (
-                      <span className="text-cyber text-[10px] ml-1">-{usaPlans[0].billingOptions.biannual.discountPercentage}%</span>
-                    )}
-                  </p>
-                </div>
+                  Biannual
+                  <span className="ml-1 text-xs text-white/60">-30%</span>
+                </button>
               </div>
             </div>
           </div>
           
           {/* Plans Display Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 relative items-center perspective-[1000px]">
             {loading ? (
               // Loading state
               <>
@@ -1136,60 +1185,109 @@ const Index = () => {
               usaPlans.slice(0, 3).map((plan, index) => (
                 <div 
                   key={plan._id} 
-                  className={`bg-charcoal/50 border ${plan.popular ? 'border-electric' : 'border-white/10'} rounded-lg p-6 flex flex-col h-full relative ${plan.popular ? 'transform scale-105' : ''}`}
+                  className={`
+                    bg-midnight/80 border-2 rounded-xl p-6 flex flex-col h-full relative
+                    transition-all duration-300 hover:shadow-[0_10px_40px_rgba(0,240,255,0.3)]
+                    ${index === 1 
+                      ? 'z-20 transform md:scale-[1.05] border-electric shadow-[0_0_20px_rgba(0,240,255,0.25)] hover:shadow-[0_15px_40px_rgba(0,240,255,0.4)] md:hover:scale-[1.08]' 
+                      : 'z-10 border-white/10 md:hover:scale-[1.03] hover:border-electric/70 hover:z-20'}
+                    hover:-translate-y-2
+                  `}
                 >
-                  {plan.popular && (
-                    <div className="absolute top-0 right-0 bg-electric text-midnight text-xs font-bold py-1 px-3 rounded-bl-lg">
-                      MOST POPULAR
+                  {(index === 1 || plan.popular) && (
+                    <div className="absolute top-4 right-4 bg-electric/20 text-electric text-xs font-bold py-1 px-3 rounded-full border border-electric/30">
+                      Best Value
                     </div>
                   )}
                   
                   <h3 className="text-xl font-bold text-white mb-1">{plan.name}</h3>
-                  <p className="text-white/60 text-sm mb-4">{plan.description}</p>
+                  <p className="text-white/60 text-sm mb-5">{plan.description}</p>
                   
-                  <div className="flex items-baseline mb-5">
-                    <span className="text-3xl font-bold text-white">
+                  <div className="flex items-baseline mb-6">
+                    <span className="text-4xl font-bold text-white bg-clip-text text-transparent bg-gradient-to-r from-white to-electric">
                       ${getCurrentPrice(plan)?.toFixed(2)}
                     </span>
                     <span className="text-white/60 ml-2 text-sm">/month</span>
                     {billingCycle !== 'monthly' && getDiscount(plan, billingCycle) > 0 && (
-                      <span className="ml-2 text-xs text-cyber bg-cyber/10 px-1.5 py-0.5 rounded">
+                      <span className="ml-3 text-xs text-cyber bg-cyber/10 px-2 py-1 rounded-full">
                         Save {getDiscount(plan, billingCycle)}%
                       </span>
                     )}
                   </div>
                   
-                  <div className="space-y-3 mb-6 flex-grow">
-                    <div className="flex items-start gap-2">
-                      <Cpu className="h-4 w-4 text-electric mt-0.5" />
-                      <span className="text-white/80 text-sm">{plan.specs.cpu}</span>
+                  <div className="space-y-4 mb-8 flex-grow">
+                    <div className="flex items-center gap-3">
+                      <div className="flex-shrink-0 w-5 h-5 rounded-full bg-charcoal flex items-center justify-center">
+                        <Check className="h-3 w-3 text-cyber" />
+                      </div>
+                      <span className="text-white/90 text-sm">{plan.specs.cpu} CPU Cores</span>
                     </div>
-                    <div className="flex items-start gap-2">
-                      <HardDrive className="h-4 w-4 text-electric mt-0.5" />
-                      <span className="text-white/80 text-sm">{plan.specs.ram}</span>
+                    <div className="flex items-center gap-3">
+                      <div className="flex-shrink-0 w-5 h-5 rounded-full bg-charcoal flex items-center justify-center">
+                        <Check className="h-3 w-3 text-cyber" />
+                      </div>
+                      <span className="text-white/90 text-sm">{plan.specs.ram}</span>
                     </div>
-                    <div className="flex items-start gap-2">
-                      <Server className="h-4 w-4 text-electric mt-0.5" />
-                      <span className="text-white/80 text-sm">{plan.specs.storage}</span>
+                    <div className="flex items-center gap-3">
+                      <div className="flex-shrink-0 w-5 h-5 rounded-full bg-charcoal flex items-center justify-center">
+                        <Check className="h-3 w-3 text-cyber" />
+                      </div>
+                      <span className="text-white/90 text-sm">{plan.specs.storage}</span>
                     </div>
-                    <div className="flex items-start gap-2">
-                      <Globe className="h-4 w-4 text-electric mt-0.5" />
-                      <span className="text-white/80 text-sm">{plan.specs.bandwidth}</span>
+                    <div className="flex items-center gap-3">
+                      <div className="flex-shrink-0 w-5 h-5 rounded-full bg-charcoal flex items-center justify-center">
+                        <Check className="h-3 w-3 text-cyber" />
+                      </div>
+                      <span className="text-white/90 text-sm">Unlimited Bandwidth</span>
                     </div>
+                    {(index === 1 || plan.popular) && (
+                      <div className="flex items-center gap-3">
+                        <div className="flex-shrink-0 w-5 h-5 rounded-full bg-charcoal flex items-center justify-center">
+                          <Check className="h-3 w-3 text-cyber" />
+                        </div>
+                        <span className="text-white/90 text-sm">Performance Boost</span>
+                      </div>
+                    )}
+                    {index === 2 && (
+                      <div className="flex items-center gap-3">
+                        <div className="flex-shrink-0 w-5 h-5 rounded-full bg-charcoal flex items-center justify-center">
+                          <Check className="h-3 w-3 text-cyber" />
+                        </div>
+                        <span className="text-white/90 text-sm">Premium Support</span>
+                      </div>
+                    )}
                   </div>
                   
-                  <Button asChild className={`${plan.popular ? 'bg-electric text-midnight hover:bg-cyber' : 'bg-midnight hover:bg-charcoal border border-electric text-electric'} w-full`}>
-                    <Link to={plan.purchaseUrl || '/plans'}>
-                      Select Plan
-                    </Link>
-                  </Button>
+                  {index === 1 || plan.popular ? (
+                    <Button asChild className="bg-electric text-midnight hover:bg-electric/90 transition-all font-medium w-full py-6 shadow-[0_4px_12px_rgba(0,240,255,0.3)] hover:shadow-[0_4px_20px_rgba(0,240,255,0.5)]">
+                      <Link to={plan.purchaseUrl || '/plans'}>
+                        Deploy Now
+                      </Link>
+                    </Button>
+                  ) : index === 2 ? (
+                    <Button asChild className="bg-cyber text-midnight hover:bg-cyber/90 transition-all font-medium w-full py-6 hover:shadow-[0_4px_12px_rgba(34,212,107,0.3)]">
+                      <Link to={plan.purchaseUrl || '/plans'}>
+                        Deploy Now
+                      </Link>
+                    </Button>
+                  ) : (
+                    <Button asChild className="bg-charcoal/50 border border-white/20 hover:border-electric text-white hover:bg-charcoal transition-all font-medium w-full py-6 hover:text-electric">
+                      <Link to={plan.purchaseUrl || '/plans'}>
+                        Deploy Now
+                      </Link>
+                    </Button>
+                  )}
+                  
+                  <div className="text-xs text-white/50 text-center mt-3">
+                    Deploy in 60 seconds + <span className="text-electric">FREE migration</span>
+                  </div>
                 </div>
               ))
             )}
           </div>
           
           <div className="text-center mt-8">
-            <Button asChild variant="outline" className="border-electric text-electric hover:bg-electric/10">
+            <Button asChild variant="outline" className="bg-electric/10 text-electric border-electric hover:bg-electric hover:text-midnight transition-all duration-300 font-medium px-6 py-2">
               <Link to="/plans" className="flex items-center gap-2">
                 View All Plans <MoveRight className="h-4 w-4" />
               </Link>
@@ -1197,8 +1295,49 @@ const Index = () => {
           </div>
         </div>
       </section>
-
-      {/* Interactive Savings Calculator - Keep the JSX but remove the script tag */}
+      
+      {/* Ready to Stop Wasting Time Section */}
+      <section className="py-16 md:py-24 bg-midnight relative overflow-hidden before:content-[''] before:absolute before:inset-0 before:bg-[radial-gradient(circle_at_50%_-20%,#0B0F2D,#090C24_70%)] before:z-0">
+        <div className="absolute inset-0 z-0 opacity-10 bg-[radial-gradient(#00F0FF10_1px,transparent_1px)] [background-size:16px_16px]"></div>
+        <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-electric/5 blur-[150px] rounded-full"></div>
+        <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-cyber/5 blur-[150px] rounded-full"></div>
+        <div className="container mx-auto px-4 max-w-6xl relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Left Column - Main CTA */}
+            <DeploymentCTA startingPrice="9.50" />
+            
+            {/* Right Column - Testimonial and Activity */}
+            {testimonialsLoading ? (
+              <div className="bg-[#0A0E24] rounded-xl border border-white/5 p-6 shadow-xl h-[500px] animate-pulse flex items-center justify-center">
+                <p className="text-white/50">Loading testimonials...</p>
+              </div>
+            ) : testimonials.length > 0 ? (
+              <TestimonialCard 
+                testimonial={{
+                  name: getCurrentTestimonial()?.authorName || "Customer",
+                  position: getCurrentTestimonial()?.authorPosition || "Customer",
+                  company: getCurrentTestimonial()?.authorCompany || "Happy Client",
+                  image: getCurrentTestimonial()?.avatarUrl || "https://randomuser.me/api/portraits/men/42.jpg",
+                  quote: getCurrentTestimonial()?.quote || "No testimonial available",
+                  rating: 5
+                }}
+                recentActivities={recentActivities}
+                clientBadge={testimonials.length > 1 ? `${currentTestimonialIndex + 1}/${testimonials.length}` : "Verified Customer"}
+                onPrevious={handlePreviousTestimonial}
+                onNext={handleNextTestimonial}
+                goToIndex={goToTestimonial}
+                hasMultiple={testimonials.length > 1}
+                currentIndex={currentTestimonialIndex}
+                totalCount={testimonials.length}
+              />
+            ) : (
+              <div className="bg-[#0A0E24] rounded-xl border border-white/5 p-6 shadow-xl">
+                <p className="text-white/70">No testimonials available yet.</p>
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
 
     </Layout>
   );

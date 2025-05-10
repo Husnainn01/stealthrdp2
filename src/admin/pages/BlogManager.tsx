@@ -48,6 +48,7 @@ import { IBlog, BlogCategory } from '@/lib/models/Blog';
 import { Badge } from '@/components/ui/badge';
 import BlogForm from '@/admin/components/BlogForm';
 import { format } from 'date-fns';
+import { toast } from '@/components/ui/use-toast';
 
 // Interface for Blog form data
 interface BlogFormData {
@@ -245,6 +246,22 @@ const BlogManager: React.FC = () => {
     try {
       const updatedBlog = await blogApi.updateBlog(id, { isPublished: !currentStatus });
       setBlogs(blogs.map(blog => blog._id === id ? updatedBlog : blog));
+      
+      // Add a toast notification to provide clear feedback
+      if (!currentStatus) {
+        toast({
+          title: "Blog Published Successfully",
+          description: "Your blog post is now visible on your website.",
+          variant: "default"
+        });
+      } else {
+        toast({
+          title: "Blog Unpublished",
+          description: "Your blog post is now hidden from your website.",
+          variant: "default"
+        });
+      }
+      
       console.log(`Blog ${currentStatus ? 'unpublished' : 'published'} successfully`);
     } catch (err) {
       console.error('Error toggling blog published status:', err);
@@ -252,6 +269,12 @@ const BlogManager: React.FC = () => {
       setBlogs(blogs.map(blog => 
         blog._id === id ? {...blog, isPublished: !currentStatus} as IBlog : blog
       ));
+      
+      toast({
+        title: "Action Failed",
+        description: "There was an error updating the blog status. Please try again.",
+        variant: "destructive"
+      });
     }
   };
 
@@ -271,6 +294,14 @@ const BlogManager: React.FC = () => {
           setBlogs(blogs.map(blog => 
             blog._id === currentBlog._id ? updatedBlog : blog
           ));
+          
+          toast({
+            title: "Blog Updated",
+            description: formData.isPublished 
+              ? "Your blog post has been updated and is published."
+              : "Your blog post has been updated but is still in draft mode.",
+            variant: "default"
+          });
         } catch (apiError) {
           console.error('API Error, updating in state only:', apiError);
           // Update in state only if the API fails
@@ -282,6 +313,12 @@ const BlogManager: React.FC = () => {
           setBlogs(blogs.map(blog => 
             blog._id === currentBlog._id ? updatedBlog as IBlog : blog
           ));
+          
+          toast({
+            title: "Update Failed",
+            description: "Changes were saved locally only. API connection failed.",
+            variant: "destructive"
+          });
         }
       } else {
         // Create new blog
@@ -289,6 +326,14 @@ const BlogManager: React.FC = () => {
         try {
           const newBlog = await blogApi.createBlog(formData as any);
           setBlogs([...blogs, newBlog]);
+          
+          toast({
+            title: "Blog Created Successfully",
+            description: formData.isPublished 
+              ? "Your new blog post is now published and visible on your website."
+              : "Your blog post was saved as a draft. It won't appear on your website until you publish it.",
+            variant: "default"
+          });
         } catch (apiError) {
           console.error('API Error, creating mock in state only:', apiError);
           // Create a mock blog if the API fails
@@ -299,6 +344,12 @@ const BlogManager: React.FC = () => {
             updatedAt: new Date()
           };
           setBlogs([...blogs, newBlog as IBlog]);
+          
+          toast({
+            title: "Creation Failed",
+            description: "Blog was saved locally only. API connection failed.",
+            variant: "destructive"
+          });
         }
       }
       
@@ -306,6 +357,12 @@ const BlogManager: React.FC = () => {
       setShowForm(false);
     } catch (err) {
       console.error('Error saving blog:', err);
+      
+      toast({
+        title: "Save Failed",
+        description: "There was an error saving your blog post. Please try again.",
+        variant: "destructive"
+      });
     }
   };
 

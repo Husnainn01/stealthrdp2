@@ -582,25 +582,32 @@ const BlogForm: React.FC<BlogFormProps> = ({
               </TabsContent>
 
               <TabsContent value="seo" className="pt-6 px-6 space-y-6 m-0 data-[state=active]:block">
-                {/* Published Status Field */}
-                <div className="flex items-center space-x-2 p-4 bg-charcoal/30 rounded-lg border border-white/10">
-                  <div className="flex-1">
-                    <Label htmlFor="isPublished" className="text-white flex items-center gap-2 mb-1">
-                      <Eye className="h-4 w-4 text-electric" />
-                      <span>Published Status</span>
-                    </Label>
-                    <p className="text-white/50 text-xs">
-                      {formData.isPublished 
-                        ? 'This post is published and visible to the public' 
-                        : 'This post is a draft and only visible to admins'}
-                    </p>
+                {/* Published Field - Make it more prominent */}
+                <div className="mt-6 p-4 bg-charcoal/50 border border-white/10 rounded-md">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Eye className="h-5 w-5 text-electric" />
+                      <div>
+                        <h3 className="text-white font-medium">Publish Status</h3>
+                        <p className="text-white/60 text-sm">
+                          {formData.isPublished 
+                            ? "This post will be visible on your blog" 
+                            : "This post will be saved as a draft and won't appear on your blog"}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Label htmlFor="isPublished" className={`text-sm ${formData.isPublished ? 'text-cyber' : 'text-white/60'}`}>
+                        {formData.isPublished ? 'Published' : 'Draft'}
+                      </Label>
+                      <Switch
+                        id="isPublished"
+                        checked={formData.isPublished}
+                        onCheckedChange={(checked) => handleChange('isPublished', checked)}
+                        className="data-[state=checked]:bg-cyber"
+                      />
+                    </div>
                   </div>
-                  <Switch
-                    id="isPublished"
-                    checked={formData.isPublished}
-                    onCheckedChange={(checked) => handleChange('isPublished', checked)}
-                    className="data-[state=checked]:bg-cyber"
-                  />
                 </div>
                 
                 {/* Meta Title Field */}

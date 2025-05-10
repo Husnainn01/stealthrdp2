@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import Layout from '../components/Layout';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../components/ui/card';
-import { Check, Shield, Cpu, Database, Server, HardDrive, Settings, Globe, Zap, Clock } from 'lucide-react';
+import { Check, Shield, Cpu, Database, Server, HardDrive, Settings, Globe, Zap, Clock, X } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
 import { planApi, PlanApiResponse } from '../lib/api/planApi';
+import AnimatedPlanCard from '../components/sections/AnimatedPlanCard';
 
 const Plans = () => {
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'quarterly' | 'annually' | 'biannually'>('monthly');
@@ -262,161 +263,40 @@ const Plans = () => {
       return '#';
     };
 
-    return (
-      <Card className={`bg-midnight border border-gray-800 hover:border-electric transition-all duration-300 card-hover flex flex-col ${plan.isCustom ? 'border-cyber' : ''}`}>
-                <CardHeader className="pb-2">
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="p-2 rounded-lg bg-gray-800/50">
-                      {plan.icon}
-                    </div>
-                    <div className="text-right">
-              {plan.monthlyPrice !== null ? (
-                <>
-                      <span className="text-sm text-gray-400">Starting at</span>
-                      <div className="font-bold text-2xl text-white">
-                    €{currentMonthlyPrice ? currentMonthlyPrice.toFixed(2) : plan.monthlyPrice.toFixed(2)}
-                        <span className="text-base text-gray-400">/mo</span>
-                  </div>
-                </>
-              ) : (
-                <div className="font-bold text-2xl text-white">Custom Pricing</div>
-              )}
-                    </div>
-                  </div>
-                  <CardTitle className="text-xl text-white">{plan.name}</CardTitle>
-                  <CardDescription className="text-gray-400">{plan.description}</CardDescription>
-                </CardHeader>
-        <CardContent className="pt-4 flex-grow">
-                  <div className="space-y-4">
-                    {/* Specs */}
-                    <div className="grid grid-cols-2 gap-2 text-sm">
-                      <div className="bg-gray-800/40 p-2 rounded flex flex-col items-center justify-center">
-                        <span className="text-gray-400">CPU</span>
-                        <span className="text-white font-medium">{plan.specs.cpu}</span>
-                      </div>
-                      <div className="bg-gray-800/40 p-2 rounded flex flex-col items-center justify-center">
-                        <span className="text-gray-400">RAM</span>
-                        <span className="text-white font-medium">{plan.specs.ram}</span>
-                      </div>
-                      <div className="bg-gray-800/40 p-2 rounded flex flex-col items-center justify-center">
-                        <span className="text-gray-400">Storage</span>
-                        <span className="text-white font-medium">{plan.specs.storage}</span>
-                      </div>
-                      <div className="bg-gray-800/40 p-2 rounded flex flex-col items-center justify-center">
-                        <span className="text-gray-400">Bandwidth</span>
-                        <span className="text-white font-medium">{plan.specs.bandwidth}</span>
-                      </div>
-                    </div>
-                    
-                    {/* Features */}
-                    <div className="space-y-2">
-                      {(plan.features || []).map((feature, i) => (
-                        <div key={i} className="flex items-center space-x-2">
-                          <Check className={`h-4 w-4 ${plan.isCustom ? 'text-cyber' : 'text-cyber'}`} />
-                          <span className="text-gray-300 text-sm">{feature}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </CardContent>
-        <CardFooter className="flex flex-col items-stretch pt-4 mt-auto">
-          {/* Add Billing Cycle Selector INSIDE card, if not custom */}
-          {!plan.isCustom && (
-            <div className="w-full mb-4 p-1 bg-gray-800/50 rounded-md">
-              <div className="grid grid-cols-2 gap-1">
-                {plan.billingOptions && (
-                  <>
-                    <div className="flex flex-col space-y-2 mb-4">
-                      <span className="text-sm text-gray-400">Billing Cycle</span>
-                      <div className="bg-gray-800/40 p-1 rounded-md grid grid-cols-2 sm:grid-cols-4 gap-1">
-                        <Button
-                          variant={billingCycle === 'monthly' ? 'default' : 'outline'}
-                          className={`h-auto py-2 text-xs ${billingCycle === 'monthly' ? 'bg-electric text-midnight' : 'bg-transparent text-gray-300'}`}
-                          onClick={() => setBillingCycle('monthly')}
-                        >
-                          Monthly
-                        </Button>
-                        <Button
-                          variant={billingCycle === 'quarterly' ? 'default' : 'outline'}
-                          className={`h-auto py-2 text-xs ${billingCycle === 'quarterly' ? 'bg-electric text-midnight' : 'bg-transparent text-gray-300'}`}
-                          onClick={() => setBillingCycle('quarterly')}
-                          disabled={!plan.billingOptions?.quarterly?.enabled}
-                        >
-                          Quarterly
-                          {plan.billingOptions?.quarterly?.enabled && (
-                            <span className="ml-1 bg-cyber text-midnight text-[10px] rounded px-1">-{plan.billingOptions.quarterly.discountPercentage}%</span>
-                          )}
-                        </Button>
-                        <Button
-                          variant={billingCycle === 'annually' ? 'default' : 'outline'}
-                          className={`h-auto py-2 text-xs ${billingCycle === 'annually' ? 'bg-electric text-midnight' : 'bg-transparent text-gray-300'}`}
-                          onClick={() => setBillingCycle('annually')}
-                          disabled={!plan.billingOptions?.annual?.enabled}
-                        >
-                          Annual
-                          {plan.billingOptions?.annual?.enabled && (
-                            <span className="ml-1 bg-cyber text-midnight text-[10px] rounded px-1">-{plan.billingOptions.annual.discountPercentage}%</span>
-                          )}
-                        </Button>
-                        <Button
-                          variant={billingCycle === 'biannually' ? 'default' : 'outline'}
-                          className={`h-auto py-2 text-xs ${billingCycle === 'biannually' ? 'bg-electric text-midnight' : 'bg-transparent text-gray-300'}`}
-                          onClick={() => setBillingCycle('biannually')}
-                          disabled={!plan.billingOptions?.biannual?.enabled}
-                        >
-                          Biannual
-                          {plan.billingOptions?.biannual?.enabled && (
-                            <span className="ml-1 bg-cyber text-midnight text-[10px] rounded px-1">-{plan.billingOptions.biannual.discountPercentage}%</span>
-                          )}
-                        </Button>
-                      </div>
-                    </div>
-                    
-                    <div className="bg-gray-800/40 p-3 rounded-md mb-4">
-                      <div className="flex justify-between text-sm mb-1">
-                        <span>Monthly price:</span>
-                        <span>€{currentMonthlyPrice ? currentMonthlyPrice.toFixed(2) : ""}</span>
-                      </div>
-                      <div className="flex justify-between text-sm mb-1">
-                        <span>Billing period:</span>
-                        <span>{billingPeriodText}</span>
-                      </div>
-                      {discount > 0 && (
-                        <div className="flex justify-between text-sm mb-1">
-                          <span>Discount:</span>
-                          <span className="text-cyber">-{discount}%</span>
-                        </div>
-                      )}
-                      <div className="flex justify-between text-sm font-bold mt-2 pt-2 border-t border-gray-700">
-                        <span>Total due today:</span>
-                        <span>€{totalBilled.toFixed(2)}</span>
-                      </div>
-                      {discount > 0 && (
-                        <div className="flex justify-between text-sm text-cyber mt-1">
-                          <span>You save:</span>
-                          <span>€{totalSavings.toFixed(2)}</span>
-                        </div>
-                      )}
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
-          )}
+    // Map CPU icon
+    let icon = <Cpu className="h-10 w-10 text-cyber" />;
+    if (plan.name.toLowerCase().includes('bronze')) {
+      icon = <Cpu className="h-10 w-10 text-cyber" />;
+    } else if (plan.name.toLowerCase().includes('silver')) {
+      icon = <Server className="h-10 w-10 text-cyber" />;
+    } else if (plan.name.toLowerCase().includes('gold')) {
+      icon = <Database className="h-10 w-10 text-cyber" />;
+    } else if (plan.name.toLowerCase().includes('platinum')) {
+      icon = <HardDrive className="h-10 w-10 text-cyber" />;
+    } else if (plan.name.toLowerCase().includes('diamond')) {
+      icon = <Zap className="h-10 w-10 text-cyber" />;
+    } else if (plan.name.toLowerCase().includes('emerald')) {
+      icon = <Clock className="h-10 w-10 text-cyber" />;
+    }
 
-          {/* Existing Buy Now Button */}
-          <a 
-            href={getPurchaseUrl()} 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            className="w-full"
-          >
-            <Button className={`w-full ${plan.isCustom ? 'bg-cyber hover:bg-cyber/80' : 'bg-electric hover:bg-electric/80'} text-charcoal`}>
-              {plan.isCustom ? 'Configure Now' : 'Buy Now!'}
-                  </Button>
-          </a>
-                </CardFooter>
-              </Card>
+    // Add icon to plan
+    const planWithIcon = {
+      ...plan,
+      icon
+    };
+
+    return (
+      <AnimatedPlanCard
+        plan={planWithIcon}
+        billingCycle={billingCycle}
+        setBillingCycle={setBillingCycle}
+        currentPrice={currentMonthlyPrice}
+        totalBilled={totalBilled}
+        originalTotal={originalTotal}
+        billingPeriodText={billingPeriodText}
+        discount={discount}
+        getPurchaseUrl={getPurchaseUrl}
+      />
     );
   };
 
@@ -549,72 +429,138 @@ const Plans = () => {
             </TabsContent>
           </Tabs>
           
-          {/* Easy Steps Section */}
-          <div className="py-16 border-t border-gray-800">
-            <div className="text-center mb-16">
-              <h3 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
-                Features that brings <span className="text-electric">maximum power</span> to your <span className="text-cyber">Project</span>.
-              </h3>
-              <p className="text-gray-400 max-w-3xl mx-auto text-lg">
-                Elevate your experience with our high-performance infrastructure and premium service guarantees.
-              </p>
-            </div>
+          {/* Comparison Table */}
+          <div className="mt-12 md:mt-20">
+            <h2 className="text-2xl md:text-3xl font-bold text-white text-center mb-8">VPS Features Comparison</h2>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              <div className="bg-midnight rounded-xl p-6 text-center hover:border-electric border border-gray-800 transition-all duration-300">
-                <div className="flex justify-center mb-6">
-                  <Zap className="h-16 w-16 text-electric" />
-                </div>
-                <h4 className="text-xl font-semibold text-white mb-3">Instant Activation</h4>
-                <p className="text-gray-400">
-                  Experience the speed of instant activation: launch your services instantly and seamlessly!
-                </p>
+            <div className="overflow-x-auto">
+              <table className="w-full mb-8 border-collapse">
+                <thead>
+                  <tr className="bg-midnight text-white border-b border-gray-800">
+                    <th className="px-4 py-3 text-left">Feature</th>
+                    <th className="px-4 py-3 text-center">Basic</th>
+                    <th className="px-4 py-3 text-center">Standard</th>
+                    <th className="px-4 py-3 text-center">Premium</th>
+                    <th className="px-4 py-3 text-center">Custom</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b border-gray-800">
+                    <td className="px-4 py-3 text-white">Remote Desktop Protocol (RDP)</td>
+                    <td className="px-4 py-3 text-center"><Check className="h-5 w-5 text-cyber mx-auto" /></td>
+                    <td className="px-4 py-3 text-center"><Check className="h-5 w-5 text-cyber mx-auto" /></td>
+                    <td className="px-4 py-3 text-center"><Check className="h-5 w-5 text-cyber mx-auto" /></td>
+                    <td className="px-4 py-3 text-center"><Check className="h-5 w-5 text-cyber mx-auto" /></td>
+                  </tr>
+                  <tr className="border-b border-gray-800">
+                    <td className="px-4 py-3 text-white">Windows/Linux OS</td>
+                    <td className="px-4 py-3 text-center"><Check className="h-5 w-5 text-cyber mx-auto" /></td>
+                    <td className="px-4 py-3 text-center"><Check className="h-5 w-5 text-cyber mx-auto" /></td>
+                    <td className="px-4 py-3 text-center"><Check className="h-5 w-5 text-cyber mx-auto" /></td>
+                    <td className="px-4 py-3 text-center"><Check className="h-5 w-5 text-cyber mx-auto" /></td>
+                  </tr>
+                  <tr className="border-b border-gray-800">
+                    <td className="px-4 py-3 text-white">Managed Security</td>
+                    <td className="px-4 py-3 text-center"><Check className="h-5 w-5 text-cyber mx-auto" /></td>
+                    <td className="px-4 py-3 text-center"><Check className="h-5 w-5 text-cyber mx-auto" /></td>
+                    <td className="px-4 py-3 text-center"><Check className="h-5 w-5 text-cyber mx-auto" /></td>
+                    <td className="px-4 py-3 text-center"><Check className="h-5 w-5 text-cyber mx-auto" /></td>
+                  </tr>
+                  <tr className="border-b border-gray-800">
+                    <td className="px-4 py-3 text-white">SSD Storage</td>
+                    <td className="px-4 py-3 text-center"><Check className="h-5 w-5 text-cyber mx-auto" /></td>
+                    <td className="px-4 py-3 text-center"><Check className="h-5 w-5 text-cyber mx-auto" /></td>
+                    <td className="px-4 py-3 text-center"><Check className="h-5 w-5 text-cyber mx-auto" /></td>
+                    <td className="px-4 py-3 text-center"><Check className="h-5 w-5 text-cyber mx-auto" /></td>
+                  </tr>
+                  <tr className="border-b border-gray-800">
+                    <td className="px-4 py-3 text-white">99.9% Uptime Guarantee</td>
+                    <td className="px-4 py-3 text-center"><Check className="h-5 w-5 text-cyber mx-auto" /></td>
+                    <td className="px-4 py-3 text-center"><Check className="h-5 w-5 text-cyber mx-auto" /></td>
+                    <td className="px-4 py-3 text-center"><Check className="h-5 w-5 text-cyber mx-auto" /></td>
+                    <td className="px-4 py-3 text-center"><Check className="h-5 w-5 text-cyber mx-auto" /></td>
+                  </tr>
+                  <tr className="border-b border-gray-800">
+                    <td className="px-4 py-3 text-white">DDoS Protection</td>
+                    <td className="px-4 py-3 text-center"><X className="h-5 w-5 text-gray-500 mx-auto" /></td>
+                    <td className="px-4 py-3 text-center"><Check className="h-5 w-5 text-cyber mx-auto" /></td>
+                    <td className="px-4 py-3 text-center"><Check className="h-5 w-5 text-cyber mx-auto" /></td>
+                    <td className="px-4 py-3 text-center"><Check className="h-5 w-5 text-cyber mx-auto" /></td>
+                  </tr>
+                  <tr className="border-b border-gray-800">
+                    <td className="px-4 py-3 text-white">Dedicated IP</td>
+                    <td className="px-4 py-3 text-center"><Check className="h-5 w-5 text-cyber mx-auto" /></td>
+                    <td className="px-4 py-3 text-center"><Check className="h-5 w-5 text-cyber mx-auto" /></td>
+                    <td className="px-4 py-3 text-center"><Check className="h-5 w-5 text-cyber mx-auto" /></td>
+                    <td className="px-4 py-3 text-center"><Check className="h-5 w-5 text-cyber mx-auto" /></td>
+                  </tr>
+                  <tr className="border-b border-gray-800">
+                    <td className="px-4 py-3 text-white">Resource Scaling</td>
+                    <td className="px-4 py-3 text-center"><X className="h-5 w-5 text-gray-500 mx-auto" /></td>
+                    <td className="px-4 py-3 text-center"><X className="h-5 w-5 text-gray-500 mx-auto" /></td>
+                    <td className="px-4 py-3 text-center"><Check className="h-5 w-5 text-cyber mx-auto" /></td>
+                    <td className="px-4 py-3 text-center"><Check className="h-5 w-5 text-cyber mx-auto" /></td>
+                  </tr>
+                  <tr className="border-b border-gray-800">
+                    <td className="px-4 py-3 text-white">Priority Support</td>
+                    <td className="px-4 py-3 text-center"><X className="h-5 w-5 text-gray-500 mx-auto" /></td>
+                    <td className="px-4 py-3 text-center"><X className="h-5 w-5 text-gray-500 mx-auto" /></td>
+                    <td className="px-4 py-3 text-center"><Check className="h-5 w-5 text-cyber mx-auto" /></td>
+                    <td className="px-4 py-3 text-center"><Check className="h-5 w-5 text-cyber mx-auto" /></td>
+                  </tr>
+                  <tr>
+                    <td className="px-4 py-3 text-white">Custom Configuration</td>
+                    <td className="px-4 py-3 text-center"><X className="h-5 w-5 text-gray-500 mx-auto" /></td>
+                    <td className="px-4 py-3 text-center"><X className="h-5 w-5 text-gray-500 mx-auto" /></td>
+                    <td className="px-4 py-3 text-center"><X className="h-5 w-5 text-gray-500 mx-auto" /></td>
+                    <td className="px-4 py-3 text-center"><Check className="h-5 w-5 text-cyber mx-auto" /></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          
+          {/* FAQ Section */}
+          <div className="mt-12 md:mt-20 max-w-4xl mx-auto">
+            <h2 className="text-2xl md:text-3xl font-bold text-white text-center mb-8">Frequently Asked Questions</h2>
+            
+            <div className="space-y-6">
+              <div className="bg-midnight p-5 rounded-lg border border-gray-800">
+                <h3 className="text-white text-lg font-medium mb-2">What is a VPS?</h3>
+                <p className="text-gray-400">A Virtual Private Server (VPS) is a virtualized server that looks like a dedicated server to the user but actually shares hardware with other VPSs. Our VPS plans give you full control with root access in a secure, isolated environment.</p>
               </div>
               
-              <div className="bg-midnight rounded-xl p-6 text-center hover:border-electric border border-gray-800 transition-all duration-300">
-                <div className="flex justify-center mb-6">
-                  <Clock className="h-16 w-16 text-electric" />
-                </div>
-                <h4 className="text-xl font-semibold text-white mb-3">99.99% Server Uptime</h4>
-                <p className="text-gray-400">
-                  Server uptime for uninterrupted online presence and maximum business continuity.
-                </p>
+              <div className="bg-midnight p-5 rounded-lg border border-gray-800">
+                <h3 className="text-white text-lg font-medium mb-2">What is RDP and why do I need it?</h3>
+                <p className="text-gray-400">Remote Desktop Protocol (RDP) allows you to connect to and control your Windows server from anywhere. It provides a graphical interface to remotely manage your server, run applications, and work as if you were sitting in front of that computer.</p>
               </div>
               
-              <div className="bg-midnight rounded-xl p-6 text-center hover:border-electric border border-gray-800 transition-all duration-300">
-                <div className="flex justify-center mb-6">
-                  <Globe className="h-16 w-16 text-electric" />
-                </div>
-                <h4 className="text-xl font-semibold text-white mb-3">Low Latency Network</h4>
-                <p className="text-gray-400">
-                  Strengthening your online presence with global reach and unparalleled resilience.
-                </p>
+              <div className="bg-midnight p-5 rounded-lg border border-gray-800">
+                <h3 className="text-white text-lg font-medium mb-2">Can I upgrade my plan later?</h3>
+                <p className="text-gray-400">Yes! You can easily upgrade to a higher plan at any time. The transition is seamless and we'll only charge you the prorated difference between plans.</p>
               </div>
               
-              <div className="bg-midnight rounded-xl p-6 text-center hover:border-electric border border-gray-800 transition-all duration-300">
-                <div className="flex justify-center mb-6">
-                  <Database className="h-16 w-16 text-electric" />
-                </div>
-                <h4 className="text-xl font-semibold text-white mb-3">Disaster Recovery</h4>
-                <p className="text-gray-400">
-                  Empowering you with weekly data assurance and during hardware failures.
-                </p>
+              <div className="bg-midnight p-5 rounded-lg border border-gray-800">
+                <h3 className="text-white text-lg font-medium mb-2">What operating systems are available?</h3>
+                <p className="text-gray-400">We offer Windows Server 2019/2022 and various Linux distributions including Ubuntu, CentOS, and Debian. If you need a specific OS or version, please contact our support team.</p>
+              </div>
+              
+              <div className="bg-midnight p-5 rounded-lg border border-gray-800">
+                <h3 className="text-white text-lg font-medium mb-2">Do you offer a money-back guarantee?</h3>
+                <p className="text-gray-400">Yes, we offer a 7-day money-back guarantee on all new VPS plans. If you're not satisfied with our service, you can request a refund within the first week of your purchase.</p>
               </div>
             </div>
           </div>
           
-          {/* FAQs CTA */}
-          <div className="text-center mt-16">
-            <h3 className="text-xl md:text-2xl font-semibold text-white mb-4">Have questions about our VPS plans?</h3>
-            <p className="text-gray-400 mb-6">Check our frequently asked questions or contact our support team.</p>
-            <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <Button asChild variant="outline" className="border-electric text-electric hover:bg-electric/10">
-                <a href="/faq">Read FAQs</a>
+          {/* CTA Section */}
+          <div className="mt-16 text-center">
+            <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Ready to get started?</h2>
+            <p className="text-gray-400 mb-8 max-w-2xl mx-auto">Choose your perfect VPS plan today and experience the performance, security, and reliability of StealthRDP.</p>
+            <a href="#top" className="inline-block">
+              <Button className="bg-electric hover:bg-electric/80 text-midnight text-lg px-8 py-3">
+                Select a Plan Now
               </Button>
-              <Button asChild className="bg-cyber text-midnight hover:bg-cyber/90">
-                <a href="https://stealthrdp.com/dash/submitticket.php" target="_blank" rel="noopener noreferrer">Contact Support</a>
-              </Button>
-            </div>
+            </a>
           </div>
         </div>
       </div>
