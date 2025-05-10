@@ -41,20 +41,44 @@ app.use((req, res, next) => {
   next();
 });
 
-// CORS Configuration - Making more permissive for troubleshooting
-const corsOptions = {
-  origin: 'http://localhost:8080', // Specify the exact origin
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept']
-};
+// CORS Configuration - Making completely permissive for troubleshooting
+app.use((req, res, next) => {
+  // Allow all origins
+  res.header('Access-Control-Allow-Origin', '*');
+  
+  // Allow all methods
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
+  
+  // Allow all headers by reflecting the requested headers back
+  const requestedHeaders = req.headers['access-control-request-headers'];
+  if (requestedHeaders) {
+    res.header('Access-Control-Allow-Headers', requestedHeaders);
+  } else {
+    // Fallback to a comprehensive list of common headers
+    res.header('Access-Control-Allow-Headers', 
+      'Origin, X-Requested-With, Content-Type, content-type, Accept, accept, Authorization, authorization, ' +
+      'Cache-Control, cache-control, X-Access-Token, x-access-token, X-Refresh-Token, x-refresh-token');
+  }
+  
+  // Allow credentials
+  res.header('Access-Control-Allow-Credentials', 'true');
+  
+  // Set max age for preflight requests
+  res.header('Access-Control-Max-Age', '86400'); // 24 hours
+  
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
+  }
+  
+  next();
+});
 
-// Apply CORS middleware
-app.use(cors(corsOptions));
-
-// Additional specific CORS handling for file uploads
-app.options('/api/blogs/upload-image', cors(corsOptions));
-app.use('/api/blogs/upload-image', cors(corsOptions));
+// Additional specific CORS handling for file uploads is no longer needed
+// as our custom middleware handles all endpoints including file uploads
+// app.options('/api/blogs/upload-image', cors(corsOptions));
+// app.use('/api/blogs/upload-image', cors(corsOptions));
 
 // Apply regular body parsers for JSON and form data
 app.use(express.json());

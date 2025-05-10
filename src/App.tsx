@@ -12,6 +12,7 @@ import BlogPage from "./pages/BlogPage";
 import BlogDetailPage from "./pages/BlogDetailPage";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
+import ServerStatusPage from "./pages/ServerStatus";
 import AdminLayout from "./admin/components/AdminLayout";
 import Dashboard from "./admin/pages/Dashboard";
 import PlansManager from "./admin/pages/PlansManager";
@@ -41,6 +42,7 @@ const App = () => (
             <Route path="/features" element={<Features />} />
             <Route path="/blog" element={<BlogPage />} />
             <Route path="/blog/:slug" element={<BlogDetailPage />} />
+            <Route path="/server-status" element={<ServerStatusPage />} />
             <Route path="/login" element={<Login />} />
             
             {/* Protected Admin Routes */}

@@ -39,14 +39,12 @@ const Navbar = () => {
           <Link to="/" className="text-white hover:text-electric transition-colors">Home</Link>
           <Link to="/plans" className="text-white hover:text-electric transition-colors">Plans</Link>
           <Link to="/features" className="text-white hover:text-electric transition-colors">Features</Link>
-          <a 
-            href="https://status.stealthrdp.com/?_gl=1*wfqblk*_gcl_au*MTc2OTgxMjEwNS4xNzQ0MDk5Nzcw" 
-            target="_blank" 
-            rel="noopener noreferrer"
+          <Link 
+            to="/server-status" 
             className="text-white hover:text-electric transition-colors"
           >
-            Network Status
-          </a>
+            Server Status
+          </Link>
           <Link to="/blog" className="text-white hover:text-electric transition-colors">Blog</Link>
           <Link to="/faq" className="text-white hover:text-electric transition-colors">FAQ</Link>
           <Button asChild className="btn-electric">
@@ -95,15 +93,13 @@ const Navbar = () => {
             >
               Features
             </Link>
-            <a 
-              href="https://status.stealthrdp.com/?_gl=1*wfqblk*_gcl_au*MTc2OTgxMjEwNS4xNzQ0MDk5Nzcw" 
-              target="_blank" 
-              rel="noopener noreferrer"
+            <Link 
+              to="/server-status" 
               className="text-white hover:text-electric py-2 transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
-              Network Status
-            </a>
+              Server Status
+            </Link>
             <Link 
               to="/blog" 
               className="text-white hover:text-electric py-2 transition-colors"
@@ -118,19 +114,15 @@ const Navbar = () => {
             >
               FAQ
             </Link>
-            <Button 
-              asChild 
-              className="btn-electric w-full"
+            <a 
+              href="https://stealthrdp.com/dash/index.php?rp=/login" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-white hover:text-electric py-2 transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
-              <a 
-                href="https://stealthrdp.com/dash/index.php?rp=/login" 
-                target="_blank" 
-                rel="noopener noreferrer"
-              >
-                Client Area
-              </a>
-            </Button>
+              Client Area
+            </a>
           </div>
         </div>
       )}

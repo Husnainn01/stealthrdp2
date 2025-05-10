@@ -6,6 +6,7 @@ import { Check, Shield, Cpu, Database, Server, HardDrive, Settings, Globe, Zap, 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
 import { planApi, PlanApiResponse } from '../lib/api/planApi';
 import AnimatedPlanCard from '../components/sections/AnimatedPlanCard';
+import { motion } from 'framer-motion';
 
 const Plans = () => {
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'quarterly' | 'annually' | 'biannually'>('monthly');
@@ -300,6 +301,57 @@ const Plans = () => {
     );
   };
 
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.3
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0 }
+  };
+
+  const featureVariants = {
+    hidden: { opacity: 0, x: -10 },
+    show: { opacity: 1, x: 0 }
+  };
+
+  const iconVariants = {
+    hidden: { scale: 0.8, opacity: 0 },
+    show: { 
+      scale: 1, 
+      opacity: 1,
+      transition: { 
+        type: "spring",
+        stiffness: 200,
+        damping: 10
+      }
+    },
+    hover: { 
+      rotate: [0, -10, 10, -5, 5, 0],
+      transition: { duration: 0.6 }
+    }
+  };
+
+  const glowVariants = {
+    hidden: { opacity: 0 },
+    show: { 
+      opacity: 0.6,
+      transition: {
+        repeat: Infinity,
+        repeatType: "reverse" as const,
+        duration: 3
+      }
+    }
+  };
+
   return (
     <Layout>
       <div className="py-20 md:py-28 bg-charcoal">
@@ -382,42 +434,95 @@ const Plans = () => {
 
             <TabsContent value="custom" className="mt-0">
               <div className="max-w-4xl mx-auto">
-                <div className="bg-midnight border border-cyber rounded-xl p-8 md:p-12 mb-8">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <motion.div 
+                  className="bg-midnight border border-cyber rounded-xl p-8 md:p-12 mb-8 relative overflow-hidden"
+                  initial="hidden"
+                  animate="show"
+                  variants={containerVariants}
+                  whileHover="hover"
+                >
+                  {/* Background glow effect */}
+                  <motion.div 
+                    className="absolute -inset-0 bg-gradient-to-br from-cyber/10 via-electric/5 to-cyber/10 rounded-xl blur-xl"
+                    variants={glowVariants}
+                  />
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center relative z-10">
                     <div>
-                      <h2 className="text-3xl font-bold text-white mb-6">
+                      <motion.h2 
+                        className="text-3xl font-bold text-white mb-6"
+                        variants={itemVariants}
+                      >
                         Design Your <span className="text-cyber">Ideal Server</span>
-                      </h2>
-                      <p className="text-gray-300 mb-6">
+                      </motion.h2>
+                      <motion.p 
+                        className="text-gray-300 mb-6"
+                        variants={itemVariants}
+                      >
                         Our custom VPS solution allows you to build exactly the server you need. Choose your CPU cores, RAM amount, storage space, and more to create a perfectly tailored virtual private server.
-                      </p>
-                      <ul className="space-y-3 mb-8">
-                        <li className="flex items-start">
+                      </motion.p>
+                      <motion.ul 
+                        className="space-y-3 mb-8"
+                        variants={containerVariants}
+                      >
+                        <motion.li 
+                          className="flex items-start"
+                          variants={featureVariants}
+                          whileHover={{ x: 5 }}
+                        >
                           <Check className="h-5 w-5 text-cyber mr-3 mt-0.5" />
                           <span className="text-gray-300">Complete resource customization</span>
-                        </li>
-                        <li className="flex items-start">
+                        </motion.li>
+                        <motion.li 
+                          className="flex items-start"
+                          variants={featureVariants}
+                          whileHover={{ x: 5 }}
+                        >
                           <Check className="h-5 w-5 text-cyber mr-3 mt-0.5" />
                           <span className="text-gray-300">Choice of US or EU data centers</span>
-                        </li>
-                        <li className="flex items-start">
+                        </motion.li>
+                        <motion.li 
+                          className="flex items-start"
+                          variants={featureVariants}
+                          whileHover={{ x: 5 }}
+                        >
                           <Check className="h-5 w-5 text-cyber mr-3 mt-0.5" />
                           <span className="text-gray-300">Pay only for what you actually need</span>
-                        </li>
-                        <li className="flex items-start">
+                        </motion.li>
+                        <motion.li 
+                          className="flex items-start"
+                          variants={featureVariants}
+                          whileHover={{ x: 5 }}
+                        >
                           <Check className="h-5 w-5 text-cyber mr-3 mt-0.5" />
                           <span className="text-gray-300">Instant scaling as your needs change</span>
-                        </li>
-                      </ul>
+                        </motion.li>
+                      </motion.ul>
                     </div>
                     <div className="flex justify-center">
                       <div className="relative">
-                        <div className="w-64 h-64 rounded-full bg-gradient-to-br from-cyber/20 to-electric/20 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 blur-xl"></div>
-                        <Settings className="h-40 w-40 text-cyber relative z-10" />
+                        <motion.div 
+                          className="w-64 h-64 rounded-full bg-gradient-to-br from-cyber/20 to-electric/20 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 blur-xl"
+                          animate={{ 
+                            opacity: [0.5, 0.8, 0.5],
+                            scale: [1, 1.05, 1]
+                          }}
+                          transition={{
+                            duration: 3,
+                            repeat: Infinity,
+                            repeatType: "mirror"
+                          }}
+                        />
+                        <motion.div
+                          variants={iconVariants}
+                          whileHover="hover"
+                        >
+                          <Settings className="h-40 w-40 text-cyber relative z-10" />
+                        </motion.div>
                       </div>
                     </div>
                   </div>
-                </div>
+                </motion.div>
                 <div className="grid grid-cols-1 gap-6">
                   {customPlans.map((plan, index) => (
                     <div key={index}>
