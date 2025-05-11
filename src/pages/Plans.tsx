@@ -53,8 +53,45 @@ const Plans = () => {
         ]);
         console.log('Fetched USA Plans:', usaData);
         console.log('Fetched EU Plans:', euData);
-        setUsaPlans(usaData);
-        setEuPlans(euData);
+        
+        // Process plans to add features from descriptions
+        const processedUsaPlans = usaData.map(plan => {
+          // Generate standard features for each plan
+          const standardFeatures = [
+            'Windows/Linux OS',
+            '24/7 Support',
+            'Root Access',
+            '99.9% Uptime',
+            'USA Location',
+            '1Gbps Network',
+            'Dedicated IP'
+          ];
+          
+          return {
+            ...plan,
+            features: standardFeatures
+          };
+        });
+        
+        const processedEuPlans = euData.map(plan => {
+          const standardFeatures = [
+            'Windows/Linux OS',
+            '24/7 Support',
+            'Root Access',
+            '99.9% Uptime',
+            'EU Location',
+            '1Gbps Network',
+            'Dedicated IP'
+          ];
+          
+          return {
+            ...plan,
+            features: standardFeatures
+          };
+        });
+        
+        setUsaPlans(processedUsaPlans);
+        setEuPlans(processedEuPlans);
         setError(null);
       } catch (err) {
         console.error('Error fetching plans:', err);
@@ -369,20 +406,20 @@ const Plans = () => {
           {/* Location Tabs */}
           <Tabs defaultValue="usa" className="mb-10">
             <div className="flex justify-center mb-8">
-              <TabsList className="bg-midnight p-1">
-                <TabsTrigger value="usa" className="data-[state=active]:bg-electric data-[state=active]:text-midnight">
+              <TabsList className="bg-charcoal border border-gray-800 p-1 rounded-full">
+                <TabsTrigger value="usa" className="data-[state=active]:bg-electric data-[state=active]:text-midnight rounded-full">
                   <div className="flex items-center gap-2">
                     <Globe className="h-4 w-4" />
                     <span>USA Plans</span>
                   </div>
                 </TabsTrigger>
-                <TabsTrigger value="eu" className="data-[state=active]:bg-electric data-[state=active]:text-midnight">
+                <TabsTrigger value="eu" className="data-[state=active]:bg-electric data-[state=active]:text-midnight rounded-full">
                   <div className="flex items-center gap-2">
                     <Globe className="h-4 w-4" />
                     <span>EU Plans</span>
                   </div>
                 </TabsTrigger>
-                <TabsTrigger value="custom" className="data-[state=active]:bg-cyber data-[state=active]:text-midnight">
+                <TabsTrigger value="custom" className="data-[state=active]:bg-cyber data-[state=active]:text-midnight rounded-full">
                   <div className="flex items-center gap-2">
                     <Settings className="h-4 w-4" />
                     <span>Build Your Own</span>
