@@ -36,30 +36,24 @@ app.use(cors({
   origin: function(origin, callback) {
     console.log('Incoming request from origin:', origin || 'no origin');
     
-    // In production, we'll be more permissive with origins to debug
-    if (process.env.NODE_ENV === 'production') {
-      // Allow any origin in production for now, to debug the issue
-      callback(null, origin || '*');
-      return;
-    }
-    
-    // For development, use the specific origin list
+    // List of allowed origins
     const allowedOrigins = [
       'http://localhost:8080',
       'http://localhost:3000',
       'https://stealthrdp.com',
       'https://www.stealthrdp.com',
       'https://stealthrdp-production.up.railway.app',
-      'https://stealthrdp-production.up.railway.app:8080',
       'https://stealthrdp2-production.up.railway.app'
     ];
     
     // For local development or non-browser requests that don't send origin
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, origin);
+    if (!origin) {
+      callback(null, '*'); // Allow requests with no origin (like mobile apps or curl requests)
+    } else if (allowedOrigins.includes(origin)) {
+      callback(null, origin); // Allow the specific origin
     } else {
       console.log(`CORS blocked origin: ${origin}`);
-      callback(null, false);
+      callback(null, allowedOrigins[0]); // Default to first allowed origin if not matching
     }
   },
   credentials: true,
@@ -75,6 +69,15 @@ app.use(cors({
     'X-Refresh-Token'
   ]
 }));
+
+// Also set the Access-Control-Allow-Origin header explicitly for all responses
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (origin === 'https://www.stealthrdp.com' || origin === 'https://stealthrdp.com') {
+    res.header('Access-Control-Allow-Origin', origin);
+  }
+  next();
+});
 
 // Connect to MongoDB
 connectDB();
@@ -110,6 +113,16 @@ app.use(express.urlencoded({ extended: true }));
 // Explicit handler for OPTIONS requests (CORS preflight)
 app.options('*', (req, res) => {
   console.log('Handling OPTIONS preflight request');
+  
+  // Set CORS headers for OPTIONS requests
+  const origin = req.headers.origin;
+  if (origin === 'https://www.stealthrdp.com' || origin === 'https://stealthrdp.com') {
+    res.header('Access-Control-Allow-Origin', origin);
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Cache-Control, X-Access-Token, X-Refresh-Token');
+    res.header('Access-Control-Allow-Credentials', 'true');
+  }
+  
   res.status(200).end();
 });
 
@@ -185,7 +198,7 @@ app.listen(PORT, HOST, () => {
   
   // Generate proper server URL based on environment
   const serverUrl = process.env.NODE_ENV === 'production' 
-    ? 'https://stealthrdp2-production.up.railway.app' 
+    ? 'https://stealthrdp-production.up.railway.app' 
     : `http://localhost:${PORT}`;
     
   console.log(`Server URL: ${serverUrl}`);
