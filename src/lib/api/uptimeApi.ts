@@ -78,7 +78,8 @@ export const getMonitors = async (): Promise<Monitor[]> => {
       headers: {
         'Content-Type': 'application/json',
         'Cache-Control': 'no-cache',
-      }
+      },
+      withCredentials: false // Set to false to avoid CORS credentials issues
     });
 
     // Log response status
