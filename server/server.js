@@ -14,6 +14,23 @@ dotenv.config();
 // Create Express app
 const app = express();
 
+// Safety middleware to intercept potential path-to-regexp errors
+app.use((req, res, next) => {
+  // Check if URL contains a colon without being properly escaped
+  try {
+    // This will catch badly formatted URLs before they crash the app
+    if (req.url && req.url.includes('http')) {
+      console.warn('WARNING: URL contains http - this might cause path-to-regexp errors:', req.url);
+      // Sanitize the URL by removing any potentially problematic patterns
+      req.url = req.url.replace(/https?:\/\/[^\/]+/g, '');
+    }
+    next();
+  } catch (err) {
+    console.error('URL parsing error:', err);
+    res.status(400).json({ error: 'Invalid URL format' });
+  }
+});
+
 // Apply CORS middleware with proper configuration for credentials
 app.use(cors({
   origin: function(origin, callback) {
