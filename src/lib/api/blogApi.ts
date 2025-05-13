@@ -109,7 +109,7 @@ export const blogApi = {
         body: formData,
         // Add these options for better error handling
         mode: 'cors',
-        credentials: 'include'
+        credentials: url.includes('localhost') ? 'include' : 'omit'
       });
       
       if (!response.ok) {
