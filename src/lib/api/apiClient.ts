@@ -4,12 +4,14 @@ const getApiBaseUrl = () => {
   if (typeof window !== 'undefined') {
     const savedUrl = localStorage.getItem('api_base_url');
     if (savedUrl) {
+      console.log('Using saved API base URL:', savedUrl);
       return `${savedUrl}/api`;
     }
     
     // Check if we're on production domain
     if (window.location.hostname === 'www.stealthrdp.com' || window.location.hostname === 'stealthrdp.com') {
       console.log('Production domain detected, using Railway API URL');
+      // Railway uses port 8080 for the application
       return 'https://stealthrdp-production.up.railway.app/api';
     }
   }

@@ -23,13 +23,15 @@ app.use(cors({
       'http://localhost:3000',
       'https://stealthrdp.com',
       'https://www.stealthrdp.com',
-      'https://stealthrdp-production.up.railway.app'
+      'https://stealthrdp-production.up.railway.app',
+      'https://stealthrdp-production.up.railway.app:8080'
     ];
     
     // For local development or non-browser requests that don't send origin
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, origin);
     } else {
+      console.log(`CORS blocked origin: ${origin}`);
       callback(null, false);
     }
   },
@@ -119,13 +121,19 @@ app.use((err, req, res, next) => {
 console.log('Environment variables:');
 console.log('process.env.PORT =', process.env.PORT);
 
-// Force port to 5001 to avoid conflicts with macOS Control Center
-const PORT = 5001;
+// Use environment PORT or default to 5001
+const PORT = process.env.PORT || 5001;
 const HOST = '0.0.0.0'; // Listen on all interfaces
 
 // Start server
 app.listen(PORT, HOST, () => {
   console.log(`Server running on ${HOST}:${PORT}`);
-  console.log(`Server URL: http://localhost:${PORT}`);
+  
+  // Generate proper server URL based on environment
+  const serverUrl = process.env.NODE_ENV === 'production' 
+    ? 'https://stealthrdp-production.up.railway.app' 
+    : `http://localhost:${PORT}`;
+    
+  console.log(`Server URL: ${serverUrl}`);
   console.log(`CORS configured for specific origins with credentials support`);
 }); 
