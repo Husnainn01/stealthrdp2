@@ -228,72 +228,72 @@ const Plans = () => {
       const urls = {
         // USA Plans
         'Bronze USA': {
-          monthly: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/bronze-usa2&billingcycle=monthly',
-          quarterly: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/bronze-usa2&billingcycle=quarterly',
-          annually: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/bronze-usa2&billingcycle=annually',
-          biannually: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/bronze-usa2&billingcycle=biennially'
+          monthly: 'https://dash.stealthrdp.com/index.php?rp=/store/standard-usa-rdp-vps/bronze-usa2&billingcycle=monthly',
+          quarterly: 'https://dash.stealthrdp.com/index.php?rp=/store/standard-usa-rdp-vps/bronze-usa2&billingcycle=quarterly',
+          annually: 'https://dash.stealthrdp.com/index.php?rp=/store/standard-usa-rdp-vps/bronze-usa2&billingcycle=annually',
+          biannually: 'https://dash.stealthrdp.com/index.php?rp=/store/standard-usa-rdp-vps/bronze-usa2&billingcycle=biennially'
         },
         'Silver USA': {
-          monthly: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/silver-usa&billingcycle=monthly',
-          quarterly: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/silver-usa&billingcycle=quarterly',
-          annually: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/silver-usa&billingcycle=annually',
-          biannually: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/silver-usa&billingcycle=biennially'
+          monthly: 'https://dash.stealthrdp.com/index.php?rp=/store/standard-usa-rdp-vps/silver-usa&billingcycle=monthly',
+          quarterly: 'https://dash.stealthrdp.com/index.php?rp=/store/standard-usa-rdp-vps/silver-usa&billingcycle=quarterly',
+          annually: 'https://dash.stealthrdp.com/index.php?rp=/store/standard-usa-rdp-vps/silver-usa&billingcycle=annually',
+          biannually: 'https://dash.stealthrdp.com/index.php?rp=/store/standard-usa-rdp-vps/silver-usa&billingcycle=biennially'
         },
         'Gold USA': {
-          monthly: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/gold-usa&billingcycle=monthly',
-          quarterly: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/gold-usa&billingcycle=quarterly',
-          annually: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/gold-usa&billingcycle=annually',
-          biannually: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/gold-usa&billingcycle=biennially'
+          monthly: 'https://dash.stealthrdp.com/index.php?rp=/store/standard-usa-rdp-vps/gold-usa&billingcycle=monthly',
+          quarterly: 'https://dash.stealthrdp.com/index.php?rp=/store/standard-usa-rdp-vps/gold-usa&billingcycle=quarterly',
+          annually: 'https://dash.stealthrdp.com/index.php?rp=/store/standard-usa-rdp-vps/gold-usa&billingcycle=annually',
+          biannually: 'https://dash.stealthrdp.com/index.php?rp=/store/standard-usa-rdp-vps/gold-usa&billingcycle=biennially'
         },
         'Platinum USA': {
-          monthly: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/platinum-usa&billingcycle=monthly',
-          quarterly: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/platinum-usa&billingcycle=quarterly',
-          annually: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/platinum-usa&billingcycle=annually',
-          biannually: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/platinum-usa&billingcycle=biennially'
+          monthly: 'https://dash.stealthrdp.com/index.php?rp=/store/standard-usa-rdp-vps/platinum-usa&billingcycle=monthly',
+          quarterly: 'https://dash.stealthrdp.com/index.php?rp=/store/standard-usa-rdp-vps/platinum-usa&billingcycle=quarterly',
+          annually: 'https://dash.stealthrdp.com/index.php?rp=/store/standard-usa-rdp-vps/platinum-usa&billingcycle=annually',
+          biannually: 'https://dash.stealthrdp.com/index.php?rp=/store/standard-usa-rdp-vps/platinum-usa&billingcycle=biennially'
         },
         'Diamond USA': {
-          monthly: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/diamond-usa&billingcycle=monthly',
-          quarterly: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/diamond-usa&billingcycle=quarterly',
-          annually: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/diamond-usa&billingcycle=annually',
-          biannually: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/diamond-usa&billingcycle=biennially'
+          monthly: 'https://dash.stealthrdp.com/index.php?rp=/store/standard-usa-rdp-vps/diamond-usa&billingcycle=monthly',
+          quarterly: 'https://dash.stealthrdp.com/index.php?rp=/store/standard-usa-rdp-vps/diamond-usa&billingcycle=quarterly',
+          annually: 'https://dash.stealthrdp.com/index.php?rp=/store/standard-usa-rdp-vps/diamond-usa&billingcycle=annually',
+          biannually: 'https://dash.stealthrdp.com/index.php?rp=/store/standard-usa-rdp-vps/diamond-usa&billingcycle=biennially'
         },
         'Emerald USA': {
-          monthly: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/emerald-usa&billingcycle=monthly',
-          quarterly: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/emerald-usa&billingcycle=quarterly',
-          annually: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/emerald-usa&billingcycle=annually',
-          biannually: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/emerald-usa&billingcycle=biennially'
+          monthly: 'https://dash.stealthrdp.com/index.php?rp=/store/standard-usa-rdp-vps/emerald-usa&billingcycle=monthly',
+          quarterly: 'https://dash.stealthrdp.com/index.php?rp=/store/standard-usa-rdp-vps/emerald-usa&billingcycle=quarterly',
+          annually: 'https://dash.stealthrdp.com/index.php?rp=/store/standard-usa-rdp-vps/emerald-usa&billingcycle=annually',
+          biannually: 'https://dash.stealthrdp.com/index.php?rp=/store/standard-usa-rdp-vps/emerald-usa&billingcycle=biennially'
         },
         
         // EU Plans
         'Bronze EU': {
-          monthly: 'https://stealthrdp.com/dash/index.php?rp=/store/eu/bronze-eu&billingcycle=monthly',
-          quarterly: 'https://stealthrdp.com/dash/index.php?rp=/store/eu/bronze-eu&billingcycle=quarterly',
-          annually: 'https://stealthrdp.com/dash/index.php?rp=/store/eu/bronze-eu&billingcycle=annually',
-          biannually: 'https://stealthrdp.com/dash/index.php?rp=/store/eu/bronze-eu&billingcycle=biennially'
+          monthly: 'https://dash.stealthrdp.com/index.php?rp=/store/eu/bronze-eu&billingcycle=monthly',
+          quarterly: 'https://dash.stealthrdp.com/index.php?rp=/store/eu/bronze-eu&billingcycle=quarterly',
+          annually: 'https://dash.stealthrdp.com/index.php?rp=/store/eu/bronze-eu&billingcycle=annually',
+          biannually: 'https://dash.stealthrdp.com/index.php?rp=/store/eu/bronze-eu&billingcycle=biennially'
         },
         'Silver EU': {
-          monthly: 'https://stealthrdp.com/dash/index.php?rp=/store/eu/silver-eu&billingcycle=monthly',
-          quarterly: 'https://stealthrdp.com/dash/index.php?rp=/store/eu/silver-eu&billingcycle=quarterly',
-          annually: 'https://stealthrdp.com/dash/index.php?rp=/store/eu/silver-eu&billingcycle=annually',
-          biannually: 'https://stealthrdp.com/dash/index.php?rp=/store/eu/silver-eu&billingcycle=biennially'
+          monthly: 'https://dash.stealthrdp.com/index.php?rp=/store/eu/silver-eu&billingcycle=monthly',
+          quarterly: 'https://dash.stealthrdp.com/index.php?rp=/store/eu/silver-eu&billingcycle=quarterly',
+          annually: 'https://dash.stealthrdp.com/index.php?rp=/store/eu/silver-eu&billingcycle=annually',
+          biannually: 'https://dash.stealthrdp.com/index.php?rp=/store/eu/silver-eu&billingcycle=biennially'
         },
         'Gold EU': {
-          monthly: 'https://stealthrdp.com/dash/index.php?rp=/store/eu/gold-eu&billingcycle=monthly',
-          quarterly: 'https://stealthrdp.com/dash/index.php?rp=/store/eu/gold-eu&billingcycle=quarterly',
-          annually: 'https://stealthrdp.com/dash/index.php?rp=/store/eu/gold-eu&billingcycle=annually',
-          biannually: 'https://stealthrdp.com/dash/index.php?rp=/store/eu/gold-eu&billingcycle=biennially'
+          monthly: 'https://dash.stealthrdp.com/index.php?rp=/store/eu/gold-eu&billingcycle=monthly',
+          quarterly: 'https://dash.stealthrdp.com/index.php?rp=/store/eu/gold-eu&billingcycle=quarterly',
+          annually: 'https://dash.stealthrdp.com/index.php?rp=/store/eu/gold-eu&billingcycle=annually',
+          biannually: 'https://dash.stealthrdp.com/index.php?rp=/store/eu/gold-eu&billingcycle=biennially'
         },
         'Platinum EU': {
-          monthly: 'https://stealthrdp.com/dash/index.php?rp=/store/eu/platinum-eu&billingcycle=monthly',
-          quarterly: 'https://stealthrdp.com/dash/index.php?rp=/store/eu/platinum-eu&billingcycle=quarterly',
-          annually: 'https://stealthrdp.com/dash/index.php?rp=/store/eu/platinum-eu&billingcycle=annually',
-          biannually: 'https://stealthrdp.com/dash/index.php?rp=/store/eu/platinum-eu&billingcycle=biennially'
+          monthly: 'https://dash.stealthrdp.com/index.php?rp=/store/eu/platinum-eu&billingcycle=monthly',
+          quarterly: 'https://dash.stealthrdp.com/index.php?rp=/store/eu/platinum-eu&billingcycle=quarterly',
+          annually: 'https://dash.stealthrdp.com/index.php?rp=/store/eu/platinum-eu&billingcycle=annually',
+          biannually: 'https://dash.stealthrdp.com/index.php?rp=/store/eu/platinum-eu&billingcycle=biennially'
         },
         'Diamond EU': {
-          monthly: 'https://stealthrdp.com/dash/index.php?rp=/store/eu/diamond-eu&billingcycle=monthly',
-          quarterly: 'https://stealthrdp.com/dash/index.php?rp=/store/eu/diamond-eu&billingcycle=quarterly',
-          annually: 'https://stealthrdp.com/dash/index.php?rp=/store/eu/diamond-eu&billingcycle=annually',
-          biannually: 'https://stealthrdp.com/dash/index.php?rp=/store/eu/diamond-eu&billingcycle=biennially'
+          monthly: 'https://dash.stealthrdp.com/index.php?rp=/store/eu/diamond-eu&billingcycle=monthly',
+          quarterly: 'https://dash.stealthrdp.com/index.php?rp=/store/eu/diamond-eu&billingcycle=quarterly',
+          annually: 'https://dash.stealthrdp.com/index.php?rp=/store/eu/diamond-eu&billingcycle=annually',
+          biannually: 'https://dash.stealthrdp.com/index.php?rp=/store/eu/diamond-eu&billingcycle=biennially'
         }
       };
 
