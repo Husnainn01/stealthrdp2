@@ -14,26 +14,8 @@ dotenv.config();
 // Create Express app
 const app = express();
 
-// CORS Configuration - Define proper CORS options
-const corsOptions = {
-  origin: ['https://www.stealthrdp.com', 'https://stealthrdp.com', 'http://localhost:8080'],
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
-  allowedHeaders: [
-    'Origin', 
-    'X-Requested-With', 
-    'Content-Type', 
-    'Accept', 
-    'Authorization', 
-    'Cache-Control',
-    'X-Access-Token',
-    'X-Refresh-Token'
-  ],
-  maxAge: 86400 // 24 hours
-};
-
-// Apply CORS middleware (before other middleware and routes)
-app.use(cors(corsOptions));
+// Apply simple CORS middleware that allows all origins - most reliable approach
+app.use(cors());
 
 // Connect to MongoDB
 connectDB();
@@ -115,5 +97,5 @@ const HOST = '0.0.0.0'; // Listen on all interfaces
 app.listen(PORT, HOST, () => {
   console.log(`Server running on ${HOST}:${PORT}`);
   console.log(`Server URL: http://localhost:${PORT}`);
-  console.log(`CORS configured to allow specific origins: ${corsOptions.origin.join(', ')}`);
+  console.log(`CORS configured to allow all origins`);
 }); 
