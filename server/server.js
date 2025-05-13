@@ -14,8 +14,25 @@ dotenv.config();
 // Create Express app
 const app = express();
 
-// Apply simple CORS middleware that allows all origins - most reliable approach
-app.use(cors());
+// Apply CORS middleware with proper configuration for credentials
+app.use(cors({
+  origin: function(origin, callback) {
+    // Allow any origin
+    callback(null, origin || '*');
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: [
+    'Origin', 
+    'X-Requested-With', 
+    'Content-Type', 
+    'Accept', 
+    'Authorization', 
+    'Cache-Control',
+    'X-Access-Token',
+    'X-Refresh-Token'
+  ]
+}));
 
 // Connect to MongoDB
 connectDB();

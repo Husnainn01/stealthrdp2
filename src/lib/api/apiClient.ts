@@ -55,8 +55,8 @@ async function fetchAPI<T>(
     headers,
     // Explicitly set mode for debugging
     mode: 'cors',
-    // Don't send credentials for external URLs
-    credentials: API_BASE_URL.includes('localhost') ? 'include' : 'omit'
+    // Never use credentials for cross-origin requests
+    credentials: 'omit'
   };
   
   console.log(`API Request: ${options.method || 'GET'} ${url}`);
