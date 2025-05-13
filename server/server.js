@@ -138,6 +138,15 @@ app.get('/api/debug', (req, res) => {
   });
 });
 
+// Add a catchall route for unmatched routes to prevent 404s
+app.use('*', (req, res) => {
+  res.status(404).json({
+    message: 'Route not found',
+    path: req.originalUrl,
+    method: req.method
+  });
+});
+
 // Error handler
 app.use((err, req, res, next) => {
   console.error('Error:', err.stack);
