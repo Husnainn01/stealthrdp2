@@ -6,6 +6,11 @@ const getApiBaseUrl = () => {
     if (savedUrl) {
       return `${savedUrl}/api`;
     }
+    
+    // Check if we're on production domain
+    if (window.location.hostname === 'www.stealthrdp.com' || window.location.hostname === 'stealthrdp.com') {
+      return 'https://stealthrdp-production.up.railway.app/api';
+    }
   }
   
   // Fall back to environment variable or default

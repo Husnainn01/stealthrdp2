@@ -1,7 +1,21 @@
 import axios from 'axios';
 
+// Get API base URL based on environment
+const getApiBaseUrl = () => {
+  // Check if we're on production domain
+  if (typeof window !== 'undefined' && 
+      (window.location.hostname === 'www.stealthrdp.com' || window.location.hostname === 'stealthrdp.com')) {
+    return 'https://stealthrdp-production.up.railway.app/api/uptime';
+  }
+  
+  // Fall back to environment variable or default
+  return process.env.VITE_API_URL 
+    ? `${process.env.VITE_API_URL}/uptime` 
+    : 'http://localhost:5001/api/uptime';
+};
+
 // API endpoints - Using our simplified proxy server endpoint
-const BASE_URL = 'http://localhost:5001/api/uptime';
+const BASE_URL = getApiBaseUrl();
 
 // Interface for monitor data
 export interface Monitor {
