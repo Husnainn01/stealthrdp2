@@ -49,7 +49,7 @@ const Navbar = () => {
           <Link to="/faq" className="text-white hover:text-electric transition-colors">FAQ</Link>
           <Button asChild className="btn-electric">
             <a 
-              href="https://stealthrdp.com/dash/index.php?rp=/login" 
+              href="https://dash.stealthrdp.com/index.php?rp=/login" 
               target="_blank" 
               rel="noopener noreferrer"
             >
