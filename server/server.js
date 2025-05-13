@@ -145,6 +145,15 @@ app.post('/api/privacy-policy', privacyPolicyController.updatePrivacyPolicy);
 app.put('/api/privacy-policy/:id', privacyPolicyController.updatePrivacyPolicy);
 app.delete('/api/privacy-policy/:id', privacyPolicyController.deletePrivacyPolicy);
 
+// Serve static files from the React app's build directory
+const buildPath = path.join(__dirname, '../dist');
+if (fs.existsSync(buildPath)) {
+  console.log(`Serving static files from: ${buildPath}`);
+  app.use(express.static(buildPath));
+} else {
+  console.log(`Build directory not found at: ${buildPath}, falling back to public`);
+}
+
 // Serve static files from public directory
 app.use(express.static('public'));
 
@@ -154,7 +163,19 @@ app.use('/api/auth', authRoutes);
 
 // Test route
 app.get('/', (req, res) => {
-  res.send('StealthRDP API is running');
+  // Only respond with API message if requesting the root path from the API domain
+  const host = req.get('host');
+  if (host && host.includes('railway.app')) {
+    res.send('StealthRDP API is running');
+  } else {
+    // Otherwise try to serve the frontend index.html
+    const indexPath = path.join(__dirname, '../dist/index.html');
+    if (fs.existsSync(indexPath)) {
+      res.sendFile(indexPath);
+    } else {
+      res.send('StealthRDP API is running');
+    }
+  }
 });
 
 // Add a debug route to check CORS
@@ -168,13 +189,35 @@ app.get('/api/debug', (req, res) => {
   });
 });
 
-// Add a catchall route for unmatched routes to prevent 404s
+// Catch-all route for client-side routing - serve index.html for any non-API routes
+app.get('*', (req, res, next) => {
+  // Skip for API routes
+  if (req.path.startsWith('/api')) {
+    return next();
+  }
+  
+  // Try to serve the index.html file
+  const indexPath = path.join(__dirname, '../dist/index.html');
+  if (fs.existsSync(indexPath)) {
+    res.sendFile(indexPath);
+  } else {
+    next(); // Let the 404 handler take care of it
+  }
+});
+
+// Add a catchall route for unmatched API routes
 app.use('*', (req, res) => {
-  res.status(404).json({
-    message: 'Route not found',
-    path: req.originalUrl,
-    method: req.method
-  });
+  // Only handle API routes in this catchall
+  if (req.originalUrl.startsWith('/api')) {
+    res.status(404).json({
+      message: 'API route not found',
+      path: req.originalUrl,
+      method: req.method
+    });
+  } else {
+    // Non-API routes should have been handled by the previous catch-all
+    res.status(404).send('Not found');
+  }
 });
 
 // Error handler
