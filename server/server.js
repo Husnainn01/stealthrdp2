@@ -16,22 +16,7 @@ const app = express();
 
 // CORS Configuration - Define proper CORS options
 const corsOptions = {
-  origin: function (origin, callback) {
-    const allowedOrigins = [
-      'https://www.stealthrdp.com', 
-      'https://stealthrdp.com', 
-      'http://localhost:8080'
-    ];
-    
-    // Allow requests with no origin (like mobile apps, curl, etc.)
-    if (!origin) return callback(null, true);
-    
-    if (allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true); // origin is allowed
-    } else {
-      callback(null, true); // temporarily allow all origins for troubleshooting
-    }
-  },
+  origin: ['https://www.stealthrdp.com', 'https://stealthrdp.com', 'http://localhost:8080'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: [
@@ -130,5 +115,5 @@ const HOST = '0.0.0.0'; // Listen on all interfaces
 app.listen(PORT, HOST, () => {
   console.log(`Server running on ${HOST}:${PORT}`);
   console.log(`Server URL: http://localhost:${PORT}`);
-  console.log(`CORS configured to allow specific origins: ${corsOptions.origin.toString()}`);
+  console.log(`CORS configured to allow specific origins: ${corsOptions.origin.join(', ')}`);
 }); 
