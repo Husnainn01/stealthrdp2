@@ -67,6 +67,15 @@ The frontend is deployed on Vercel and the backend is deployed on Railway.
 - Configure environment variables for MongoDB connection
 - Set the start command to `node server/server.js`
 
+### CORS Configuration
+
+The backend server is configured to allow requests from:
+- https://www.stealthrdp.com
+- https://stealthrdp.com
+- http://localhost:8080 (for local development)
+
+If you need to add additional domains, update the `allowedOrigins` array in `server/server.js`.
+
 ## Features
 
 - Remote Desktop Plans for USA and EU regions

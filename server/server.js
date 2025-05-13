@@ -43,8 +43,19 @@ app.use((req, res, next) => {
 
 // CORS Configuration - Making completely permissive for troubleshooting
 app.use((req, res, next) => {
-  // Allow all origins
-  res.header('Access-Control-Allow-Origin', '*');
+  // Get origin from request
+  const origin = req.headers.origin;
+  
+  // Allow specific origins or use * for development
+  const allowedOrigins = ['https://www.stealthrdp.com', 'https://stealthrdp.com', 'http://localhost:8080'];
+  
+  // Set Access-Control-Allow-Origin header
+  if (origin && allowedOrigins.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+  } else {
+    // For local development or unknown origins
+    res.header('Access-Control-Allow-Origin', '*');
+  }
   
   // Allow all methods
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
