@@ -9,6 +9,7 @@ const getApiBaseUrl = () => {
     
     // Check if we're on production domain
     if (window.location.hostname === 'www.stealthrdp.com' || window.location.hostname === 'stealthrdp.com') {
+      console.log('Production domain detected, using Railway API URL');
       return 'https://stealthrdp-production.up.railway.app/api';
     }
   }

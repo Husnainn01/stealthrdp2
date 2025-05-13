@@ -17,8 +17,21 @@ const app = express();
 // Apply CORS middleware with proper configuration for credentials
 app.use(cors({
   origin: function(origin, callback) {
-    // Allow any origin
-    callback(null, origin || '*');
+    // Allow requests from these specific origins
+    const allowedOrigins = [
+      'http://localhost:8080',
+      'http://localhost:3000',
+      'https://stealthrdp.com',
+      'https://www.stealthrdp.com',
+      'https://stealthrdp-production.up.railway.app'
+    ];
+    
+    // For local development or non-browser requests that don't send origin
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, origin);
+    } else {
+      callback(null, false);
+    }
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
@@ -114,5 +127,5 @@ const HOST = '0.0.0.0'; // Listen on all interfaces
 app.listen(PORT, HOST, () => {
   console.log(`Server running on ${HOST}:${PORT}`);
   console.log(`Server URL: http://localhost:${PORT}`);
-  console.log(`CORS configured to allow all origins`);
+  console.log(`CORS configured for specific origins with credentials support`);
 }); 

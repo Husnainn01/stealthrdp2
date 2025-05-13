@@ -2,6 +2,25 @@ import { createContext, useContext, useState, useEffect, ReactNode, useCallback 
 import { useNavigate } from 'react-router-dom';
 import authApi, { AuthResponse } from '@/lib/api/authApi';
 
+// Get API base URL from the same function used in apiClient
+const getApiBaseUrl = () => {
+  // First check if we have a saved API base URL from a successful connection
+  if (typeof window !== 'undefined') {
+    const savedUrl = localStorage.getItem('api_base_url');
+    if (savedUrl) {
+      return `${savedUrl}/api`;
+    }
+    
+    // Check if we're on production domain
+    if (window.location.hostname === 'www.stealthrdp.com' || window.location.hostname === 'stealthrdp.com') {
+      return 'https://stealthrdp-production.up.railway.app/api';
+    }
+  }
+  
+  // Fall back to environment variable or default
+  return process.env.VITE_API_URL || 'http://localhost:5001/api';
+};
+
 // Define the Auth Context interface
 interface AuthContextType {
   user: AuthResponse | null;
@@ -49,12 +68,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     // Always try to fetch the latest profile
     try {
-      const profileResponse = await fetch('http://localhost:5001/api/auth/profile', {
+      const apiBaseUrl = getApiBaseUrl();
+      const profileResponse = await fetch(`${apiBaseUrl}/auth/profile`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
-        }
+        },
+        credentials: 'omit',
+        mode: 'cors'
       });
       if (profileResponse.ok) {
         userData = await profileResponse.json();

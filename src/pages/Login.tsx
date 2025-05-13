@@ -172,6 +172,7 @@ const Login: React.FC = () => {
           const resp = await fetch(`${baseUrl}/`, {
             method: 'GET',
             mode: 'cors',
+            credentials: 'omit',
             headers: {
               'Accept': 'text/plain'
             }
@@ -196,6 +197,7 @@ const Login: React.FC = () => {
                   password: 'admin123'
                 }),
                 mode: 'cors',
+                credentials: 'omit',
               });
               
               setDebugInfo(prev => `${prev}\n- Login status: ${loginResp.status}`);

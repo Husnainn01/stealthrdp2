@@ -29,6 +29,25 @@ import {
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
+// Get API base URL from the same function used in apiClient
+const getApiBaseUrl = () => {
+  // First check if we have a saved API base URL from a successful connection
+  if (typeof window !== 'undefined') {
+    const savedUrl = localStorage.getItem('api_base_url');
+    if (savedUrl) {
+      return `${savedUrl}/api`;
+    }
+    
+    // Check if we're on production domain
+    if (window.location.hostname === 'www.stealthrdp.com' || window.location.hostname === 'stealthrdp.com') {
+      return 'https://stealthrdp-production.up.railway.app/api';
+    }
+  }
+  
+  // Fall back to environment variable or default
+  return process.env.VITE_API_URL || 'http://localhost:5001/api';
+};
+
 // Important: In a real implementation, you would use a rich text editor like TipTap,
 // Slate.js, or a WYSIWYG editor. For simplicity, we're using a textarea here.
 
@@ -208,7 +227,8 @@ const BlogForm: React.FC<BlogFormProps> = ({
       
       // Direct fetch approach for debugging
       const token = localStorage.getItem('auth_token');
-      const url = 'http://localhost:5001/api/blogs/upload-image';
+      const apiBaseUrl = getApiBaseUrl();
+      const url = `${apiBaseUrl}/blogs/upload-image`;
       
       console.log('Uploading to URL:', url);
       
@@ -216,7 +236,9 @@ const BlogForm: React.FC<BlogFormProps> = ({
         const response = await fetch(url, {
           method: 'POST',
           headers: token ? { 'Authorization': `Bearer ${token}` } : undefined,
-          body: formData
+          body: formData,
+          credentials: 'omit',
+          mode: 'cors'
         });
         
         if (!response.ok) {
