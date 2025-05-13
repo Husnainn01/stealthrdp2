@@ -12,7 +12,7 @@ const getApiBaseUrl = () => {
     if (window.location.hostname === 'www.stealthrdp.com' || window.location.hostname === 'stealthrdp.com') {
       console.log('Production domain detected, using Railway API URL');
       // Railway uses port 8080 for the application
-      return 'https://stealthrdp-production.up.railway.app/api';
+      return 'https://stealthrdp2-production.up.railway.app/api';
     }
   }
   

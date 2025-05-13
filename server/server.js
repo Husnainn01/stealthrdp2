@@ -17,14 +17,24 @@ const app = express();
 // Apply CORS middleware with proper configuration for credentials
 app.use(cors({
   origin: function(origin, callback) {
-    // Allow requests from these specific origins
+    console.log('Incoming request from origin:', origin || 'no origin');
+    
+    // In production, we'll be more permissive with origins to debug
+    if (process.env.NODE_ENV === 'production') {
+      // Allow any origin in production for now, to debug the issue
+      callback(null, origin || '*');
+      return;
+    }
+    
+    // For development, use the specific origin list
     const allowedOrigins = [
       'http://localhost:8080',
       'http://localhost:3000',
       'https://stealthrdp.com',
       'https://www.stealthrdp.com',
       'https://stealthrdp-production.up.railway.app',
-      'https://stealthrdp-production.up.railway.app:8080'
+      'https://stealthrdp-production.up.railway.app:8080',
+      'https://stealthrdp2-production.up.railway.app'
     ];
     
     // For local development or non-browser requests that don't send origin
@@ -80,6 +90,12 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Explicit handler for OPTIONS requests (CORS preflight)
+app.options('*', (req, res) => {
+  console.log('Handling OPTIONS preflight request');
+  res.status(200).end();
+});
+
 // Configure file upload middleware for specific upload routes
 app.use('/api/blogs/upload-image', fileUpload({
   limits: { fileSize: 10 * 1024 * 1024 }, // 10MB max file size
@@ -111,6 +127,17 @@ app.get('/', (req, res) => {
   res.send('StealthRDP API is running');
 });
 
+// Add a debug route to check CORS
+app.get('/api/debug', (req, res) => {
+  res.json({
+    message: 'Debug endpoint is working',
+    cors: 'If you see this, CORS is working',
+    headers: req.headers,
+    environment: process.env.NODE_ENV,
+    port: process.env.PORT
+  });
+});
+
 // Error handler
 app.use((err, req, res, next) => {
   console.error('Error:', err.stack);
@@ -122,7 +149,8 @@ console.log('Environment variables:');
 console.log('process.env.PORT =', process.env.PORT);
 
 // Use environment PORT or default to 5001
-const PORT = process.env.PORT || 5001;
+// Railway seems to be using port 5001 for this service
+const PORT = 5001;
 const HOST = '0.0.0.0'; // Listen on all interfaces
 
 // Start server
@@ -131,9 +159,9 @@ app.listen(PORT, HOST, () => {
   
   // Generate proper server URL based on environment
   const serverUrl = process.env.NODE_ENV === 'production' 
-    ? 'https://stealthrdp-production.up.railway.app' 
+    ? 'https://stealthrdp2-production.up.railway.app' 
     : `http://localhost:${PORT}`;
     
   console.log(`Server URL: ${serverUrl}`);
   console.log(`CORS configured for specific origins with credentials support`);
-}); 
+});
