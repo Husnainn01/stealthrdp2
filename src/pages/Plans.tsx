@@ -108,12 +108,15 @@ const Plans = () => {
     if (!plan || !plan.billingOptions) return 0;
     
     switch (cycle) {
+      case 'monthly':
+        // Add a 5% discount for monthly plans
+        return 5;
       case 'quarterly':
-        return plan.billingOptions?.quarterly?.enabled ? plan.billingOptions.quarterly.discountPercentage : 0;
+        return plan.billingOptions?.quarterly?.enabled ? plan.billingOptions.quarterly.discountPercentage : 10;
       case 'annually':
-        return plan.billingOptions?.annual?.enabled ? plan.billingOptions.annual.discountPercentage : 0;
+        return plan.billingOptions?.annual?.enabled ? plan.billingOptions.annual.discountPercentage : 20;
       case 'biannually':
-        return plan.billingOptions?.biannual?.enabled ? plan.billingOptions.biannual.discountPercentage : 0;
+        return plan.billingOptions?.biannual?.enabled ? plan.billingOptions.biannual.discountPercentage : 30;
       default:
         return 0;
     }
@@ -123,32 +126,36 @@ const Plans = () => {
   const getCurrentPrice = (plan) => {
     if (!plan || plan.monthlyPrice === null) return null;
     
+    // Calculate the base price (always use the list price before any discounts)
+    const basePrice = plan.monthlyPrice;
+    
     switch (billingCycle) {
       case 'monthly':
-        return plan.monthlyPrice;
+        // Apply 5% discount to monthly price
+        return basePrice * 0.95;
       case 'quarterly':
         if (plan.billingOptions?.quarterly?.enabled) {
           const discount = plan.billingOptions.quarterly.discountPercentage;
-          const quarterlyTotal = plan.monthlyPrice * 3 * (1 - discount / 100);
+          const quarterlyTotal = basePrice * 3 * (1 - discount / 100);
           return quarterlyTotal / 3; // Return monthly equivalent
         }
-        return plan.monthlyPrice;
+        return basePrice * 0.9; // 10% discount
       case 'annually':
         if (plan.billingOptions?.annual?.enabled) {
           const discount = plan.billingOptions.annual.discountPercentage;
-          const annualTotal = plan.monthlyPrice * 12 * (1 - discount / 100);
+          const annualTotal = basePrice * 12 * (1 - discount / 100);
           return annualTotal / 12; // Return monthly equivalent
         }
-        return plan.monthlyPrice;
+        return basePrice * 0.8; // 20% discount
       case 'biannually':
         if (plan.billingOptions?.biannual?.enabled) {
           const discount = plan.billingOptions.biannual.discountPercentage;
-          const biannualTotal = plan.monthlyPrice * 24 * (1 - discount / 100);
+          const biannualTotal = basePrice * 24 * (1 - discount / 100);
           return biannualTotal / 24; // Return monthly equivalent
         }
-        return plan.monthlyPrice;
+        return basePrice * 0.7; // 30% discount
       default:
-        return plan.monthlyPrice;
+        return basePrice;
     }
   };
 
@@ -160,13 +167,20 @@ const Plans = () => {
     const discount = getDiscount(plan, billingCycle);
 
     switch (billingCycle) {
+      case 'monthly':
+        // For monthly, we need to show the original price and the discounted price
+        totalBilled = currentMonthlyPrice; // Already has 5% discount applied
+        originalTotal = plan.monthlyPrice; // Original monthly price without discount
+        billingPeriodText = 'per month';
+        break;
       case 'quarterly':
         if (plan.billingOptions?.quarterly?.enabled) {
           totalBilled = plan.monthlyPrice * 3 * (1 - discount / 100);
           originalTotal = plan.monthlyPrice * 3;
           billingPeriodText = 'every 3 months';
         } else {
-          totalBilled = plan.monthlyPrice * 3;
+          // Default to 10% discount if not explicitly configured
+          totalBilled = plan.monthlyPrice * 3 * 0.9;
           originalTotal = plan.monthlyPrice * 3;
           billingPeriodText = 'every 3 months';
         }
@@ -177,7 +191,8 @@ const Plans = () => {
           originalTotal = plan.monthlyPrice * 12;
           billingPeriodText = 'per year';
         } else {
-          totalBilled = plan.monthlyPrice * 12;
+          // Default to 20% discount if not explicitly configured
+          totalBilled = plan.monthlyPrice * 12 * 0.8;
           originalTotal = plan.monthlyPrice * 12;
           billingPeriodText = 'per year';
         }
@@ -188,13 +203,14 @@ const Plans = () => {
           originalTotal = plan.monthlyPrice * 24;
           billingPeriodText = 'every 2 years';
         } else {
-          totalBilled = plan.monthlyPrice * 24;
+          // Default to 30% discount if not explicitly configured
+          totalBilled = plan.monthlyPrice * 24 * 0.7;
           originalTotal = plan.monthlyPrice * 24;
           billingPeriodText = 'every 2 years';
         }
         break;
       default: // monthly
-        totalBilled = plan.monthlyPrice;
+        totalBilled = currentMonthlyPrice;
         originalTotal = plan.monthlyPrice;
         billingPeriodText = 'per month';
         break;
