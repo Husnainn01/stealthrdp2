@@ -82,7 +82,7 @@ const ServerStatus: React.FC = () => {
       
       // Determine API URL based on environment
       const apiUrl = window.location.hostname === 'www.stealthrdp.com' || window.location.hostname === 'stealthrdp.com'
-        ? 'https://stealthrdp-production.up.railway.app/api/uptime'
+        ? 'https://stealthrdp2-production.up.railway.app/api/uptime'
         : 'http://localhost:5001/api/uptime';
       
       console.log(`Using API URL: ${apiUrl}`);

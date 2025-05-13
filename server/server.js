@@ -198,7 +198,7 @@ app.listen(PORT, HOST, () => {
   
   // Generate proper server URL based on environment
   const serverUrl = process.env.NODE_ENV === 'production' 
-    ? 'https://stealthrdp-production.up.railway.app' 
+    ? 'https://stealthrdp2-production.up.railway.app' 
     : `http://localhost:${PORT}`;
     
   console.log(`Server URL: ${serverUrl}`);
