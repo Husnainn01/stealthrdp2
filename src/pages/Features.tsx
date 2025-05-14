@@ -28,6 +28,20 @@ const IconComponent: React.FC<{ name: string }> = ({ name }) => {
   }
 };
 
+// Function to split description into bullet points
+const splitDescriptionToBullets = (description: string): string[] => {
+  // Split by newlines or periods followed by a space
+  if (description.includes('\n')) {
+    return description.split('\n').filter(item => item.trim() !== '');
+  } else if (description.includes('. ')) {
+    return description.split('. ')
+      .filter(item => item.trim() !== '')
+      .map(item => item.endsWith('.') ? item : `${item}.`);
+  } else {
+    return [description]; // Return as single item if no clear separator
+  }
+};
+
 const Features = () => {
   // State for storing features from API
   const [loading, setLoading] = useState<boolean>(true);
@@ -170,7 +184,14 @@ const Features = () => {
                     <IconComponent name={feature.iconName} />
                   </div>
                   <h3 className="text-2xl font-bold font-montserrat text-white mb-4 text-center">{feature.title}</h3>
-                  <p className="text-gray-400 mb-8 text-center">{feature.description}</p>
+                  <div className="space-y-3">
+                    {splitDescriptionToBullets(feature.description).map((item, i) => (
+                      <div key={i} className="flex items-start">
+                        <Check className="h-5 w-5 text-cyber mr-3 mt-0.5 flex-shrink-0" />
+                        <span className="text-gray-300">{item}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               ))
             )}
@@ -202,8 +223,15 @@ const Features = () => {
                     <div className="flex justify-center">
                       <IconComponent name={feature.iconName} />
                     </div>
-                    <h3 className="text-xl font-bold font-montserrat text-white mb-2 text-center">{feature.title}</h3>
-                    <p className="text-gray-400 mb-6 text-center text-sm">{feature.description}</p>
+                    <h3 className="text-xl font-bold font-montserrat text-white mb-4 text-center">{feature.title}</h3>
+                    <div className="space-y-2">
+                      {splitDescriptionToBullets(feature.description).map((item, i) => (
+                        <div key={i} className="flex items-start">
+                          <Check className="h-4 w-4 text-cyber mr-2 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm">{item}</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 ))
               ) : (
@@ -243,8 +271,15 @@ const Features = () => {
                     <div className="flex justify-center">
                       <IconComponent name={feature.iconName} />
                     </div>
-                    <h3 className="text-xl font-bold font-montserrat text-white mb-2 text-center">{feature.title}</h3>
-                    <p className="text-gray-400 mb-6 text-center text-sm">{feature.description}</p>
+                    <h3 className="text-xl font-bold font-montserrat text-white mb-4 text-center">{feature.title}</h3>
+                    <div className="space-y-2">
+                      {splitDescriptionToBullets(feature.description).map((item, i) => (
+                        <div key={i} className="flex items-start">
+                          <Check className="h-4 w-4 text-cyber mr-2 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm">{item}</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 ))
               ) : (
@@ -281,8 +316,15 @@ const Features = () => {
                     <div className="flex justify-center">
                       <IconComponent name={feature.iconName} />
                     </div>
-                    <h3 className="text-xl font-bold font-montserrat text-white mb-2 text-center">{feature.title}</h3>
-                    <p className="text-gray-400 mb-6 text-center text-sm">{feature.description}</p>
+                    <h3 className="text-xl font-bold font-montserrat text-white mb-4 text-center">{feature.title}</h3>
+                    <div className="space-y-2">
+                      {splitDescriptionToBullets(feature.description).map((item, i) => (
+                        <div key={i} className="flex items-start">
+                          <Check className="h-4 w-4 text-cyber mr-2 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm">{item}</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 ))
               ) : (
@@ -315,12 +357,19 @@ const Features = () => {
               // Display guarantees from API or fallback
               guarantees.length > 0 ? (
                 guarantees.map((feature) => (
-                  <div key={feature._id.toString()} className="bg-charcoal/50 rounded-xl p-8 card-hover text-center">
+                  <div key={feature._id.toString()} className="bg-charcoal/50 rounded-xl p-8 card-hover">
                     <div className="flex justify-center">
                       <IconComponent name={feature.iconName} />
                     </div>
-                    <h3 className="text-xl font-bold font-montserrat text-white mb-2">{feature.title}</h3>
-                    <p className="text-gray-400">{feature.description}</p>
+                    <h3 className="text-xl font-bold font-montserrat text-white mb-4">{feature.title}</h3>
+                    <div className="space-y-2 text-left">
+                      {splitDescriptionToBullets(feature.description).map((item, i) => (
+                        <div key={i} className="flex items-start">
+                          <Check className="h-4 w-4 text-cyber mr-2 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm">{item}</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 ))
               ) : (
