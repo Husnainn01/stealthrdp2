@@ -196,11 +196,14 @@ app.get('*', (req, res, next) => {
     return next();
   }
   
+  console.log(`Handling client-side route: ${req.path}`);
+  
   // Try to serve the index.html file
   const indexPath = path.join(__dirname, '../dist/index.html');
   if (fs.existsSync(indexPath)) {
-    res.sendFile(indexPath);
+    return res.sendFile(indexPath);
   } else {
+    console.error(`Index.html not found at: ${indexPath}`);
     next(); // Let the 404 handler take care of it
   }
 });
