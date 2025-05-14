@@ -513,9 +513,6 @@ const ServerStatus: React.FC = () => {
                           </div>
                           <div>
                             <div className="font-medium text-white text-lg">{monitor.friendly_name}</div>
-                            <div className="text-sm text-gray-400">
-                              {monitor.url.replace(/(^\w+:|^)\/\//, '')}
-                            </div>
                           </div>
                         </div>
                         <div className={`${getStatusColor(monitor.status)} font-medium px-3 py-1 rounded-full text-sm ${getStatusBgColor(monitor.status)}`}>
