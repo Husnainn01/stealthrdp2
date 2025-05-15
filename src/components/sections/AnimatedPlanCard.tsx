@@ -251,59 +251,100 @@ const AnimatedPlanCard: React.FC<PlanProps> = ({
                   variants={itemVariants}
                 >
                   <div className="grid grid-cols-2 gap-2 mb-2">
-                    <div>
-                      <Button
-                        variant={billingCycle === 'monthly' ? 'default' : 'outline'}
-                        className={`w-full h-auto py-2 text-xs ${billingCycle === 'monthly' ? 'bg-electric text-midnight' : 'bg-[#101224] text-gray-300 border-gray-700'}`}
-                        onClick={(e) => handleBillingCycleClick('monthly', e)}
-                      >
-                        <div className="flex flex-col items-center w-full">
-                          <span className="font-medium">Monthly</span>
-                          <span className="text-[10px] bg-[#22D46B] text-black px-2 py-0.5 rounded mt-1">Save 5%</span>
-                        </div>
-                      </Button>
-                    </div>
+                    <Button
+                      variant="ghost"
+                      className={`rounded-xl px-2 py-2 text-xs transition-all duration-300 relative h-auto ${
+                        billingCycle === 'monthly' 
+                          ? 'bg-electric text-midnight shadow-sm' 
+                          : 'bg-[#101224] text-gray-200 hover:text-white hover:bg-[#101224]/80 border border-gray-800'
+                      }`}
+                      onClick={(e) => handleBillingCycleClick('monthly', e)}
+                    >
+                      <div className="flex flex-col items-center w-full">
+                        <span className="font-medium">Monthly</span>
+                        <span className="bg-cyber text-black text-[10px] px-2 py-0.5 rounded-full mt-1 font-bold">-5%</span>
+                      </div>
+                      {billingCycle === 'monthly' && (
+                        <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-electric opacity-50"></span>
+                          <span className="relative inline-flex rounded-full h-3 w-3 bg-electric"></span>
+                        </span>
+                      )}
+                    </Button>
                     
-                    <div>
-                      <Button
-                        variant={billingCycle === 'quarterly' ? 'default' : 'outline'}
-                        className={`w-full h-auto py-2 text-xs ${billingCycle === 'quarterly' ? 'bg-electric text-midnight' : 'bg-[#101224] text-gray-300 border-gray-700'}`}
-                        onClick={(e) => handleBillingCycleClick('quarterly', e)}
-                      >
-                        <div className="flex flex-col items-center w-full">
-                          <span className="font-medium">Quarterly</span>
-                          <span className="text-[10px] bg-[#22D46B] text-black px-2 py-0.5 rounded mt-1">Save 10%</span>
-                        </div>
-                      </Button>
-                    </div>
+                    <Button
+                      variant="ghost"
+                      className={`rounded-xl px-2 py-2 text-xs transition-all duration-300 relative h-auto ${
+                        billingCycle === 'quarterly' 
+                          ? 'bg-electric text-midnight shadow-sm' 
+                          : 'bg-[#101224] text-gray-200 hover:text-white hover:bg-[#101224]/80 border border-gray-800'
+                      }`}
+                      onClick={(e) => handleBillingCycleClick('quarterly', e)}
+                    >
+                      <div className="flex flex-col items-center w-full">
+                        <span className="font-medium">
+                          <span className="hidden sm:inline">Quarterly</span>
+                          <span className="sm:hidden">3 Months</span>
+                        </span>
+                        <span className="bg-cyber text-black text-[10px] px-2 py-0.5 rounded-full mt-1 font-bold">-10%</span>
+                      </div>
+                      {billingCycle === 'quarterly' && (
+                        <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-electric opacity-50"></span>
+                          <span className="relative inline-flex rounded-full h-3 w-3 bg-electric"></span>
+                        </span>
+                      )}
+                    </Button>
                   </div>
                   
                   <div className="grid grid-cols-2 gap-2">
-                    <div>
-                      <Button
-                        variant={billingCycle === 'annually' ? 'default' : 'outline'}
-                        className={`w-full h-auto py-2 text-xs ${billingCycle === 'annually' ? 'bg-electric text-midnight' : 'bg-[#101224] text-gray-300 border-gray-700'}`}
-                        onClick={(e) => handleBillingCycleClick('annually', e)}
-                      >
-                        <div className="flex flex-col items-center w-full">
-                          <span className="font-medium">Annually</span>
-                          <span className="text-[10px] bg-[#22D46B] text-black px-2 py-0.5 rounded mt-1">Save 20%</span>
-                        </div>
-                      </Button>
-                    </div>
+                    <Button
+                      variant="ghost"
+                      className={`rounded-xl px-2 py-2 text-xs transition-all duration-300 relative h-auto ${
+                        billingCycle === 'annually' 
+                          ? 'bg-electric text-midnight shadow-sm' 
+                          : 'bg-[#101224] text-gray-200 hover:text-white hover:bg-[#101224]/80 border border-gray-800'
+                      }`}
+                      onClick={(e) => handleBillingCycleClick('annually', e)}
+                    >
+                      <div className="flex flex-col items-center w-full">
+                        <span className="font-medium">
+                          <span className="hidden sm:inline">Annual</span>
+                          <span className="sm:hidden">1 Year</span>
+                        </span>
+                        <span className="bg-cyber text-black text-[10px] px-2 py-0.5 rounded-full mt-1 font-bold">-20%</span>
+                      </div>
+                      {billingCycle === 'annually' && (
+                        <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-electric opacity-50"></span>
+                          <span className="relative inline-flex rounded-full h-3 w-3 bg-electric"></span>
+                        </span>
+                      )}
+                    </Button>
                     
-                    <div>
-                      <Button
-                        variant={billingCycle === 'biannually' ? 'default' : 'outline'}
-                        className={`w-full h-auto py-2 text-xs ${billingCycle === 'biannually' ? 'bg-electric text-midnight' : 'bg-[#101224] text-gray-300 border-gray-700'}`}
-                        onClick={(e) => handleBillingCycleClick('biannually', e)}
-                      >
-                        <div className="flex flex-col items-center w-full">
-                          <span className="font-medium">BiAnnually</span>
-                          <span className="text-[10px] bg-[#22D46B] text-black px-2 py-0.5 rounded mt-1">Save 30%</span>
-                        </div>
-                      </Button>
-                    </div>
+                    <Button
+                      variant="ghost"
+                      className={`rounded-xl px-2 py-2 text-xs transition-all duration-300 relative h-auto ${
+                        billingCycle === 'biannually' 
+                          ? 'bg-electric text-midnight shadow-sm' 
+                          : 'bg-[#101224] text-gray-200 hover:text-white hover:bg-[#101224]/80 border border-gray-800'
+                      }`}
+                      onClick={(e) => handleBillingCycleClick('biannually', e)}
+                    >
+                      <div className="flex flex-col items-center w-full">
+                        <span className="font-medium">
+                          <span className="hidden sm:inline">Biannual</span>
+                          <span className="sm:hidden">2 Years</span>
+                        </span>
+                        <span className="bg-cyber text-black text-[10px] px-2 py-0.5 rounded-full mt-1 font-bold">-30%</span>
+                      </div>
+                      {billingCycle === 'biannually' && (
+                        <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-electric opacity-50"></span>
+                          <span className="relative inline-flex rounded-full h-3 w-3 bg-electric"></span>
+                        </span>
+                      )}
+                    </Button>
                   </div>
                 </motion.div>
               )}

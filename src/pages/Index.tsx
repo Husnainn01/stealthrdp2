@@ -1125,32 +1125,32 @@ const Index = () => {
             </p>
           </div>
           
-          {/* Pricing Toggle - Price Anchoring */}
+          {/* Pricing Toggle - Professional Design */}
           <div className="max-w-md mx-auto mb-12">
             <div className="flex justify-center">
-              <div className="inline-flex bg-[#0A0E24] rounded-full p-1.5 border border-white/5 shadow-lg">
+              <div className="inline-flex flex-wrap sm:flex-nowrap bg-[#0A0E24] rounded-full p-1.5 border border-white/5 shadow-lg">
                 <button 
-                  className={`px-5 py-2 text-sm font-medium rounded-full transition-all ${billingCycle === 'monthly' ? 'bg-electric text-midnight shadow-sm' : 'text-white/60 hover:text-white/80'}`}
+                  className={`px-2 sm:px-5 py-2 text-xs sm:text-sm font-medium rounded-full transition-all w-[calc(50%-4px)] sm:w-auto m-0.5 sm:m-0 ${billingCycle === 'monthly' ? 'bg-electric text-midnight shadow-sm' : 'text-white/60 hover:text-white/80'}`}
                   onClick={() => setBillingCycle('monthly')}
                 >
                   Monthly
                 </button>
                 <button 
-                  className={`px-5 py-2 text-sm font-medium rounded-full transition-all ${billingCycle === 'quarterly' ? 'bg-electric text-midnight shadow-sm' : 'text-white/60 hover:text-white/80'}`}
+                  className={`px-2 sm:px-5 py-2 text-xs sm:text-sm font-medium rounded-full transition-all w-[calc(50%-4px)] sm:w-auto m-0.5 sm:m-0 ${billingCycle === 'quarterly' ? 'bg-electric text-midnight shadow-sm' : 'text-white/60 hover:text-white/80'}`}
                   onClick={() => setBillingCycle('quarterly')}
                 >
                   Quarterly
                   <span className="ml-1 text-xs text-[#22D46B]">-10%</span>
                 </button>
                 <button 
-                  className={`px-5 py-2 text-sm font-medium rounded-full transition-all ${billingCycle === 'annually' ? 'bg-electric text-midnight shadow-sm' : 'text-white/60 hover:text-white/80'}`}
+                  className={`px-2 sm:px-5 py-2 text-xs sm:text-sm font-medium rounded-full transition-all w-[calc(50%-4px)] sm:w-auto m-0.5 sm:m-0 ${billingCycle === 'annually' ? 'bg-electric text-midnight shadow-sm' : 'text-white/60 hover:text-white/80'}`}
                   onClick={() => setBillingCycle('annually')}
                 >
                   Annual
                   <span className="ml-1 text-xs text-[#22D46B]">-20%</span>
                 </button>
                 <button 
-                  className={`px-5 py-2 text-sm font-medium rounded-full transition-all ${billingCycle === 'biannually' ? 'bg-electric text-midnight shadow-sm' : 'text-white/60 hover:text-white/80'}`}
+                  className={`px-2 sm:px-5 py-2 text-xs sm:text-sm font-medium rounded-full transition-all w-[calc(50%-4px)] sm:w-auto m-0.5 sm:m-0 ${billingCycle === 'biannually' ? 'bg-electric text-midnight shadow-sm' : 'text-white/60 hover:text-white/80'}`}
                   onClick={() => setBillingCycle('biannually')}
                 >
                   Biannual
@@ -1159,6 +1159,8 @@ const Index = () => {
               </div>
             </div>
           </div>
+
+          
           
           {/* Plans Display Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 relative items-center perspective-[1000px]">
