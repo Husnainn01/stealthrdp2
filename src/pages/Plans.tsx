@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs"
 import { planApi, PlanApiResponse } from '../lib/api/planApi';
 import AnimatedPlanCard from '../components/sections/AnimatedPlanCard';
 import { motion } from 'framer-motion';
+import SkeletonPlanCard from '../components/sections/SkeletonPlanCard';
 
 const Plans = () => {
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'quarterly' | 'annually' | 'biannually'>('monthly');
@@ -447,8 +448,12 @@ const Plans = () => {
             {/* Tab Content */}
             <TabsContent value="usa" className="mt-0">
               {loading ? (
-                <div className="text-center py-8">
-                  <p className="text-white/70">Loading plans...</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                  {[1, 2, 3, 4, 5, 6].map((i) => (
+                    <div key={i}>
+                      <SkeletonPlanCard delay={i} />
+                    </div>
+                  ))}
                 </div>
               ) : error ? (
                 <div className="text-center py-8">
@@ -467,8 +472,12 @@ const Plans = () => {
 
             <TabsContent value="eu" className="mt-0">
               {loading ? (
-                <div className="text-center py-8">
-                  <p className="text-white/70">Loading plans...</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                  {[1, 2, 3, 4, 5, 6].map((i) => (
+                    <div key={i}>
+                      <SkeletonPlanCard delay={i} />
+                    </div>
+                  ))}
                 </div>
               ) : error ? (
                 <div className="text-center py-8">
