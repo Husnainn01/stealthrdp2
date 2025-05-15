@@ -34,7 +34,7 @@ const FAQPage = () => {
 
   // Function to open network status in a new tab
   const openNetworkStatus = () => {
-    window.open('https://status.stealthrdp.com', '_blank');
+    window.location.href = '/server-status';
   };
 
   // Group FAQs by category for display
