@@ -205,12 +205,12 @@ const AnimatedPlanCard: React.FC<PlanProps> = ({
                 {/* Features List with Description split into points */}
                 <motion.div className="space-y-2" variants={itemVariants}>
                   {/* Split the description by commas and display each part as a bullet */}
-                  {plan.description && plan.description.split(',').map((item, i) => (
+                  {/* {plan.description && plan.description.split(',').map((item, i) => (
                     <motion.div key={i} className="flex items-center gap-2" variants={itemVariants}>
                       <Check className="h-5 w-5 text-cyber flex-shrink-0" />
                       <span className="text-gray-300 text-sm">{item.trim()}</span>
                     </motion.div>
-                  ))}
+                  ))} */}
                   
                   {/* Standard features */}
                   <div className="grid grid-cols-2 gap-x-2 gap-y-2 mt-1">
