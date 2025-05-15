@@ -67,9 +67,9 @@ const DeploymentCTA: React.FC<DeploymentCTAProps> = ({
         </Button>
         
         <Button asChild variant="outline" className="w-full sm:w-auto bg-transparent border-electric/30 text-electric hover:bg-electric/5 transition-all py-6 px-8">
-          <Link to="/contact">
+          <a href="https://dash.stealthrdp.com/submitticket.php" target="_blank" rel="noopener noreferrer">
             Ask a Pre-Sales Question
-          </Link>
+          </a>
         </Button>
       </div>
       

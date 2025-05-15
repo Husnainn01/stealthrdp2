@@ -138,24 +138,24 @@ const AnimatedPlanCard: React.FC<PlanProps> = ({
             animate="animate"
             className="flex flex-col h-full"
           >
-            <CardHeader className="pb-4 bg-midnight pt-5 rounded-t-xl">
+            <CardHeader className="pb-3 bg-midnight pt-4 rounded-t-xl">
               <div className="flex justify-between">
                 <motion.div variants={itemVariants} className="flex-1">
                   <div className="flex flex-col">
-                    <div className="mb-3 pl-2">
-                      <div className="h-16 w-16 flex items-center justify-center text-electric">
+                    <div className="mb-2 pl-2">
+                      <div className="h-14 w-14 flex items-center justify-center text-electric">
                         {plan.icon}
                       </div>
                     </div>
                     <h2 className="text-2xl font-bold text-white">{plan.name}</h2>
-                    <p className="text-gray-400 mt-1 text-lg">{plan.description}</p>
+                    <p className="text-gray-400 mt-1 text-base">{plan.description}</p>
                   </div>
                 </motion.div>
                 
                 <motion.div variants={itemVariants} className="text-right">
                   {plan.monthlyPrice !== null ? (
                     <>
-                      <div className="text-gray-400 text-lg">Starting at</div>
+                      <div className="text-gray-400 text-base">Starting at</div>
                       <div>
                         <div className="font-bold text-2xl text-white">
                           €{currentPrice ? currentPrice.toFixed(2) : ""}
@@ -164,7 +164,7 @@ const AnimatedPlanCard: React.FC<PlanProps> = ({
                       </div>
                       {plan.monthlyPrice > 0 && currentPrice !== plan.monthlyPrice && (
                         <motion.div 
-                          className="text-lg text-gray-500 line-through text-right"
+                          className="text-base text-gray-500 line-through text-right"
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 0.7 }}
                           transition={{ delay: 0.3 }}
@@ -180,25 +180,25 @@ const AnimatedPlanCard: React.FC<PlanProps> = ({
               </div>
             </CardHeader>
             
-            <CardContent className="pt-4 flex-grow px-4">
-              <div className="space-y-4">
+            <CardContent className="pt-3 pb-2 flex-grow px-4">
+              <div className="space-y-3">
                 {/* Specs Grid */}
-                <motion.div className="grid grid-cols-2 gap-3" variants={itemVariants}>
-                  <div className="bg-[#101224] p-4 rounded-lg text-center border border-gray-800">
+                <motion.div className="grid grid-cols-2 gap-2" variants={itemVariants}>
+                  <div className="bg-[#101224] p-3 rounded-lg text-center border border-gray-800">
                     <div className="text-gray-400 text-sm mb-1">CPU</div>
-                    <div className="text-white font-bold text-lg">{plan.specs.cpu}</div>
+                    <div className="text-white font-bold text-base">{plan.specs.cpu}</div>
                   </div>
-                  <div className="bg-[#101224] p-4 rounded-lg text-center border border-gray-800">
+                  <div className="bg-[#101224] p-3 rounded-lg text-center border border-gray-800">
                     <div className="text-gray-400 text-sm mb-1">RAM</div>
-                    <div className="text-white font-bold text-lg">{plan.specs.ram}</div>
+                    <div className="text-white font-bold text-base">{plan.specs.ram}</div>
                   </div>
-                  <div className="bg-[#101224] p-4 rounded-lg text-center border border-gray-800">
+                  <div className="bg-[#101224] p-3 rounded-lg text-center border border-gray-800">
                     <div className="text-gray-400 text-sm mb-1">Storage</div>
-                    <div className="text-white font-bold text-lg">{plan.specs.storage}</div>
+                    <div className="text-white font-bold text-base">{plan.specs.storage}</div>
                   </div>
-                  <div className="bg-[#101224] p-4 rounded-lg text-center border border-gray-800">
+                  <div className="bg-[#101224] p-3 rounded-lg text-center border border-gray-800">
                     <div className="text-gray-400 text-sm mb-1">Bandwidth</div>
-                    <div className="text-white font-bold text-lg">{plan.specs.bandwidth || "Unlimited"}</div>
+                    <div className="text-white font-bold text-base">{plan.specs.bandwidth || "Unlimited"}</div>
                   </div>
                 </motion.div>
                 
@@ -213,39 +213,41 @@ const AnimatedPlanCard: React.FC<PlanProps> = ({
                   ))}
                   
                   {/* Standard features */}
-                  <motion.div className="flex items-center gap-2" variants={itemVariants}>
-                    <Check className="h-5 w-5 text-cyber flex-shrink-0" />
-                    <span className="text-gray-300 text-sm">24/7 Support</span>
-                  </motion.div>
-                  <motion.div className="flex items-center gap-2" variants={itemVariants}>
-                    <Check className="h-5 w-5 text-cyber flex-shrink-0" />
-                    <span className="text-gray-300 text-sm">Root Access</span>
-                  </motion.div>
-                  <motion.div className="flex items-center gap-2" variants={itemVariants}>
-                    <Check className="h-5 w-5 text-cyber flex-shrink-0" />
-                    <span className="text-gray-300 text-sm">99.9% Uptime</span>
-                  </motion.div>
-                  <motion.div className="flex items-center gap-2" variants={itemVariants}>
-                    <Check className="h-5 w-5 text-cyber flex-shrink-0" />
-                    <span className="text-gray-300 text-sm">{plan.name.includes('USA') ? 'USA' : 'EU'} Location</span>
-                  </motion.div>
-                  <motion.div className="flex items-center gap-2" variants={itemVariants}>
-                    <Check className="h-5 w-5 text-cyber flex-shrink-0" />
-                    <span className="text-gray-300 text-sm">1Gbps Network</span>
-                  </motion.div>
-                  <motion.div className="flex items-center gap-2" variants={itemVariants}>
-                    <Check className="h-5 w-5 text-cyber flex-shrink-0" />
-                    <span className="text-gray-300 text-sm">Dedicated IP</span>
-                  </motion.div>
+                  <div className="grid grid-cols-2 gap-x-2 gap-y-2 mt-1">
+                    <motion.div className="flex items-center gap-2" variants={itemVariants}>
+                      <Check className="h-5 w-5 text-cyber flex-shrink-0" />
+                      <span className="text-gray-300 text-sm">24/7 Support</span>
+                    </motion.div>
+                    <motion.div className="flex items-center gap-2" variants={itemVariants}>
+                      <Check className="h-5 w-5 text-cyber flex-shrink-0" />
+                      <span className="text-gray-300 text-sm">Root Access</span>
+                    </motion.div>
+                    <motion.div className="flex items-center gap-2" variants={itemVariants}>
+                      <Check className="h-5 w-5 text-cyber flex-shrink-0" />
+                      <span className="text-gray-300 text-sm">99.9% Uptime</span>
+                    </motion.div>
+                    <motion.div className="flex items-center gap-2" variants={itemVariants}>
+                      <Check className="h-5 w-5 text-cyber flex-shrink-0" />
+                      <span className="text-gray-300 text-sm">{plan.name.includes('USA') ? 'USA' : 'EU'} Location</span>
+                    </motion.div>
+                    <motion.div className="flex items-center gap-2" variants={itemVariants}>
+                      <Check className="h-5 w-5 text-cyber flex-shrink-0" />
+                      <span className="text-gray-300 text-sm">1Gbps Network</span>
+                    </motion.div>
+                    <motion.div className="flex items-center gap-2" variants={itemVariants}>
+                      <Check className="h-5 w-5 text-cyber flex-shrink-0" />
+                      <span className="text-gray-300 text-sm">Dedicated IP</span>
+                    </motion.div>
+                  </div>
                 </motion.div>
               </div>
             </CardContent>
             
-            <CardFooter className="flex flex-col items-stretch pt-2 px-4 pb-4 mt-auto relative z-10">
+            <CardFooter className="flex flex-col items-stretch pt-2 px-4 pb-3 mt-auto relative z-10">
               {/* Billing Cycle Selection */}
               {!plan.isCustom && (
                 <motion.div 
-                  className="w-full mb-4"
+                  className="w-full mb-3"
                   variants={itemVariants}
                 >
                   <div className="grid grid-cols-2 gap-2 mb-2">
@@ -323,7 +325,7 @@ const AnimatedPlanCard: React.FC<PlanProps> = ({
                     whileHover="hover"
                   >
                     <Button 
-                      className="w-full bg-electric hover:bg-electric/80 text-midnight font-bold py-3"
+                      className="w-full bg-electric hover:bg-electric/80 text-midnight font-bold py-2.5"
                     >
                       {plan.isCustom ? 'Configure Now' : 'Buy Now!'}
                     </Button>
@@ -338,4 +340,4 @@ const AnimatedPlanCard: React.FC<PlanProps> = ({
   );
 };
 
-export default AnimatedPlanCard; 
+export default AnimatedPlanCard;

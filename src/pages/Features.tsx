@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { featureApi } from '@/lib/api/featureApi';
 import { IFeature } from '@/lib/models/Feature';
+import { motion } from 'framer-motion';
 
 // Icon mapping component
 const IconComponent: React.FC<{ name: string }> = ({ name }) => {
@@ -39,6 +40,21 @@ const splitDescriptionToBullets = (description: string): string[] => {
       .map(item => item.endsWith('.') ? item : `${item}.`);
   } else {
     return [description]; // Return as single item if no clear separator
+  }
+};
+
+// Card animations
+const cardVariants = {
+  initial: { 
+    scale: 1,
+    boxShadow: "0 0 20px rgba(0, 240, 255, 0.25)" 
+  },
+  hover: { 
+    scale: 1.03,
+    boxShadow: "0 0 30px rgba(0, 240, 255, 0.4)"
+  },
+  tap: { 
+    scale: 0.98 
   }
 };
 
@@ -160,7 +176,14 @@ const Features = () => {
             ) : error || coreServices.length === 0 ? (
               // Fallback to default data if error or empty
               defaultServiceCategories.map((category, index) => (
-                <div key={index} className="bg-charcoal rounded-xl p-8 card-hover">
+                <motion.div 
+                  key={index} 
+                  className="bg-charcoal rounded-xl p-8 border border-electric shadow-[0_0_20px_rgba(0,240,255,0.25)] h-full transition-all duration-300"
+                  initial="initial"
+                  whileHover="hover"
+                  whileTap="tap"
+                  variants={cardVariants}
+                >
                   <div className="flex justify-center">
                     <IconComponent name={category.iconName} />
                   </div>
@@ -174,12 +197,19 @@ const Features = () => {
                       </div>
                     ))}
                   </div>
-                </div>
+                </motion.div>
               ))
             ) : (
               // Dynamic data from API
               coreServices.map((feature) => (
-                <div key={feature._id.toString()} className="bg-charcoal rounded-xl p-8 card-hover">
+                <motion.div 
+                  key={feature._id.toString()} 
+                  className="bg-charcoal rounded-xl p-8 border border-electric shadow-[0_0_20px_rgba(0,240,255,0.25)] h-full transition-all duration-300"
+                  initial="initial"
+                  whileHover="hover"
+                  whileTap="tap"
+                  variants={cardVariants}
+                >
                   <div className="flex justify-center">
                     <IconComponent name={feature.iconName} />
                   </div>
@@ -192,7 +222,7 @@ const Features = () => {
                       </div>
                     ))}
                   </div>
-                </div>
+                </motion.div>
               ))
             )}
           </div>
@@ -219,7 +249,14 @@ const Features = () => {
               // Display hardware features from API or fallback to empty state with CTA
               hardwareFeatures.length > 0 ? (
                 hardwareFeatures.map((feature) => (
-                  <div key={feature._id.toString()} className="bg-midnight rounded-xl p-6 card-hover">
+                  <motion.div 
+                    key={feature._id.toString()} 
+                    className="bg-midnight rounded-xl p-6 border border-electric shadow-[0_0_20px_rgba(0,240,255,0.25)] h-full transition-all duration-300"
+                    initial="initial"
+                    whileHover="hover"
+                    whileTap="tap"
+                    variants={cardVariants}
+                  >
                     <div className="flex justify-center">
                       <IconComponent name={feature.iconName} />
                     </div>
@@ -232,7 +269,7 @@ const Features = () => {
                         </div>
                       ))}
                     </div>
-                  </div>
+                  </motion.div>
                 ))
               ) : (
                 <div className="col-span-full flex flex-col items-center justify-center p-12 bg-midnight/50 rounded-xl border border-white/10">
@@ -243,6 +280,59 @@ const Features = () => {
                 </div>
               )
             )}
+          </div>
+        </div>
+      </section>
+
+      {/* Build Your Perfect VPS Section */}
+      <section className="py-16 bg-midnight" id="custom-vps">
+        <div className="container">
+          <div className="max-w-6xl mx-auto">
+            <div className="bg-[#0C0F2D] border border-cyber rounded-xl p-12 shadow-[0_0_30px_rgba(34,212,107,0.25)] relative overflow-hidden">
+              <div className="grid md:grid-cols-2 gap-8 items-center">
+                <div>
+                  <h2 className="text-4xl md:text-5xl font-bold font-montserrat mb-6">
+                    Build Your <span className="text-cyber">Perfect VPS</span>
+                  </h2>
+                  <p className="text-gray-300 mb-8">
+                    Don't settle for predefined packages. Our customizable VPS
+                    solution allows you to select exactly the resources you need for
+                    your specific workload, ensuring optimal performance without
+                    overpaying for unused capacity.
+                  </p>
+                  
+                  <div className="space-y-4 mb-8">
+                    <div className="flex items-start">
+                      <Check className="h-5 w-5 text-cyber mr-3 mt-0.5 flex-shrink-0" />
+                      <span className="text-gray-300">Choose your CPU cores, RAM, and storage</span>
+                    </div>
+                    <div className="flex items-start">
+                      <Check className="h-5 w-5 text-cyber mr-3 mt-0.5 flex-shrink-0" />
+                      <span className="text-gray-300">Select your preferred server location</span>
+                    </div>
+                    <div className="flex items-start">
+                      <Check className="h-5 w-5 text-cyber mr-3 mt-0.5 flex-shrink-0" />
+                      <span className="text-gray-300">Install your choice of operating system</span>
+                    </div>
+                    <div className="flex items-start">
+                      <Check className="h-5 w-5 text-cyber mr-3 mt-0.5 flex-shrink-0" />
+                      <span className="text-gray-300">Scale resources up or down at any time</span>
+                    </div>
+                  </div>
+                  
+                  <Button asChild className="bg-cyber text-midnight hover:bg-cyber/90 py-6 px-8">
+                    <Link to="/plans">Configure Your Custom VPS</Link>
+                  </Button>
+                </div>
+                
+                <div className="flex justify-center">
+                  <div className="relative">
+                    <div className="absolute inset-0 rounded-full bg-cyber/20 blur-3xl"></div>
+                    <Settings className="h-64 w-64 text-cyber" />
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -267,7 +357,14 @@ const Features = () => {
               // Display security features from API or empty state
               additionalFeatures.length > 0 ? (
                 additionalFeatures.map((feature) => (
-                  <div key={feature._id.toString()} className="bg-charcoal rounded-xl p-6 card-hover">
+                  <motion.div 
+                    key={feature._id.toString()} 
+                    className="bg-charcoal rounded-xl p-6 border border-electric shadow-[0_0_20px_rgba(0,240,255,0.25)] h-full transition-all duration-300"
+                    initial="initial"
+                    whileHover="hover"
+                    whileTap="tap"
+                    variants={cardVariants}
+                  >
                     <div className="flex justify-center">
                       <IconComponent name={feature.iconName} />
                     </div>
@@ -280,7 +377,7 @@ const Features = () => {
                         </div>
                       ))}
                     </div>
-                  </div>
+                  </motion.div>
                 ))
               ) : (
                 <div className="col-span-full flex flex-col items-center justify-center p-12 bg-charcoal/50 rounded-xl border border-white/10">
@@ -312,7 +409,14 @@ const Features = () => {
               // Display use cases from API or empty state
               useCases.length > 0 ? (
                 useCases.map((feature) => (
-                  <div key={feature._id.toString()} className="bg-midnight rounded-xl p-6 card-hover">
+                  <motion.div 
+                    key={feature._id.toString()} 
+                    className="bg-midnight rounded-xl p-6 border border-electric shadow-[0_0_20px_rgba(0,240,255,0.25)] h-full transition-all duration-300"
+                    initial="initial"
+                    whileHover="hover"
+                    whileTap="tap"
+                    variants={cardVariants}
+                  >
                     <div className="flex justify-center">
                       <IconComponent name={feature.iconName} />
                     </div>
@@ -325,7 +429,7 @@ const Features = () => {
                         </div>
                       ))}
                     </div>
-                  </div>
+                  </motion.div>
                 ))
               ) : (
                 <div className="col-span-full flex flex-col items-center justify-center p-12 bg-midnight/50 rounded-xl border border-white/10">
@@ -357,12 +461,19 @@ const Features = () => {
               // Display guarantees from API or fallback
               guarantees.length > 0 ? (
                 guarantees.map((feature) => (
-                  <div key={feature._id.toString()} className="bg-charcoal/50 rounded-xl p-8 card-hover">
+                  <motion.div 
+                    key={feature._id.toString()} 
+                    className="bg-charcoal/50 rounded-xl p-8 border border-electric shadow-[0_0_20px_rgba(0,240,255,0.25)] h-full transition-all duration-300"
+                    initial="initial"
+                    whileHover="hover"
+                    whileTap="tap"
+                    variants={cardVariants}
+                  >
                     <div className="flex justify-center">
                       <IconComponent name={feature.iconName} />
                     </div>
-                    <h3 className="text-xl font-bold font-montserrat text-white mb-4">{feature.title}</h3>
-                    <div className="space-y-2 text-left">
+                    <h3 className="text-xl font-bold font-montserrat text-white mb-4 text-center">{feature.title}</h3>
+                    <div className="space-y-2">
                       {splitDescriptionToBullets(feature.description).map((item, i) => (
                         <div key={i} className="flex items-start">
                           <Check className="h-4 w-4 text-cyber mr-2 mt-0.5 flex-shrink-0" />
@@ -370,7 +481,7 @@ const Features = () => {
                         </div>
                       ))}
                     </div>
-                  </div>
+                  </motion.div>
                 ))
               ) : (
                 <div className="col-span-full flex flex-col items-center justify-center p-12 bg-charcoal/50 rounded-xl border border-white/10">

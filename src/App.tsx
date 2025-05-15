@@ -14,6 +14,7 @@ import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import ServerStatusPage from "./pages/ServerStatus";
 import PrivacyPolicyPage from "./pages/PrivacyPolicy";
+import About from "./pages/About";
 import AdminLayout from "./admin/components/AdminLayout";
 import Dashboard from "./admin/pages/Dashboard";
 import PlansManager from "./admin/pages/PlansManager";
@@ -46,6 +47,7 @@ const App = () => (
             <Route path="/blog/:slug" element={<BlogDetailPage />} />
             <Route path="/server-status" element={<ServerStatusPage />} />
             <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+            <Route path="/about" element={<About />} />
             <Route path="/login" element={<Login />} />
             
             {/* Protected Admin Routes */}
