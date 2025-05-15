@@ -23,7 +23,7 @@ const Footer = () => {
               <li><Link to="/plans" className="text-gray-400 hover:text-electric transition-colors">RDP Plans</Link></li>
               <li><Link to="/features" className="text-gray-400 hover:text-electric transition-colors">Features</Link></li>
               <li><Link to="/enterprise" className="text-gray-400 hover:text-electric transition-colors">Enterprise</Link></li>
-              <li><Link to="/pricing" className="text-gray-400 hover:text-electric transition-colors">Pricing</Link></li>
+              <li><Link to="/plans" className="text-gray-400 hover:text-electric transition-colors">Pricing</Link></li>
             </ul>
           </div>
           
@@ -31,7 +31,7 @@ const Footer = () => {
             <h3 className="text-white font-montserrat font-semibold text-lg mb-4">Resources</h3>
             <ul className="space-y-2">
               <li><a href="https://docs.stealthrdp.com/hc/stealth-rdp-docs/en" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-electric transition-colors">Documentation</a></li>
-              <li><Link to="/tutorials" className="text-gray-400 hover:text-electric transition-colors">Tutorials</Link></li>
+              <li><a href="https://docs.stealthrdp.com/hc/stealth-rdp-docs/en" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-electric transition-colors">Tutorials</a></li>
               <li><Link to="/faq" className="text-gray-400 hover:text-electric transition-colors">FAQ</Link></li>
               <li><Link to="/blog" className="text-gray-400 hover:text-electric transition-colors">Blog</Link></li>
             </ul>
