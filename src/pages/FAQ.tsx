@@ -168,7 +168,7 @@ const FAQPage = () => {
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <button 
                 className="btn-electric px-6 py-2.5 rounded-lg font-medium" 
-                onClick={() => window.open('https://stealthrdp.com/dash/submitticket.php', '_blank')}
+                onClick={() => window.open('https://dash.stealthrdp.com/submitticket.php', '_blank')}
               >
                 Contact Support
               </button>

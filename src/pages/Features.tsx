@@ -321,7 +321,7 @@ const Features = () => {
                   </div>
                   
                   <Button asChild className="bg-cyber text-midnight hover:bg-cyber/90 py-6 px-8">
-                    <Link to="/plans">Configure Your Custom VPS</Link>
+                    <a href="https://dash.stealthrdp.com/index.php?rp=/store/build-your-own-rdp-vps" target="_blank" rel="noopener noreferrer">Configure Your Custom VPS</a>
                   </Button>
                 </div>
                 
@@ -506,7 +506,7 @@ const Features = () => {
                 <Link to="/plans">View Our Plans</Link>
               </Button>
               <Button asChild variant="outline" size="lg" className="border-electric text-electric hover:bg-electric/10">
-                <a href="https://stealthrdp.com/dash/submitticket.php" target="_blank" rel="noopener noreferrer">Contact Sales</a>
+                <a href="https://dash.stealthrdp.com/submitticket.php" target="_blank" rel="noopener noreferrer">Contact Sales</a>
               </Button>
             </div>
           </div>

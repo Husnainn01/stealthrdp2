@@ -61,9 +61,9 @@ const DeploymentCTA: React.FC<DeploymentCTAProps> = ({
       
       <div className="flex flex-col sm:flex-row gap-4 items-center">
         <Button asChild className="w-full sm:w-auto bg-cyber text-midnight hover:bg-cyber/90 transition-all font-medium py-6 px-8 shadow-[0_4px_12px_rgba(34,212,107,0.3)]">
-          <Link to="/plans">
+          <a href="https://dash.stealthrdp.com/index.php?rp=/store/standard-usa-rdp-vps" target="_blank" rel="noopener noreferrer">
             DEPLOY YOUR SERVER NOW
-          </Link>
+          </a>
         </Button>
         
         <Button asChild variant="outline" className="w-full sm:w-auto bg-transparent border-electric/30 text-electric hover:bg-electric/5 transition-all py-6 px-8">
