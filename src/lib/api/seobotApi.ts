@@ -27,8 +27,14 @@ export const testSeoBotApi = async () => {
     try {
       // First try with getArticles
       console.log('Testing getArticles...');
-      const articles = await blogClient.getArticles(0, 1);
-      console.log('Articles response:', articles);
+      const response = await blogClient.getArticles(0, 1);
+      console.log('Articles response:', response);
+      
+      // Extract articles array from the response
+      const articles = Array.isArray(response) ? response : (response?.articles || []);
+      const total = response?.total || 0;
+      
+      console.log(`Found ${total} total articles, with ${articles.length} in current page`);
       
       // If it worked, also try getting categories
       try {
@@ -43,7 +49,7 @@ export const testSeoBotApi = async () => {
       return { 
         success: true, 
         message: 'SEO Bot API test successful!',
-        data: { articles }
+        data: { articles, total }
       };
     } catch (articlesError) {
       // Try a direct fetch with a simple URL to test connectivity
@@ -120,6 +126,8 @@ const mapCategory = (category: ICategory): BlogCategory => {
     'tutorial': BlogCategory.TUTORIAL,
     'news': BlogCategory.INDUSTRY,
     'guides': BlogCategory.TECHNICAL,
+    'remote-desktop': BlogCategory.TECHNICAL,
+    'remote': BlogCategory.TECHNICAL
   };
 
   // Try to match by title (case-insensitive)
@@ -154,6 +162,11 @@ const convertSeoBotArticle = (article: any): IBlogBase => {
       ? article.category 
       : article.category.title || '';
     
+    console.log('Mapping SEO Bot category:', {
+      original: article.category,
+      title: categoryTitle
+    });
+    
     // Simple mapping based on keywords in the category title
     if (categoryTitle.toLowerCase().includes('security')) {
       category = BlogCategory.SECURITY;
@@ -163,13 +176,23 @@ const convertSeoBotArticle = (article: any): IBlogBase => {
       category = BlogCategory.ANNOUNCEMENT;
     } else if (categoryTitle.toLowerCase().includes('news')) {
       category = BlogCategory.INDUSTRY;
+    } else if (categoryTitle.toLowerCase().includes('remote desktop')) {
+      category = BlogCategory.TECHNICAL; // Map 'Remote Desktop' to Technical Guides
+    } else if (categoryTitle.toLowerCase().includes('remote')) {
+      category = BlogCategory.TECHNICAL; // Map any 'Remote' related categories to Technical Guides
     }
+    
+    console.log(`Mapped category "${categoryTitle}" to "${category}"`);
   }
+  
+  // Get content and sanitize it
+  let content = article.html || article.markdown || article.content || '';
+  content = sanitizeContent(content);
   
   return {
     title: article.headline || article.title,
     slug: article.slug,
-    content: article.html || article.markdown || article.content,
+    content,
     excerpt: article.metaDescription || article.summary || '',
     featuredImage: article.image || '',
     author: article.author?.name || "StealthRDP Team",
@@ -181,7 +204,37 @@ const convertSeoBotArticle = (article: any): IBlogBase => {
     publishedAt: article.publishedAt ? new Date(article.publishedAt) : new Date(),
     metaTitle: article.headline || article.title,
     metaDescription: article.metaDescription || article.summary || '',
+    readingTime: article.readingTime || Math.ceil(content.length / 3000) // Approximate 3000 chars per minute
   };
+};
+
+/**
+ * Sanitize content to fix SVG issues and other potential HTML problems
+ */
+const sanitizeContent = (content: string): string => {
+  if (!content) return '';
+  
+  try {
+    // Fix SVG path issues
+    content = content.replace(/d="[^"]*?\.{3}[^"]*?"/g, 'fill="currentColor"');
+    
+    // Remove potentially problematic SVG attributes
+    content = content.replace(/<svg[^>]*>/g, (match) => {
+      return match
+        .replace(/viewBox="[^"]*"/g, 'viewBox="0 0 24 24"')
+        .replace(/width="[^"]*"/g, 'width="24"')
+        .replace(/height="[^"]*"/g, 'height="24"');
+    });
+    
+    // Clean up any script tags (security precaution)
+    content = content.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+    
+    return content;
+  } catch (err) {
+    console.error('Error sanitizing content:', err);
+    // If sanitization fails, remove all SVGs as a fallback
+    return content.replace(/<svg\b[^<]*(?:(?!<\/svg>)<[^<]*)*<\/svg>/gi, '');
+  }
 };
 
 /**
@@ -200,10 +253,13 @@ export const seoBotApi = {
     try {
       // page is 0-based in their API, so 0 means first page
       console.log(`Calling blogClient.getArticles(0, ${limit})...`);
-      const articles = await blogClient.getArticles(0, limit);
-      console.log('SEO Bot getArticles response:', articles);
+      const response = await blogClient.getArticles(0, limit);
+      console.log('SEO Bot getArticles response:', response);
       
-      if (!articles || !Array.isArray(articles) || articles.length === 0) {
+      // Check if response is in the new format with articles and total properties
+      const articles = Array.isArray(response) ? response : (response?.articles || []);
+      
+      if (!articles || articles.length === 0) {
         console.warn('No articles returned from SEO Bot API');
         return [];
       }

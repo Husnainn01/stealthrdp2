@@ -217,10 +217,20 @@ const BlogDetailPage: React.FC = () => {
               )}
               
               {/* Blog Content */}
-              <div 
-                className="prose prose-lg prose-invert max-w-none mb-12"
-                dangerouslySetInnerHTML={{ __html: blog.content }}
-              />
+              <div className="mb-12">
+                <div 
+                  className="prose prose-lg prose-invert max-w-none bg-charcoal p-8 md:p-10 rounded-xl border border-white/10 shadow-lg"
+                  dangerouslySetInnerHTML={{ __html: blog.content }}
+                />
+                
+                {/* Reading progress indicator */}
+                <div className="mt-8 flex justify-center">
+                  <span className="text-white/60 text-sm flex items-center">
+                    <Calendar className="h-4 w-4 mr-1 text-electric" />
+                    {blog.readingTime ? `${blog.readingTime} min read` : 'Quick read'}
+                  </span>
+                </div>
+              </div>
               
               {/* Tags */}
               {blog.tags && blog.tags.length > 0 && (

@@ -45,6 +45,14 @@ const BlogPage: React.FC = () => {
             
             if (seoBotBlogs.length === 0) {
               console.warn('SEO Bot returned zero blogs - check category mappings');
+            } else {
+              // Log the original category from SEO Bot and the mapped category
+              seoBotBlogs.forEach((blog, index) => {
+                console.log(`Blog #${index + 1}: "${blog.title}"`, {
+                  category: blog.category,
+                  slug: blog.slug
+                });
+              });
             }
             
             // Convert to IBlog format (adding placeholder _id, createdAt, and updatedAt)
