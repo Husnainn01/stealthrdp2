@@ -222,7 +222,7 @@ const Plans = () => {
     // Generate purchase URL based on plan name and billing cycle
     const getPurchaseUrl = () => {
       if (plan.isCustom) {
-        return 'https://stealthrdp.com/dash/index.php?rp=/store/build-your-own-rdp-vps';
+        return 'https://dash.stealthrdp.com/index.php?rp=/store/build-your-own-rdp-vps';
       }
 
       // Exact URLs for each plan and billing cycle
