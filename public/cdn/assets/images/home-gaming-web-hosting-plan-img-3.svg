@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	viewBox="0 0 52 60" enable-background="new 0 0 52 60" xml:space="preserve">
+<g>
+	<defs>
+		<rect id="SVGID_1_" width="52" height="60"/>
+	</defs>
+	<clipPath id="SVGID_2_">
+		<use xlink:href="#SVGID_1_"  overflow="visible"/>
+	</clipPath>
+	
+		<path clip-path="url(#SVGID_2_)" fill="none" stroke="#745984" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="
+		M26,41L26,41c-7.732,0-14-6.269-14-14V15c0-7.731,6.268-14,14-14c7.732,0,14,6.269,14,14v12C40,34.731,33.732,41,26,41z"/>
+	
+		<line clip-path="url(#SVGID_2_)" fill="none" stroke="#745984" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" x1="26" y1="47" x2="26" y2="59"/>
+	
+		<line clip-path="url(#SVGID_2_)" fill="none" stroke="#745984" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" x1="18" y1="59" x2="34" y2="59"/>
+	
+		<line clip-path="url(#SVGID_2_)" fill="none" stroke="#745984" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" x1="6.401" y1="26.496" x2="6.401" y2="15.505"/>
+	
+		<line clip-path="url(#SVGID_2_)" fill="none" stroke="#745984" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" x1="45.599" y1="26.496" x2="45.599" y2="15.505"/>
+	
+		<line clip-path="url(#SVGID_2_)" fill="none" stroke="#745984" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" x1="1" y1="23.996" x2="1" y2="18.005"/>
+	
+		<line clip-path="url(#SVGID_2_)" fill="none" stroke="#745984" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" x1="51" y1="23.996" x2="51" y2="18.005"/>
+	
+		<path clip-path="url(#SVGID_2_)" fill="none" stroke="#745984" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="
+		M6.401,31C8.255,40.129,16.324,47,26,47s17.745-6.871,19.599-16"/>
+</g>
+</svg>

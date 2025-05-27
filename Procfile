@@ -1,0 +1,1 @@
+web: cd server && PORT=5001 NODE_ENV=production node server.js || node index.js 

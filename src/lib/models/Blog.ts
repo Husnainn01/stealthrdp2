@@ -27,6 +27,7 @@ export interface IBlogBase {
   publishedAt?: Date;
   metaTitle?: string;
   metaDescription?: string;
+  readingTime?: number;
 }
 
 /**

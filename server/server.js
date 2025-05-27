@@ -14,6 +14,71 @@ dotenv.config();
 // Create Express app
 const app = express();
 
+// Safety middleware to intercept potential path-to-regexp errors
+app.use((req, res, next) => {
+  // Check if URL contains a colon without being properly escaped
+  try {
+    // This will catch badly formatted URLs before they crash the app
+    if (req.url && req.url.includes('http')) {
+      console.warn('WARNING: URL contains http - this might cause path-to-regexp errors:', req.url);
+      // Sanitize the URL by removing any potentially problematic patterns
+      req.url = req.url.replace(/https?:\/\/[^\/]+/g, '');
+    }
+    next();
+  } catch (err) {
+    console.error('URL parsing error:', err);
+    res.status(400).json({ error: 'Invalid URL format' });
+  }
+});
+
+// Apply CORS middleware with proper configuration for credentials
+app.use(cors({
+  origin: function(origin, callback) {
+    console.log('Incoming request from origin:', origin || 'no origin');
+    
+    // List of allowed origins
+    const allowedOrigins = [
+      'http://localhost:8080',
+      'http://localhost:3000',
+      'https://stealthrdp.com',
+      'https://www.stealthrdp.com',
+      'https://stealthrdp-production.up.railway.app',
+      'https://stealthrdp2-production.up.railway.app'
+    ];
+    
+    // For local development or non-browser requests that don't send origin
+    if (!origin) {
+      callback(null, '*'); // Allow requests with no origin (like mobile apps or curl requests)
+    } else if (allowedOrigins.includes(origin)) {
+      callback(null, origin); // Allow the specific origin
+    } else {
+      console.log(`CORS blocked origin: ${origin}`);
+      callback(null, allowedOrigins[0]); // Default to first allowed origin if not matching
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: [
+    'Origin', 
+    'X-Requested-With', 
+    'Content-Type', 
+    'Accept', 
+    'Authorization', 
+    'Cache-Control',
+    'X-Access-Token',
+    'X-Refresh-Token'
+  ]
+}));
+
+// Also set the Access-Control-Allow-Origin header explicitly for all responses
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (origin === 'https://www.stealthrdp.com' || origin === 'https://stealthrdp.com') {
+    res.header('Access-Control-Allow-Origin', origin);
+  }
+  next();
+});
+
 // Connect to MongoDB
 connectDB();
 
@@ -41,48 +106,25 @@ app.use((req, res, next) => {
   next();
 });
 
-// CORS Configuration - Making completely permissive for troubleshooting
-app.use((req, res, next) => {
-  // Allow all origins
-  res.header('Access-Control-Allow-Origin', '*');
-  
-  // Allow all methods
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
-  
-  // Allow all headers by reflecting the requested headers back
-  const requestedHeaders = req.headers['access-control-request-headers'];
-  if (requestedHeaders) {
-    res.header('Access-Control-Allow-Headers', requestedHeaders);
-  } else {
-    // Fallback to a comprehensive list of common headers
-    res.header('Access-Control-Allow-Headers', 
-      'Origin, X-Requested-With, Content-Type, content-type, Accept, accept, Authorization, authorization, ' +
-      'Cache-Control, cache-control, X-Access-Token, x-access-token, X-Refresh-Token, x-refresh-token');
-  }
-  
-  // Allow credentials
-  res.header('Access-Control-Allow-Credentials', 'true');
-  
-  // Set max age for preflight requests
-  res.header('Access-Control-Max-Age', '86400'); // 24 hours
-  
-  // Handle preflight requests
-  if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
-  }
-  
-  next();
-});
-
-// Additional specific CORS handling for file uploads is no longer needed
-// as our custom middleware handles all endpoints including file uploads
-// app.options('/api/blogs/upload-image', cors(corsOptions));
-// app.use('/api/blogs/upload-image', cors(corsOptions));
-
 // Apply regular body parsers for JSON and form data
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Explicit handler for OPTIONS requests (CORS preflight)
+app.options('*', (req, res) => {
+  console.log('Handling OPTIONS preflight request');
+  
+  // Set CORS headers for OPTIONS requests
+  const origin = req.headers.origin;
+  if (origin === 'https://www.stealthrdp.com' || origin === 'https://stealthrdp.com') {
+    res.header('Access-Control-Allow-Origin', origin);
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Cache-Control, X-Access-Token, X-Refresh-Token');
+    res.header('Access-Control-Allow-Credentials', 'true');
+  }
+  
+  res.status(200).end();
+});
 
 // Configure file upload middleware for specific upload routes
 app.use('/api/blogs/upload-image', fileUpload({
@@ -103,6 +145,15 @@ app.post('/api/privacy-policy', privacyPolicyController.updatePrivacyPolicy);
 app.put('/api/privacy-policy/:id', privacyPolicyController.updatePrivacyPolicy);
 app.delete('/api/privacy-policy/:id', privacyPolicyController.deletePrivacyPolicy);
 
+// Serve static files from the React app's build directory
+const buildPath = path.join(__dirname, '../dist');
+if (fs.existsSync(buildPath)) {
+  console.log(`Serving static files from: ${buildPath}`);
+  app.use(express.static(buildPath));
+} else {
+  console.log(`Build directory not found at: ${buildPath}, falling back to public`);
+}
+
 // Serve static files from public directory
 app.use(express.static('public'));
 
@@ -112,7 +163,64 @@ app.use('/api/auth', authRoutes);
 
 // Test route
 app.get('/', (req, res) => {
-  res.send('StealthRDP API is running');
+  // Only respond with API message if requesting the root path from the API domain
+  const host = req.get('host');
+  if (host && host.includes('railway.app')) {
+    res.send('StealthRDP API is running');
+  } else {
+    // Otherwise try to serve the frontend index.html
+    const indexPath = path.join(__dirname, '../dist/index.html');
+    if (fs.existsSync(indexPath)) {
+      res.sendFile(indexPath);
+    } else {
+      res.send('StealthRDP API is running');
+    }
+  }
+});
+
+// Add a debug route to check CORS
+app.get('/api/debug', (req, res) => {
+  res.json({
+    message: 'Debug endpoint is working',
+    cors: 'If you see this, CORS is working',
+    headers: req.headers,
+    environment: process.env.NODE_ENV,
+    port: process.env.PORT
+  });
+});
+
+// Catch-all route for client-side routing - serve index.html for any non-API routes
+app.get('*', (req, res, next) => {
+  // Skip for API routes
+  if (req.path.startsWith('/api')) {
+    return next();
+  }
+  
+  console.log(`Handling client-side route: ${req.path}`);
+  
+  // Try to serve the index.html file
+  const indexPath = path.join(__dirname, '../dist/index.html');
+  if (fs.existsSync(indexPath)) {
+    return res.sendFile(indexPath);
+  } else {
+    console.error(`Index.html not found at: ${indexPath}`);
+    next(); // Let the 404 handler take care of it
+  }
+});
+
+// Add a catchall route for unmatched API routes
+app.use('*', (req, res) => {
+  // Only handle API routes in this catchall
+  if (req.originalUrl.startsWith('/api')) {
+    res.status(404).json({
+      message: 'API route not found',
+      path: req.originalUrl,
+      method: req.method
+    });
+  } else {
+    // Non-API routes should have been handled by the previous catch-all
+    res.status(404).send('Not found');
+  }
 });
 
 // Error handler
@@ -125,13 +233,20 @@ app.use((err, req, res, next) => {
 console.log('Environment variables:');
 console.log('process.env.PORT =', process.env.PORT);
 
-// Force port to 5001 to avoid conflicts with macOS Control Center
+// Use environment PORT or default to 5001
+// Railway seems to be using port 5001 for this service
 const PORT = 5001;
 const HOST = '0.0.0.0'; // Listen on all interfaces
 
 // Start server
 app.listen(PORT, HOST, () => {
   console.log(`Server running on ${HOST}:${PORT}`);
-  console.log(`Server URL: http://localhost:${PORT}`);
-  console.log(`CORS configured to allow all origins for troubleshooting`);
-}); 
+  
+  // Generate proper server URL based on environment
+  const serverUrl = process.env.NODE_ENV === 'production' 
+    ? 'https://stealthrdp2-production.up.railway.app' 
+    : `http://localhost:${PORT}`;
+    
+  console.log(`Server URL: ${serverUrl}`);
+  console.log(`CORS configured for specific origins with credentials support`);
+});

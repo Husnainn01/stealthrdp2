@@ -80,12 +80,20 @@ const ServerStatus: React.FC = () => {
     try {
       console.log('Testing server API connection');
       
+      // Determine API URL based on environment
+      const apiUrl = window.location.hostname === 'www.stealthrdp.com' || window.location.hostname === 'stealthrdp.com'
+        ? 'https://stealthrdp2-production.up.railway.app/api/uptime'
+        : 'http://localhost:5001/api/uptime';
+      
+      console.log(`Using API URL: ${apiUrl}`);
+      
       // Make a direct axios request to our server API
-      const response = await axios.post('http://localhost:5001/api/uptime', {}, {
+      const response = await axios.post(apiUrl, {}, {
         headers: {
           'Content-Type': 'application/json',
           'Cache-Control': 'no-cache',
-        }
+        },
+        withCredentials: false // Set to false to avoid CORS credentials issues
       });
       
       console.log('Server API test response:', response);
@@ -505,9 +513,6 @@ const ServerStatus: React.FC = () => {
                           </div>
                           <div>
                             <div className="font-medium text-white text-lg">{monitor.friendly_name}</div>
-                            <div className="text-sm text-gray-400">
-                              {monitor.url.replace(/(^\w+:|^)\/\//, '')}
-                            </div>
                           </div>
                         </div>
                         <div className={`${getStatusColor(monitor.status)} font-medium px-3 py-1 rounded-full text-sm ${getStatusBgColor(monitor.status)}`}>

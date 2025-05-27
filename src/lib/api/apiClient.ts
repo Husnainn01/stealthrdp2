@@ -4,7 +4,15 @@ const getApiBaseUrl = () => {
   if (typeof window !== 'undefined') {
     const savedUrl = localStorage.getItem('api_base_url');
     if (savedUrl) {
+      console.log('Using saved API base URL:', savedUrl);
       return `${savedUrl}/api`;
+    }
+    
+    // Check if we're on production domain
+    if (window.location.hostname === 'www.stealthrdp.com' || window.location.hostname === 'stealthrdp.com') {
+      console.log('Production domain detected, using Railway API URL');
+      // Railway uses port 8080 for the application
+      return 'https://stealthrdp2-production.up.railway.app/api';
     }
   }
   
@@ -50,8 +58,8 @@ async function fetchAPI<T>(
     headers,
     // Explicitly set mode for debugging
     mode: 'cors',
-    // Remove credentials to test if that's causing issues
-    // credentials: 'same-origin' as RequestCredentials
+    // Never use credentials for cross-origin requests
+    credentials: 'omit'
   };
   
   console.log(`API Request: ${options.method || 'GET'} ${url}`);

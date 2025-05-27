@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs"
 import { planApi, PlanApiResponse } from '../lib/api/planApi';
 import AnimatedPlanCard from '../components/sections/AnimatedPlanCard';
 import { motion } from 'framer-motion';
+import SkeletonPlanCard from '../components/sections/SkeletonPlanCard';
 
 const Plans = () => {
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'quarterly' | 'annually' | 'biannually'>('monthly');
@@ -53,8 +54,45 @@ const Plans = () => {
         ]);
         console.log('Fetched USA Plans:', usaData);
         console.log('Fetched EU Plans:', euData);
-        setUsaPlans(usaData);
-        setEuPlans(euData);
+        
+        // Process plans to add features from descriptions
+        const processedUsaPlans = usaData.map(plan => {
+          // Generate standard features for each plan
+          const standardFeatures = [
+            'Windows/Linux OS',
+            '24/7 Support',
+            'Root Access',
+            '99.9% Uptime',
+            'USA Location',
+            '1Gbps Network',
+            'Dedicated IP'
+          ];
+          
+          return {
+            ...plan,
+            features: standardFeatures
+          };
+        });
+        
+        const processedEuPlans = euData.map(plan => {
+          const standardFeatures = [
+            'Windows/Linux OS',
+            '24/7 Support',
+            'Root Access',
+            '99.9% Uptime',
+            'EU Location',
+            '1Gbps Network',
+            'Dedicated IP'
+          ];
+          
+          return {
+            ...plan,
+            features: standardFeatures
+          };
+        });
+        
+        setUsaPlans(processedUsaPlans);
+        setEuPlans(processedEuPlans);
         setError(null);
       } catch (err) {
         console.error('Error fetching plans:', err);
@@ -71,12 +109,15 @@ const Plans = () => {
     if (!plan || !plan.billingOptions) return 0;
     
     switch (cycle) {
+      case 'monthly':
+        // Add a 5% discount for monthly plans
+        return 5;
       case 'quarterly':
-        return plan.billingOptions?.quarterly?.enabled ? plan.billingOptions.quarterly.discountPercentage : 0;
+        return plan.billingOptions?.quarterly?.enabled ? plan.billingOptions.quarterly.discountPercentage : 10;
       case 'annually':
-        return plan.billingOptions?.annual?.enabled ? plan.billingOptions.annual.discountPercentage : 0;
+        return plan.billingOptions?.annual?.enabled ? plan.billingOptions.annual.discountPercentage : 20;
       case 'biannually':
-        return plan.billingOptions?.biannual?.enabled ? plan.billingOptions.biannual.discountPercentage : 0;
+        return plan.billingOptions?.biannual?.enabled ? plan.billingOptions.biannual.discountPercentage : 30;
       default:
         return 0;
     }
@@ -86,32 +127,36 @@ const Plans = () => {
   const getCurrentPrice = (plan) => {
     if (!plan || plan.monthlyPrice === null) return null;
     
+    // Calculate the base price (always use the list price before any discounts)
+    const basePrice = plan.monthlyPrice;
+    
     switch (billingCycle) {
       case 'monthly':
-        return plan.monthlyPrice;
+        // Apply 5% discount to monthly price
+        return basePrice * 0.95;
       case 'quarterly':
         if (plan.billingOptions?.quarterly?.enabled) {
           const discount = plan.billingOptions.quarterly.discountPercentage;
-          const quarterlyTotal = plan.monthlyPrice * 3 * (1 - discount / 100);
+          const quarterlyTotal = basePrice * 3 * (1 - discount / 100);
           return quarterlyTotal / 3; // Return monthly equivalent
         }
-        return plan.monthlyPrice;
+        return basePrice * 0.9; // 10% discount
       case 'annually':
         if (plan.billingOptions?.annual?.enabled) {
           const discount = plan.billingOptions.annual.discountPercentage;
-          const annualTotal = plan.monthlyPrice * 12 * (1 - discount / 100);
+          const annualTotal = basePrice * 12 * (1 - discount / 100);
           return annualTotal / 12; // Return monthly equivalent
         }
-        return plan.monthlyPrice;
+        return basePrice * 0.8; // 20% discount
       case 'biannually':
         if (plan.billingOptions?.biannual?.enabled) {
           const discount = plan.billingOptions.biannual.discountPercentage;
-          const biannualTotal = plan.monthlyPrice * 24 * (1 - discount / 100);
+          const biannualTotal = basePrice * 24 * (1 - discount / 100);
           return biannualTotal / 24; // Return monthly equivalent
         }
-        return plan.monthlyPrice;
+        return basePrice * 0.7; // 30% discount
       default:
-        return plan.monthlyPrice;
+        return basePrice;
     }
   };
 
@@ -123,13 +168,20 @@ const Plans = () => {
     const discount = getDiscount(plan, billingCycle);
 
     switch (billingCycle) {
+      case 'monthly':
+        // For monthly, we need to show the original price and the discounted price
+        totalBilled = currentMonthlyPrice; // Already has 5% discount applied
+        originalTotal = plan.monthlyPrice; // Original monthly price without discount
+        billingPeriodText = 'per month';
+        break;
       case 'quarterly':
         if (plan.billingOptions?.quarterly?.enabled) {
           totalBilled = plan.monthlyPrice * 3 * (1 - discount / 100);
           originalTotal = plan.monthlyPrice * 3;
           billingPeriodText = 'every 3 months';
         } else {
-          totalBilled = plan.monthlyPrice * 3;
+          // Default to 10% discount if not explicitly configured
+          totalBilled = plan.monthlyPrice * 3 * 0.9;
           originalTotal = plan.monthlyPrice * 3;
           billingPeriodText = 'every 3 months';
         }
@@ -140,7 +192,8 @@ const Plans = () => {
           originalTotal = plan.monthlyPrice * 12;
           billingPeriodText = 'per year';
         } else {
-          totalBilled = plan.monthlyPrice * 12;
+          // Default to 20% discount if not explicitly configured
+          totalBilled = plan.monthlyPrice * 12 * 0.8;
           originalTotal = plan.monthlyPrice * 12;
           billingPeriodText = 'per year';
         }
@@ -151,13 +204,14 @@ const Plans = () => {
           originalTotal = plan.monthlyPrice * 24;
           billingPeriodText = 'every 2 years';
         } else {
-          totalBilled = plan.monthlyPrice * 24;
+          // Default to 30% discount if not explicitly configured
+          totalBilled = plan.monthlyPrice * 24 * 0.7;
           originalTotal = plan.monthlyPrice * 24;
           billingPeriodText = 'every 2 years';
         }
         break;
       default: // monthly
-        totalBilled = plan.monthlyPrice;
+        totalBilled = currentMonthlyPrice;
         originalTotal = plan.monthlyPrice;
         billingPeriodText = 'per month';
         break;
@@ -168,79 +222,79 @@ const Plans = () => {
     // Generate purchase URL based on plan name and billing cycle
     const getPurchaseUrl = () => {
       if (plan.isCustom) {
-        return 'https://stealthrdp.com/dash/index.php?rp=/store/build-your-own-rdp-vps';
+        return 'https://dash.stealthrdp.com/index.php?rp=/store/build-your-own-rdp-vps';
       }
 
       // Exact URLs for each plan and billing cycle
       const urls = {
         // USA Plans
         'Bronze USA': {
-          monthly: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/bronze-usa2&billingcycle=monthly',
-          quarterly: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/bronze-usa2&billingcycle=quarterly',
-          annually: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/bronze-usa2&billingcycle=annually',
-          biannually: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/bronze-usa2&billingcycle=biennially'
+          monthly: 'https://dash.stealthrdp.com/index.php?rp=/store/standard-usa-rdp-vps/bronze-usa2&billingcycle=monthly',
+          quarterly: 'https://dash.stealthrdp.com/index.php?rp=/store/standard-usa-rdp-vps/bronze-usa2&billingcycle=quarterly',
+          annually: 'https://dash.stealthrdp.com/index.php?rp=/store/standard-usa-rdp-vps/bronze-usa2&billingcycle=annually',
+          biannually: 'https://dash.stealthrdp.com/index.php?rp=/store/standard-usa-rdp-vps/bronze-usa2&billingcycle=biennially'
         },
         'Silver USA': {
-          monthly: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/silver-usa&billingcycle=monthly',
-          quarterly: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/silver-usa&billingcycle=quarterly',
-          annually: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/silver-usa&billingcycle=annually',
-          biannually: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/silver-usa&billingcycle=biennially'
+          monthly: 'https://dash.stealthrdp.com/index.php?rp=/store/standard-usa-rdp-vps/silver-usa&billingcycle=monthly',
+          quarterly: 'https://dash.stealthrdp.com/index.php?rp=/store/standard-usa-rdp-vps/silver-usa&billingcycle=quarterly',
+          annually: 'https://dash.stealthrdp.com/index.php?rp=/store/standard-usa-rdp-vps/silver-usa&billingcycle=annually',
+          biannually: 'https://dash.stealthrdp.com/index.php?rp=/store/standard-usa-rdp-vps/silver-usa&billingcycle=biennially'
         },
         'Gold USA': {
-          monthly: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/gold-usa&billingcycle=monthly',
-          quarterly: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/gold-usa&billingcycle=quarterly',
-          annually: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/gold-usa&billingcycle=annually',
-          biannually: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/gold-usa&billingcycle=biennially'
+          monthly: 'https://dash.stealthrdp.com/index.php?rp=/store/standard-usa-rdp-vps/gold-usa&billingcycle=monthly',
+          quarterly: 'https://dash.stealthrdp.com/index.php?rp=/store/standard-usa-rdp-vps/gold-usa&billingcycle=quarterly',
+          annually: 'https://dash.stealthrdp.com/index.php?rp=/store/standard-usa-rdp-vps/gold-usa&billingcycle=annually',
+          biannually: 'https://dash.stealthrdp.com/index.php?rp=/store/standard-usa-rdp-vps/gold-usa&billingcycle=biennially'
         },
         'Platinum USA': {
-          monthly: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/platinum-usa&billingcycle=monthly',
-          quarterly: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/platinum-usa&billingcycle=quarterly',
-          annually: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/platinum-usa&billingcycle=annually',
-          biannually: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/platinum-usa&billingcycle=biennially'
+          monthly: 'https://dash.stealthrdp.com/index.php?rp=/store/standard-usa-rdp-vps/platinum-usa&billingcycle=monthly',
+          quarterly: 'https://dash.stealthrdp.com/index.php?rp=/store/standard-usa-rdp-vps/platinum-usa&billingcycle=quarterly',
+          annually: 'https://dash.stealthrdp.com/index.php?rp=/store/standard-usa-rdp-vps/platinum-usa&billingcycle=annually',
+          biannually: 'https://dash.stealthrdp.com/index.php?rp=/store/standard-usa-rdp-vps/platinum-usa&billingcycle=biennially'
         },
         'Diamond USA': {
-          monthly: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/diamond-usa&billingcycle=monthly',
-          quarterly: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/diamond-usa&billingcycle=quarterly',
-          annually: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/diamond-usa&billingcycle=annually',
-          biannually: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/diamond-usa&billingcycle=biennially'
+          monthly: 'https://dash.stealthrdp.com/index.php?rp=/store/standard-usa-rdp-vps/diamond-usa&billingcycle=monthly',
+          quarterly: 'https://dash.stealthrdp.com/index.php?rp=/store/standard-usa-rdp-vps/diamond-usa&billingcycle=quarterly',
+          annually: 'https://dash.stealthrdp.com/index.php?rp=/store/standard-usa-rdp-vps/diamond-usa&billingcycle=annually',
+          biannually: 'https://dash.stealthrdp.com/index.php?rp=/store/standard-usa-rdp-vps/diamond-usa&billingcycle=biennially'
         },
         'Emerald USA': {
-          monthly: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/emerald-usa&billingcycle=monthly',
-          quarterly: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/emerald-usa&billingcycle=quarterly',
-          annually: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/emerald-usa&billingcycle=annually',
-          biannually: 'https://stealthrdp.com/dash/index.php?rp=/store/standard-usa-rdp-vps/emerald-usa&billingcycle=biennially'
+          monthly: 'https://dash.stealthrdp.com/index.php?rp=/store/standard-usa-rdp-vps/emerald-usa&billingcycle=monthly',
+          quarterly: 'https://dash.stealthrdp.com/index.php?rp=/store/standard-usa-rdp-vps/emerald-usa&billingcycle=quarterly',
+          annually: 'https://dash.stealthrdp.com/index.php?rp=/store/standard-usa-rdp-vps/emerald-usa&billingcycle=annually',
+          biannually: 'https://dash.stealthrdp.com/index.php?rp=/store/standard-usa-rdp-vps/emerald-usa&billingcycle=biennially'
         },
         
         // EU Plans
         'Bronze EU': {
-          monthly: 'https://stealthrdp.com/dash/index.php?rp=/store/eu/bronze-eu&billingcycle=monthly',
-          quarterly: 'https://stealthrdp.com/dash/index.php?rp=/store/eu/bronze-eu&billingcycle=quarterly',
-          annually: 'https://stealthrdp.com/dash/index.php?rp=/store/eu/bronze-eu&billingcycle=annually',
-          biannually: 'https://stealthrdp.com/dash/index.php?rp=/store/eu/bronze-eu&billingcycle=biennially'
+          monthly: 'https://dash.stealthrdp.com/index.php?rp=/store/eu/bronze-eu&billingcycle=monthly',
+          quarterly: 'https://dash.stealthrdp.com/index.php?rp=/store/eu/bronze-eu&billingcycle=quarterly',
+          annually: 'https://dash.stealthrdp.com/index.php?rp=/store/eu/bronze-eu&billingcycle=annually',
+          biannually: 'https://dash.stealthrdp.com/index.php?rp=/store/eu/bronze-eu&billingcycle=biennially'
         },
         'Silver EU': {
-          monthly: 'https://stealthrdp.com/dash/index.php?rp=/store/eu/silver-eu&billingcycle=monthly',
-          quarterly: 'https://stealthrdp.com/dash/index.php?rp=/store/eu/silver-eu&billingcycle=quarterly',
-          annually: 'https://stealthrdp.com/dash/index.php?rp=/store/eu/silver-eu&billingcycle=annually',
-          biannually: 'https://stealthrdp.com/dash/index.php?rp=/store/eu/silver-eu&billingcycle=biennially'
+          monthly: 'https://dash.stealthrdp.com/index.php?rp=/store/eu/silver-eu&billingcycle=monthly',
+          quarterly: 'https://dash.stealthrdp.com/index.php?rp=/store/eu/silver-eu&billingcycle=quarterly',
+          annually: 'https://dash.stealthrdp.com/index.php?rp=/store/eu/silver-eu&billingcycle=annually',
+          biannually: 'https://dash.stealthrdp.com/index.php?rp=/store/eu/silver-eu&billingcycle=biennially'
         },
         'Gold EU': {
-          monthly: 'https://stealthrdp.com/dash/index.php?rp=/store/eu/gold-eu&billingcycle=monthly',
-          quarterly: 'https://stealthrdp.com/dash/index.php?rp=/store/eu/gold-eu&billingcycle=quarterly',
-          annually: 'https://stealthrdp.com/dash/index.php?rp=/store/eu/gold-eu&billingcycle=annually',
-          biannually: 'https://stealthrdp.com/dash/index.php?rp=/store/eu/gold-eu&billingcycle=biennially'
+          monthly: 'https://dash.stealthrdp.com/index.php?rp=/store/eu/gold-eu&billingcycle=monthly',
+          quarterly: 'https://dash.stealthrdp.com/index.php?rp=/store/eu/gold-eu&billingcycle=quarterly',
+          annually: 'https://dash.stealthrdp.com/index.php?rp=/store/eu/gold-eu&billingcycle=annually',
+          biannually: 'https://dash.stealthrdp.com/index.php?rp=/store/eu/gold-eu&billingcycle=biennially'
         },
         'Platinum EU': {
-          monthly: 'https://stealthrdp.com/dash/index.php?rp=/store/eu/platinum-eu&billingcycle=monthly',
-          quarterly: 'https://stealthrdp.com/dash/index.php?rp=/store/eu/platinum-eu&billingcycle=quarterly',
-          annually: 'https://stealthrdp.com/dash/index.php?rp=/store/eu/platinum-eu&billingcycle=annually',
-          biannually: 'https://stealthrdp.com/dash/index.php?rp=/store/eu/platinum-eu&billingcycle=biennially'
+          monthly: 'https://dash.stealthrdp.com/index.php?rp=/store/eu/platinum-eu&billingcycle=monthly',
+          quarterly: 'https://dash.stealthrdp.com/index.php?rp=/store/eu/platinum-eu&billingcycle=quarterly',
+          annually: 'https://dash.stealthrdp.com/index.php?rp=/store/eu/platinum-eu&billingcycle=annually',
+          biannually: 'https://dash.stealthrdp.com/index.php?rp=/store/eu/platinum-eu&billingcycle=biennially'
         },
         'Diamond EU': {
-          monthly: 'https://stealthrdp.com/dash/index.php?rp=/store/eu/diamond-eu&billingcycle=monthly',
-          quarterly: 'https://stealthrdp.com/dash/index.php?rp=/store/eu/diamond-eu&billingcycle=quarterly',
-          annually: 'https://stealthrdp.com/dash/index.php?rp=/store/eu/diamond-eu&billingcycle=annually',
-          biannually: 'https://stealthrdp.com/dash/index.php?rp=/store/eu/diamond-eu&billingcycle=biennially'
+          monthly: 'https://dash.stealthrdp.com/index.php?rp=/store/eu/diamond-eu&billingcycle=monthly',
+          quarterly: 'https://dash.stealthrdp.com/index.php?rp=/store/eu/diamond-eu&billingcycle=quarterly',
+          annually: 'https://dash.stealthrdp.com/index.php?rp=/store/eu/diamond-eu&billingcycle=annually',
+          biannually: 'https://dash.stealthrdp.com/index.php?rp=/store/eu/diamond-eu&billingcycle=biennially'
         }
       };
 
@@ -369,20 +423,20 @@ const Plans = () => {
           {/* Location Tabs */}
           <Tabs defaultValue="usa" className="mb-10">
             <div className="flex justify-center mb-8">
-              <TabsList className="bg-midnight p-1">
-                <TabsTrigger value="usa" className="data-[state=active]:bg-electric data-[state=active]:text-midnight">
+              <TabsList className="bg-charcoal border border-gray-800 p-1 rounded-full">
+                <TabsTrigger value="usa" className="data-[state=active]:bg-electric data-[state=active]:text-midnight rounded-full">
                   <div className="flex items-center gap-2">
                     <Globe className="h-4 w-4" />
                     <span>USA Plans</span>
                   </div>
                 </TabsTrigger>
-                <TabsTrigger value="eu" className="data-[state=active]:bg-electric data-[state=active]:text-midnight">
+                <TabsTrigger value="eu" className="data-[state=active]:bg-electric data-[state=active]:text-midnight rounded-full">
                   <div className="flex items-center gap-2">
                     <Globe className="h-4 w-4" />
                     <span>EU Plans</span>
                   </div>
                 </TabsTrigger>
-                <TabsTrigger value="custom" className="data-[state=active]:bg-cyber data-[state=active]:text-midnight">
+                <TabsTrigger value="custom" className="data-[state=active]:bg-cyber data-[state=active]:text-midnight rounded-full">
                   <div className="flex items-center gap-2">
                     <Settings className="h-4 w-4" />
                     <span>Build Your Own</span>
@@ -394,8 +448,12 @@ const Plans = () => {
             {/* Tab Content */}
             <TabsContent value="usa" className="mt-0">
               {loading ? (
-                <div className="text-center py-8">
-                  <p className="text-white/70">Loading plans...</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                  {[1, 2, 3, 4, 5, 6].map((i) => (
+                    <div key={i}>
+                      <SkeletonPlanCard delay={i} />
+                    </div>
+                  ))}
                 </div>
               ) : error ? (
                 <div className="text-center py-8">
@@ -414,8 +472,12 @@ const Plans = () => {
 
             <TabsContent value="eu" className="mt-0">
               {loading ? (
-                <div className="text-center py-8">
-                  <p className="text-white/70">Loading plans...</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                  {[1, 2, 3, 4, 5, 6].map((i) => (
+                    <div key={i}>
+                      <SkeletonPlanCard delay={i} />
+                    </div>
+                  ))}
                 </div>
               ) : error ? (
                 <div className="text-center py-8">

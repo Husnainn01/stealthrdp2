@@ -10,6 +10,20 @@ type BlogCreateData = Omit<IBlog, '_id' | 'createdAt' | 'updatedAt'>;
 // Define blog update data
 type BlogUpdateData = Partial<BlogCreateData>;
 
+// Get API base URL - for consistency with apiClient.ts
+const getApiBaseUrl = () => {
+  // Check if we're on production domain
+  if (typeof window !== 'undefined' && 
+      (window.location.hostname === 'www.stealthrdp.com' || window.location.hostname === 'stealthrdp.com')) {
+    return 'https://stealthrdp-production.up.railway.app/api';
+  }
+  
+  // Fall back to environment variable or default
+  return process.env.VITE_API_URL || 'http://localhost:5001/api';
+};
+
+const baseUrl = getApiBaseUrl();
+
 /**
  * Blog API Service
  */
@@ -83,7 +97,6 @@ export const blogApi = {
     const token = localStorage.getItem('auth_token');
     
     // Ensure proper URL construction with no double slashes
-    const baseUrl = process.env.VITE_API_URL || 'https://web-production-40fb0.up.railway.app/api' || 'http://localhost:5001/api';
     const url = `${baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl}/blogs/upload-image`;
     
     console.log('Uploading to URL:', url);
@@ -96,7 +109,7 @@ export const blogApi = {
         body: formData,
         // Add these options for better error handling
         mode: 'cors',
-        credentials: 'include'
+        credentials: 'omit'
       });
       
       if (!response.ok) {

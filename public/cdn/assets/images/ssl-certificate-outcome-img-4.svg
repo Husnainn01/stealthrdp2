@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve">
+<circle fill="#CB6686" cx="50" cy="50" r="50"/>
+<g>
+	<defs>
+		<rect id="SVGID_1_" x="23.372" y="20" width="53.256" height="60"/>
+	</defs>
+	<clipPath id="SVGID_2_">
+		<use xlink:href="#SVGID_1_"  overflow="visible"/>
+	</clipPath>
+	
+		<path clip-path="url(#SVGID_2_)" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="
+		M71.582,56.069c0,12.141,0,13.488-17.535,13.488"/>
+	
+		<path clip-path="url(#SVGID_2_)" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="
+		M28.419,41.232C28.419,30.197,37.364,21,48.398,21h3.203c11.034,0,19.979,8.945,19.979,19.98"/>
+	
+		<path clip-path="url(#SVGID_2_)" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="
+		M52.698,72.256h-5.396c-0.745,0-1.348-0.604-1.348-1.349V68.21c0-0.746,0.603-1.35,1.348-1.35h5.396
+		c0.744,0,1.349,0.604,1.349,1.35v2.697C54.047,71.652,53.442,72.256,52.698,72.256z"/>
+	
+		<path clip-path="url(#SVGID_2_)" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="
+		M33.813,41.232h-7.082c-1.302,0-2.359,1.208-2.359,2.698v8.093c0,1.49,1.057,2.697,2.359,2.697h7.082"/>
+	
+		<path clip-path="url(#SVGID_2_)" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="
+		M66.186,41.232h7.082c1.304,0,2.36,1.208,2.36,2.698v8.093c0,1.489-1.057,2.697-2.36,2.697h-7.082"/>
+	
+		<path clip-path="url(#SVGID_2_)" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="
+		M60.809,75.41C58.24,77.652,54.944,79,51.349,79h-2.697c-2.333,0-4.539-0.567-6.502-1.577c-4.936-2.54-8.336-7.081-8.336-13.26
+		v-22.93c0-8.637,6.643-14.837,14.838-14.837h2.697c8.194,0,14.837,6.2,14.837,14.837v21.581"/>
+</g>
+</svg>

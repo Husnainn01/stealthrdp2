@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import Layout from '@/components/Layout';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { faqApi } from '@/lib/api/faqApi';
 import { IFaq, FaqCategory } from '@/lib/models/Faq';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { ChevronDown, ChevronUp, Check } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const FAQPage = () => {
   // State for FAQ data
   const [faqs, setFaqs] = useState<IFaq[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [expandedFaqs, setExpandedFaqs] = useState<Record<string, boolean>>({});
 
   // Fetch FAQs on component mount
   useEffect(() => {
@@ -34,7 +37,15 @@ const FAQPage = () => {
 
   // Function to open network status in a new tab
   const openNetworkStatus = () => {
-    window.open('https://status.stealthrdp.com', '_blank');
+    window.location.href = '/server-status';
+  };
+
+  // Toggle FAQ expansion
+  const toggleFaq = (faqId: string) => {
+    setExpandedFaqs(prev => ({
+      ...prev,
+      [faqId]: !prev[faqId]
+    }));
   };
 
   // Group FAQs by category for display
@@ -91,27 +102,52 @@ const FAQPage = () => {
               </button>
             </div>
           ) : (
-            <div className="bg-midnight rounded-lg p-4 md:p-6 shadow-lg">
+            <div>
               {Object.entries(groupedFaqs).length > 0 ? (
                 Object.entries(groupedFaqs).map(([category, categoryFaqs], categoryIndex) => (
-                  <div key={categoryIndex} className="mb-8 last:mb-0">
-                    <h2 className="text-xl font-semibold mb-4 text-electric">{category}</h2>
-                    <Accordion type="single" collapsible className="w-full">
-                      {categoryFaqs.map((faq, index) => (
-                        <AccordionItem 
-                          key={faq._id} 
-                          value={`item-${faq._id}`}
-                          className="border-b border-gray-700 last:border-b-0"
+                  <div key={categoryIndex} className="mb-12 last:mb-0">
+                    <h2 className="text-2xl font-semibold mb-6 text-electric">{category}</h2>
+                    <div className="grid grid-cols-1 gap-4">
+                      {categoryFaqs.map((faq) => (
+                        <motion.div 
+                          key={faq._id}
+                          initial={{ y: 10, opacity: 0 }}
+                          animate={{ y: 0, opacity: 1 }}
+                          transition={{ duration: 0.3 }}
+                          whileHover={{ y: -5 }}
                         >
-                          <AccordionTrigger className="text-left hover:text-electric py-4 text-base md:text-lg font-medium">
-                            {faq.question}
-                          </AccordionTrigger>
-                          <AccordionContent className="text-gray-300 pt-1 pb-4 text-sm md:text-base">
-                            {faq.answer}
-                          </AccordionContent>
-                        </AccordionItem>
+                          <Card 
+                            className={`bg-[#0C0F2D] border ${expandedFaqs[faq._id] ? 'border-electric shadow-[0_0_20px_rgba(0,240,255,0.25)]' : 'border-gray-800'} rounded-xl overflow-hidden cursor-pointer transition-all duration-300`}
+                            onClick={() => toggleFaq(faq._id)}
+                          >
+                            <CardHeader className="p-5">
+                              <div className="flex justify-between items-center">
+                                <CardTitle className="text-lg md:text-xl font-medium text-white flex items-center">
+                                  <div className="mr-3 text-electric">
+                                    <Check className="h-5 w-5" />
+                                  </div>
+                                  {faq.question}
+                                </CardTitle>
+                                <div className="text-electric">
+                                  {expandedFaqs[faq._id] ? (
+                                    <ChevronUp className="h-5 w-5" />
+                                  ) : (
+                                    <ChevronDown className="h-5 w-5" />
+                                  )}
+                                </div>
+                              </div>
+                            </CardHeader>
+                            {expandedFaqs[faq._id] && (
+                              <CardContent className="px-5 pb-5 pt-0 text-gray-300">
+                                <div className="border-t border-gray-700 pt-4">
+                                  {faq.answer}
+                                </div>
+                              </CardContent>
+                            )}
+                          </Card>
+                        </motion.div>
                       ))}
-                    </Accordion>
+                    </div>
                   </div>
                 ))
               ) : (
@@ -132,7 +168,7 @@ const FAQPage = () => {
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <button 
                 className="btn-electric px-6 py-2.5 rounded-lg font-medium" 
-                onClick={() => window.open('https://stealthrdp.com/dash/submitticket.php', '_blank')}
+                onClick={() => window.open('https://dash.stealthrdp.com/submitticket.php', '_blank')}
               >
                 Contact Support
               </button>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	viewBox="0 0 38 38" enable-background="new 0 0 38 38" xml:space="preserve">
+<g>
+	<defs>
+		<rect id="SVGID_1_" width="38" height="38"/>
+	</defs>
+	<clipPath id="SVGID_2_">
+		<use xlink:href="#SVGID_1_"  overflow="visible"/>
+	</clipPath>
+	
+		<rect x="1" y="25" clip-path="url(#SVGID_2_)" fill="none" stroke="#434343" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="36" height="12"/>
+</g>
+<line fill="none" stroke="#434343" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" x1="6.214" y1="31" x2="7.214" y2="31"/>
+<line fill="none" stroke="#434343" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" x1="11.214" y1="31" x2="12.214" y2="31"/>
+<line fill="none" stroke="#434343" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" x1="19" y1="14.25" x2="19" y2="24.25"/>
+<g>
+	<defs>
+		<rect id="SVGID_3_" width="38" height="38"/>
+	</defs>
+	<clipPath id="SVGID_4_">
+		<use xlink:href="#SVGID_3_"  overflow="visible"/>
+	</clipPath>
+	
+		<path clip-path="url(#SVGID_4_)" fill="none" stroke="#434343" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="
+		M26.211,17c3.565-0.919,6.203-4.147,6.203-8s-2.638-7.081-6.203-8"/>
+	
+		<path clip-path="url(#SVGID_4_)" fill="none" stroke="#434343" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="
+		M24.423,13c1.783-0.46,3.102-2.074,3.102-4s-1.318-3.54-3.102-4"/>
+	
+		<path clip-path="url(#SVGID_4_)" fill="none" stroke="#434343" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="
+		M21.586,10c0.446-0.115,0.775-0.519,0.775-1s-0.329-0.885-0.775-1"/>
+	
+		<path clip-path="url(#SVGID_4_)" fill="none" stroke="#434343" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="
+		M11.789,17c-3.565-0.919-6.203-4.147-6.203-8s2.638-7.081,6.203-8"/>
+	
+		<path clip-path="url(#SVGID_4_)" fill="none" stroke="#434343" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="
+		M13.577,13c-1.783-0.46-3.102-2.074-3.102-4s1.319-3.54,3.102-4"/>
+	
+		<path clip-path="url(#SVGID_4_)" fill="none" stroke="#434343" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="
+		M16.414,10c-0.446-0.115-0.775-0.519-0.775-1s0.329-0.885,0.775-1"/>
+</g>
+</svg>

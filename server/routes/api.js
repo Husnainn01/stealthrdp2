@@ -136,8 +136,10 @@ router.post('/uptime', async (req, res) => {
     
     console.log('Making UptimeRobot API request with provided key');
     
-    // Make request to UptimeRobot API
-    const response = await axios.post('https://api.uptimerobot.com/v2/getMonitors', {
+    // Make request to UptimeRobot API - using string concatenation instead of template literals
+    // to avoid any potential issues with path-to-regexp parsing
+    const uptimeRobotUrl = 'https://api.uptimerobot.com/v2/getMonitors';
+    const response = await axios.post(uptimeRobotUrl, {
       api_key: apiKey,
       format: 'json',
       logs: 1,
@@ -166,7 +168,7 @@ router.post('/uptime', async (req, res) => {
         status: error.response.status,
         data: error.response.data
       });
-      errorDetail = `API responded with status ${error.response.status}: ${JSON.stringify(error.response.data)}`;
+      errorDetail = `API responded with status ${error.response.status}`;
     } else if (error.request) {
       // The request was made but no response was received
       console.error('No response received from API');

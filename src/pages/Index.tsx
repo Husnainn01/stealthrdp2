@@ -716,10 +716,10 @@ const Index = () => {
             
             <div className="flex flex-col sm:flex-row justify-center gap-4 mb-6 fade-in" style={{ animationDelay: '0.4s' }}>
               <Button asChild size="lg" className="bg-cyber text-midnight hover:bg-cyber/90 font-bold uppercase text-base px-8 py-3 relative overflow-hidden group">
-                <Link to="/plans">
+                <a href="https://dash.stealthrdp.com/index.php?rp=/store/standard-usa-rdp-vps" target="_blank" rel="noopener noreferrer">
                   Deploy Your Server Now
                   <span className="absolute top-0 right-0 bg-white/20 w-8 h-full transform translate-x-[-120%] skew-x-[20deg] transition-transform group-hover:translate-x-[180%] duration-700"></span>
-                </Link>
+                </a>
               </Button>
             </div>
             
@@ -1125,43 +1125,42 @@ const Index = () => {
             </p>
           </div>
           
-          {/* Pricing Toggle - Price Anchoring */}
+          {/* Pricing Toggle - Professional Design */}
           <div className="max-w-md mx-auto mb-12">
             <div className="flex justify-center">
-              <div className="inline-flex bg-[#0A0E24] rounded-full p-1.5 border border-white/5 shadow-lg">
+              <div className="inline-flex flex-wrap sm:flex-nowrap bg-[#0A0E24] rounded-full p-1.5 border border-white/5 shadow-lg">
                 <button 
-                  className={`px-5 py-2 text-sm font-medium rounded-full transition-all ${billingCycle === 'monthly' ? 'bg-[#0F1533] text-white shadow-sm border border-[#1A2348]' : 'text-white/60 hover:text-white/80'}`}
+                  className={`px-2 sm:px-5 py-2 text-xs sm:text-sm font-medium rounded-full transition-all w-[calc(50%-4px)] sm:w-auto m-0.5 sm:m-0 ${billingCycle === 'monthly' ? 'bg-electric text-midnight shadow-sm' : 'text-white/60 hover:text-white/80'}`}
                   onClick={() => setBillingCycle('monthly')}
                 >
                   Monthly
                 </button>
                 <button 
-                  className={`px-5 py-2 text-sm font-medium rounded-full transition-all ${!isBillingOptionEnabled('quarterly') ? 'opacity-50 cursor-not-allowed' : billingCycle === 'quarterly' ? 'bg-[#0F1533] text-white shadow-sm border border-[#1A2348]' : 'text-white/60 hover:text-white/80'}`}
-                  onClick={() => isBillingOptionEnabled('quarterly') && setBillingCycle('quarterly')}
-                  disabled={!isBillingOptionEnabled('quarterly')}
+                  className={`px-2 sm:px-5 py-2 text-xs sm:text-sm font-medium rounded-full transition-all w-[calc(50%-4px)] sm:w-auto m-0.5 sm:m-0 ${billingCycle === 'quarterly' ? 'bg-electric text-midnight shadow-sm' : 'text-white/60 hover:text-white/80'}`}
+                  onClick={() => setBillingCycle('quarterly')}
                 >
                   Quarterly
-                  <span className="ml-1 text-xs text-white/60">-10%</span>
+                  <span className="ml-1 text-xs text-[#22D46B]">-10%</span>
                 </button>
                 <button 
-                  className={`px-5 py-2 text-sm font-medium rounded-full transition-all ${!isBillingOptionEnabled('annually') ? 'opacity-50 cursor-not-allowed' : billingCycle === 'annually' ? 'bg-[#0F1533] text-white shadow-sm border border-[#1A2348]' : 'text-white/60 hover:text-white/80'}`}
-                  onClick={() => isBillingOptionEnabled('annually') && setBillingCycle('annually')}
-                  disabled={!isBillingOptionEnabled('annually')}
+                  className={`px-2 sm:px-5 py-2 text-xs sm:text-sm font-medium rounded-full transition-all w-[calc(50%-4px)] sm:w-auto m-0.5 sm:m-0 ${billingCycle === 'annually' ? 'bg-electric text-midnight shadow-sm' : 'text-white/60 hover:text-white/80'}`}
+                  onClick={() => setBillingCycle('annually')}
                 >
                   Annual
-                  <span className="ml-1 text-xs text-cyber">-25%</span>
+                  <span className="ml-1 text-xs text-[#22D46B]">-20%</span>
                 </button>
                 <button 
-                  className={`px-5 py-2 text-sm font-medium rounded-full transition-all ${!isBillingOptionEnabled('biannually') ? 'opacity-50 cursor-not-allowed' : billingCycle === 'biannually' ? 'bg-[#0F1533] text-white shadow-sm border border-[#1A2348]' : 'text-white/60 hover:text-white/80'}`}
-                  onClick={() => isBillingOptionEnabled('biannually') && setBillingCycle('biannually')}
-                  disabled={!isBillingOptionEnabled('biannually')}
+                  className={`px-2 sm:px-5 py-2 text-xs sm:text-sm font-medium rounded-full transition-all w-[calc(50%-4px)] sm:w-auto m-0.5 sm:m-0 ${billingCycle === 'biannually' ? 'bg-electric text-midnight shadow-sm' : 'text-white/60 hover:text-white/80'}`}
+                  onClick={() => setBillingCycle('biannually')}
                 >
                   Biannual
-                  <span className="ml-1 text-xs text-white/60">-30%</span>
+                  <span className="ml-1 text-xs text-[#22D46B]">-30%</span>
                 </button>
               </div>
             </div>
           </div>
+
+          
           
           {/* Plans Display Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 relative items-center perspective-[1000px]">
@@ -1181,38 +1180,60 @@ const Index = () => {
                 </Button>
               </div>
             ) : (
-              // Filtered plans from the USA data center
-              usaPlans.slice(0, 3).map((plan, index) => (
+              // Hardcoded plans matching the reference image
+              <>
+                {/* Bronze Plan */}
                 <div 
-                  key={plan._id} 
-                  className={`
-                    bg-midnight/80 border-2 rounded-xl p-6 flex flex-col h-full relative
+                  className="
+                    bg-[#0C0F2D] border-2 rounded-xl p-6 flex flex-col h-full relative
                     transition-all duration-300 hover:shadow-[0_10px_40px_rgba(0,240,255,0.3)]
-                    ${index === 1 
-                      ? 'z-20 transform md:scale-[1.05] border-electric shadow-[0_0_20px_rgba(0,240,255,0.25)] hover:shadow-[0_15px_40px_rgba(0,240,255,0.4)] md:hover:scale-[1.08]' 
-                      : 'z-10 border-white/10 md:hover:scale-[1.03] hover:border-electric/70 hover:z-20'}
+                    z-10 border-white/10 md:hover:scale-[1.03] hover:border-electric/70 hover:z-20
                     hover:-translate-y-2
-                  `}
+                  "
                 >
-                  {(index === 1 || plan.popular) && (
-                    <div className="absolute top-4 right-4 bg-electric/20 text-electric text-xs font-bold py-1 px-3 rounded-full border border-electric/30">
-                      Best Value
-                    </div>
-                  )}
-                  
-                  <h3 className="text-xl font-bold text-white mb-1">{plan.name}</h3>
-                  <p className="text-white/60 text-sm mb-5">{plan.description}</p>
+                  <h3 className="text-xl font-bold text-white mb-1">Bronze</h3>
+                  <p className="text-white/60 text-sm mb-5">Personal projects & light workloads</p>
                   
                   <div className="flex items-baseline mb-6">
-                    <span className="text-4xl font-bold text-white bg-clip-text text-transparent bg-gradient-to-r from-white to-electric">
-                      ${getCurrentPrice(plan)?.toFixed(2)}
-                    </span>
-                    <span className="text-white/60 ml-2 text-sm">/month</span>
-                    {billingCycle !== 'monthly' && getDiscount(plan, billingCycle) > 0 && (
-                      <span className="ml-3 text-xs text-cyber bg-cyber/10 px-2 py-1 rounded-full">
-                        Save {getDiscount(plan, billingCycle)}%
-                      </span>
-                    )}
+                    {/* Calculating prices from a base price of $9.50 */}
+                    {(() => {
+                      const basePrice = 9.50;
+                      const monthlyPrice = basePrice * 0.95; // 5% discount on monthly
+                      
+                      let currentPrice;
+                      let discountPercent;
+                      
+                      switch(billingCycle) {
+                        case 'monthly':
+                          currentPrice = monthlyPrice;
+                          discountPercent = 5;
+                          break;
+                        case 'quarterly':
+                          currentPrice = basePrice * 0.9; // 10% discount
+                          discountPercent = 10;
+                          break;
+                        case 'annually':
+                          currentPrice = basePrice * 0.8; // 20% discount
+                          discountPercent = 20;
+                          break;
+                        case 'biannually':
+                          currentPrice = basePrice * 0.7; // 30% discount
+                          discountPercent = 30;
+                          break;
+                      }
+                      
+                      return (
+                        <>
+                          <span className="text-4xl font-bold text-white bg-clip-text text-transparent bg-gradient-to-r from-white to-electric">
+                            ${currentPrice.toFixed(2)}
+                          </span>
+                          <span className="text-white/60 ml-2 text-sm">/month</span>
+                          <span className="ml-3 text-xs text-cyber bg-cyber/10 px-2 py-1 rounded-full">
+                            Save {discountPercent}%
+                          </span>
+                        </>
+                      );
+                    })()}
                   </div>
                   
                   <div className="space-y-4 mb-8 flex-grow">
@@ -1220,19 +1241,19 @@ const Index = () => {
                       <div className="flex-shrink-0 w-5 h-5 rounded-full bg-charcoal flex items-center justify-center">
                         <Check className="h-3 w-3 text-cyber" />
                       </div>
-                      <span className="text-white/90 text-sm">{plan.specs.cpu} CPU Cores</span>
+                      <span className="text-white/90 text-sm">2 CPU Cores</span>
                     </div>
                     <div className="flex items-center gap-3">
                       <div className="flex-shrink-0 w-5 h-5 rounded-full bg-charcoal flex items-center justify-center">
                         <Check className="h-3 w-3 text-cyber" />
                       </div>
-                      <span className="text-white/90 text-sm">{plan.specs.ram}</span>
+                      <span className="text-white/90 text-sm">4 GB RAM</span>
                     </div>
                     <div className="flex items-center gap-3">
                       <div className="flex-shrink-0 w-5 h-5 rounded-full bg-charcoal flex items-center justify-center">
                         <Check className="h-3 w-3 text-cyber" />
                       </div>
-                      <span className="text-white/90 text-sm">{plan.specs.storage}</span>
+                      <span className="text-white/90 text-sm">60 GB SSD Storage</span>
                     </div>
                     <div className="flex items-center gap-3">
                       <div className="flex-shrink-0 w-5 h-5 rounded-full bg-charcoal flex items-center justify-center">
@@ -1240,49 +1261,190 @@ const Index = () => {
                       </div>
                       <span className="text-white/90 text-sm">Unlimited Bandwidth</span>
                     </div>
-                    {(index === 1 || plan.popular) && (
-                      <div className="flex items-center gap-3">
-                        <div className="flex-shrink-0 w-5 h-5 rounded-full bg-charcoal flex items-center justify-center">
-                          <Check className="h-3 w-3 text-cyber" />
-                        </div>
-                        <span className="text-white/90 text-sm">Performance Boost</span>
+                    <div className="flex items-center gap-3">
+                      <div className="flex-shrink-0 w-5 h-5 rounded-full bg-charcoal flex items-center justify-center">
+                        <X className="h-3 w-3 text-red-500" />
                       </div>
-                    )}
-                    {index === 2 && (
-                      <div className="flex items-center gap-3">
-                        <div className="flex-shrink-0 w-5 h-5 rounded-full bg-charcoal flex items-center justify-center">
-                          <Check className="h-3 w-3 text-cyber" />
-                        </div>
-                        <span className="text-white/90 text-sm">Premium Support</span>
-                      </div>
-                    )}
+                      <span className="text-white/60 text-sm">Performance Boost</span>
+                    </div>
                   </div>
                   
-                  {index === 1 || plan.popular ? (
-                    <Button asChild className="bg-electric text-midnight hover:bg-electric/90 transition-all font-medium w-full py-6 shadow-[0_4px_12px_rgba(0,240,255,0.3)] hover:shadow-[0_4px_20px_rgba(0,240,255,0.5)]">
-                      <Link to={plan.purchaseUrl || '/plans'}>
-                        Deploy Now
-                      </Link>
-                    </Button>
-                  ) : index === 2 ? (
-                    <Button asChild className="bg-cyber text-midnight hover:bg-cyber/90 transition-all font-medium w-full py-6 hover:shadow-[0_4px_12px_rgba(34,212,107,0.3)]">
-                      <Link to={plan.purchaseUrl || '/plans'}>
-                        Deploy Now
-                      </Link>
-                    </Button>
-                  ) : (
-                    <Button asChild className="bg-charcoal/50 border border-white/20 hover:border-electric text-white hover:bg-charcoal transition-all font-medium w-full py-6 hover:text-electric">
-                      <Link to={plan.purchaseUrl || '/plans'}>
-                        Deploy Now
-                      </Link>
-                    </Button>
-                  )}
+                  <Button asChild className="bg-charcoal/50 border border-white/20 hover:border-electric text-white hover:bg-charcoal transition-all font-medium w-full py-6 hover:text-electric">
+                    <Link to="/plans">
+                      Deploy Now
+                    </Link>
+                  </Button>
                   
                   <div className="text-xs text-white/50 text-center mt-3">
                     Deploy in 60 seconds + <span className="text-electric">FREE migration</span>
                   </div>
                 </div>
-              ))
+
+                {/* Silver Plan (Best Value) */}
+                <div 
+                  className="
+                    bg-[#0C0F2D] border-2 rounded-xl p-6 flex flex-col h-full relative
+                    transition-all duration-300 hover:shadow-[0_10px_40px_rgba(0,240,255,0.3)]
+                    z-20 transform md:scale-[1.05] border-electric shadow-[0_0_20px_rgba(0,240,255,0.25)] hover:shadow-[0_15px_40px_rgba(0,240,255,0.4)] md:hover:scale-[1.08]
+                    hover:-translate-y-2
+                  "
+                >
+                  <div className="absolute top-4 right-4 bg-electric/20 text-electric text-xs font-bold py-1 px-3 rounded-full border border-electric/30">
+                    Best Value
+                  </div>
+                  
+                  <h3 className="text-xl font-bold text-white mb-1">Silver</h3>
+                  <p className="text-white/60 text-sm mb-5">Professional applications & multitasking</p>
+                  
+                  <div className="flex items-baseline mb-6">
+                    {/* Calculating prices from a base price of $18.04 */}
+                    {(() => {
+                      const basePrice = 18.04;
+                      const monthlyPrice = basePrice * 0.95; // 5% discount on monthly
+                      
+                      let currentPrice;
+                      let discountPercent;
+                      
+                      switch(billingCycle) {
+                        case 'monthly':
+                          currentPrice = monthlyPrice;
+                          discountPercent = 5;
+                          break;
+                        case 'quarterly':
+                          currentPrice = basePrice * 0.9; // 10% discount
+                          discountPercent = 10;
+                          break;
+                        case 'annually':
+                          currentPrice = basePrice * 0.8; // 20% discount
+                          discountPercent = 20;
+                          break;
+                        case 'biannually':
+                          currentPrice = basePrice * 0.7; // 30% discount
+                          discountPercent = 30;
+                          break;
+                      }
+                      
+                      return (
+                        <>
+                          <span className="text-4xl font-bold text-white bg-clip-text text-transparent bg-gradient-to-r from-white to-electric">
+                            ${currentPrice.toFixed(2)}
+                          </span>
+                          <span className="text-white/60 ml-2 text-sm">/month</span>
+                          <span className="ml-3 text-xs text-cyber bg-cyber/10 px-2 py-1 rounded-full">
+                            Save {discountPercent}%
+                          </span>
+                        </>
+                      );
+                    })()}
+                  </div>
+                  
+                  <div className="space-y-4 mb-8 flex-grow">
+                    <div className="flex items-center gap-3">
+                      <div className="flex-shrink-0 w-5 h-5 rounded-full bg-charcoal flex items-center justify-center">
+                        <Check className="h-3 w-3 text-cyber" />
+                      </div>
+                      <span className="text-white/90 text-sm">2 CPU Cores</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="flex-shrink-0 w-5 h-5 rounded-full bg-charcoal flex items-center justify-center">
+                        <Check className="h-3 w-3 text-cyber" />
+                      </div>
+                      <span className="text-white/90 text-sm">8 GB RAM</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="flex-shrink-0 w-5 h-5 rounded-full bg-charcoal flex items-center justify-center">
+                        <Check className="h-3 w-3 text-cyber" />
+                      </div>
+                      <span className="text-white/90 text-sm">80 GB SSD Storage</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="flex-shrink-0 w-5 h-5 rounded-full bg-charcoal flex items-center justify-center">
+                        <Check className="h-3 w-3 text-cyber" />
+                      </div>
+                      <span className="text-white/90 text-sm">Unlimited Bandwidth</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="flex-shrink-0 w-5 h-5 rounded-full bg-charcoal flex items-center justify-center">
+                        <Check className="h-3 w-3 text-cyber" />
+                      </div>
+                      <span className="text-white/90 text-sm">Performance Boost</span>
+                    </div>
+                  </div>
+                  
+                  <Button asChild className="bg-electric text-midnight hover:bg-electric/90 transition-all font-medium w-full py-6 shadow-[0_4px_12px_rgba(0,240,255,0.3)] hover:shadow-[0_4px_20px_rgba(0,240,255,0.5)]">
+                    <Link to="/plans">
+                      Deploy Now
+                    </Link>
+                  </Button>
+                  
+                  <div className="text-xs text-white/50 text-center mt-3">
+                    Deploy in 60 seconds + <span className="text-electric">FREE migration</span>
+                  </div>
+                </div>
+
+                {/* Custom Plan */}
+                <div 
+                  className="
+                    bg-[#0C0F2D] border-2 rounded-xl p-6 flex flex-col h-full relative
+                    transition-all duration-300 hover:shadow-[0_10px_40px_rgba(0,240,255,0.3)]
+                    z-10 border-white/10 md:hover:scale-[1.03] hover:border-electric/70 hover:z-20
+                    hover:-translate-y-2
+                  "
+                >
+                  <h3 className="text-xl font-bold text-white mb-1">Custom</h3>
+                  <p className="text-white/60 text-sm mb-5">Enterprise & specialized workloads</p>
+                  
+                  <div className="flex items-baseline mb-6">
+                    <span className="text-4xl font-bold text-white bg-clip-text text-transparent bg-gradient-to-r from-white to-electric">
+                      Custom
+                    </span>
+                    <span className="text-white/60 ml-2 text-sm">pricing</span>
+                  </div>
+                  
+                  <div className="space-y-4 mb-8 flex-grow">
+                    <div className="flex items-center gap-3">
+                      <div className="flex-shrink-0 w-5 h-5 rounded-full bg-charcoal flex items-center justify-center">
+                        <Check className="h-3 w-3 text-cyber" />
+                      </div>
+                      <span className="text-white/90 text-sm">Custom CPU Cores</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="flex-shrink-0 w-5 h-5 rounded-full bg-charcoal flex items-center justify-center">
+                        <Check className="h-3 w-3 text-cyber" />
+                      </div>
+                      <span className="text-white/90 text-sm">Custom RAM</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="flex-shrink-0 w-5 h-5 rounded-full bg-charcoal flex items-center justify-center">
+                        <Check className="h-3 w-3 text-cyber" />
+                      </div>
+                      <span className="text-white/90 text-sm">Custom Storage</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="flex-shrink-0 w-5 h-5 rounded-full bg-charcoal flex items-center justify-center">
+                        <Check className="h-3 w-3 text-cyber" />
+                      </div>
+                      <span className="text-white/90 text-sm">Unlimited Bandwidth</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="flex-shrink-0 w-5 h-5 rounded-full bg-charcoal flex items-center justify-center">
+                        <Check className="h-3 w-3 text-cyber" />
+                      </div>
+                      <span className="text-white/90 text-sm">Premium Support</span>
+                    </div>
+                  </div>
+                  
+                  <Button asChild className="bg-cyber text-midnight hover:bg-cyber/90 transition-all font-medium w-full py-6 hover:shadow-[0_4px_12px_rgba(34,212,107,0.3)]">
+                    <Link to="/plans">
+                      Configure & Deploy
+                    </Link>
+                  </Button>
+                  
+                  <div className="text-xs text-white/50 text-center mt-3">
+                    Deploy in 60 seconds + <span className="text-electric">FREE migration</span>
+                  </div>
+                </div>
+              </>
             )}
           </div>
           

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { blogApi } from '@/lib/api/blogApi';
+import { seoBotApi, testSeoBotApi } from '@/lib/api/seobotApi';
 import { IBlog, BlogCategory } from '@/lib/models/Blog';
 import Layout from '@/components/Layout';
 import { Button } from '@/components/ui/button';
@@ -13,7 +14,8 @@ import {
   Search,
   Filter,
   Loader2,
-  AlertCircle
+  AlertCircle,
+  Wrench
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { formatDate } from '@/lib/utils';
@@ -25,24 +27,81 @@ const BlogPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [activeFilter, setActiveFilter] = useState<BlogCategory | 'all'>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [useSeoBotApi, setUseSeoBotApi] = useState<boolean>(true); // Default to using SEO Bot API
 
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
         setIsLoading(true);
-        const data = await blogApi.getPublishedBlogs();
-        setBlogs(data);
-        setFilteredBlogs(data);
-        setIsLoading(false);
+        
+        let blogData: IBlog[] = [];
+        
+        if (useSeoBotApi) {
+          // First try to fetch blogs from SEO Bot
+          try {
+            console.log('Attempting to fetch blogs from SEO Bot...');
+            const seoBotBlogs = await seoBotApi.getBlogs(20);
+            console.log('SEO Bot blogs retrieved:', seoBotBlogs.length);
+            
+            if (seoBotBlogs.length === 0) {
+              console.warn('SEO Bot returned zero blogs - check category mappings');
+            } else {
+              // Log the original category from SEO Bot and the mapped category
+              seoBotBlogs.forEach((blog, index) => {
+                console.log(`Blog #${index + 1}: "${blog.title}"`, {
+                  category: blog.category,
+                  slug: blog.slug
+                });
+              });
+            }
+            
+            // Convert to IBlog format (adding placeholder _id, createdAt, and updatedAt)
+            blogData = seoBotBlogs.map((blog, index) => ({
+              ...blog,
+              _id: `seobot-${index}`,
+              createdAt: blog.publishedAt || new Date(),
+              updatedAt: blog.publishedAt || new Date()
+            } as IBlog));
+            
+            console.log('Successfully fetched blogs from SEO Bot:', blogData);
+          } catch (seoBotError) {
+            console.error('Failed to fetch from SEO Bot, falling back to local API:', seoBotError);
+            
+            // Additional debug info in development mode
+            if (process.env.NODE_ENV === 'development') {
+              console.warn(
+                'SEO Bot Error Info:',
+                '\n- Make sure the seobot package is correctly installed',
+                '\n- Verify API key is correct',
+                '\n- Check if you have internet access'
+              );
+            }
+            
+            setUseSeoBotApi(false); // Fallback to our own API for future requests
+            
+            // Fetch from our own API as fallback
+            const data = await blogApi.getPublishedBlogs();
+            blogData = data;
+          }
+        } else {
+          // Use our own API
+          const data = await blogApi.getPublishedBlogs();
+          blogData = data;
+        }
+        
+        setBlogs(blogData);
+        setFilteredBlogs(blogData);
+        setError(null);
       } catch (err) {
         console.error('Failed to fetch blogs:', err);
         setError('Failed to load blog posts. Please try again later.');
+      } finally {
         setIsLoading(false);
       }
     };
 
     fetchBlogs();
-  }, []);
+  }, [useSeoBotApi]);
 
   useEffect(() => {
     let result = [...blogs];
@@ -73,6 +132,23 @@ const BlogPage: React.FC = () => {
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
+  };
+
+  const toggleApiSource = () => {
+    setUseSeoBotApi(!useSeoBotApi);
+    setIsLoading(true);
+  };
+
+  const handleTestSeoBotApi = async () => {
+    console.log('Running SEO Bot API test...');
+    const result = await testSeoBotApi();
+    console.log('SEO Bot API Test Result:', result);
+    
+    if (result.success) {
+      alert('SEO Bot API test successful! See console for details.');
+    } else {
+      alert(`SEO Bot API test failed: ${result.message || 'See console for details'}`);
+    }
   };
 
   return (

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	viewBox="0 0 62 62" enable-background="new 0 0 62 62" xml:space="preserve">
+<g>
+	<defs>
+		<rect id="SVGID_1_" width="62" height="62"/>
+	</defs>
+	<clipPath id="SVGID_2_">
+		<use xlink:href="#SVGID_1_"  overflow="visible"/>
+	</clipPath>
+	
+		<path clip-path="url(#SVGID_2_)" fill="none" stroke="#FF687D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="
+		M61,21.869v31.305C61,57.496,57.496,61,53.174,61H8.826C4.504,61,1,57.496,1,53.174V8.826C1,4.504,4.504,1,8.826,1H40.13"/>
+	
+		<polygon clip-path="url(#SVGID_2_)" fill="none" stroke="#FF687D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="
+		53.174,1 21.87,32.305 15.348,46.652 29.696,40.131 61,8.826 	"/>
+	
+		<line clip-path="url(#SVGID_2_)" fill="none" stroke="#FF687D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" x1="29.696" y1="40.131" x2="21.87" y2="32.305"/>
+	
+		<line clip-path="url(#SVGID_2_)" fill="none" stroke="#FF687D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" x1="55.782" y1="14.044" x2="47.957" y2="6.218"/>
+</g>
+</svg>

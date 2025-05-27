@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	viewBox="0 0 60 39.826" enable-background="new 0 0 60 39.826" xml:space="preserve">
+<g>
+	<defs>
+		<rect id="SVGID_1_" width="60" height="39.826"/>
+	</defs>
+	<clipPath id="SVGID_2_">
+		<use xlink:href="#SVGID_1_"  overflow="visible"/>
+	</clipPath>
+	
+		<path clip-path="url(#SVGID_2_)" fill="none" stroke="#FF687D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="
+		M57.739,38.826H2.26c-0.696,0-1.26-0.564-1.26-1.261V2.261C1,1.564,1.564,1,2.26,1h55.479C58.436,1,59,1.564,59,2.261v35.304
+		C59,38.262,58.436,38.826,57.739,38.826z"/>
+	
+		<polyline clip-path="url(#SVGID_2_)" fill="none" stroke="#FF687D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="
+		58.47,1.239 37.653,18.665 30,25.07 22.346,18.665 1.53,1.239 	"/>
+	
+		<line clip-path="url(#SVGID_2_)" fill="none" stroke="#FF687D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" x1="22.347" y1="18.665" x2="1.416" y2="38.498"/>
+	
+		<line clip-path="url(#SVGID_2_)" fill="none" stroke="#FF687D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" x1="58.584" y1="38.498" x2="37.653" y2="18.665"/>
+</g>
+</svg>

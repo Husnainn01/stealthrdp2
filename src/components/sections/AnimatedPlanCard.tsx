@@ -115,6 +115,12 @@ const AnimatedPlanCard: React.FC<PlanProps> = ({
     setBillingCycle(cycle);
   };
 
+  // Helper to determine which color highlight to use based on plan name
+  const getPlanColor = () => {
+    if (plan.isCustom) return 'border-cyber';
+    return 'border-electric';
+  };
+
   return (
     <div className="h-full relative">
       {/* Card with animations */}
@@ -125,40 +131,40 @@ const AnimatedPlanCard: React.FC<PlanProps> = ({
         whileTap="tap"
         variants={cardVariants}
       >
-        <Card className={`bg-midnight border-2 ${plan.popular ? 'border-electric shadow-[0_0_20px_rgba(0,240,255,0.25)]' : 'border-gray-800'} rounded-xl p-5 flex flex-col h-full relative overflow-hidden`}>
-          {plan.popular && (
-            <motion.div 
-              className="absolute top-4 right-4 bg-electric/20 text-electric text-xs font-bold py-1 px-3 rounded-full border border-electric/30"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.2 }}
-            >
-              Best Value
-            </motion.div>
-          )}
-          
+        <Card className={`bg-[#0C0F2D] border ${plan.popular ? 'border-electric shadow-[0_0_20px_rgba(0,240,255,0.25)]' : 'border-gray-800'} rounded-xl flex flex-col h-full relative overflow-hidden`}>
           <motion.div
             variants={contentVariants}
             initial="initial"
             animate="animate"
             className="flex flex-col h-full"
           >
-            <CardHeader className="pb-2">
-              <motion.div className="flex items-center justify-between mb-2" variants={itemVariants}>
-                <div className="p-2 rounded-lg bg-gray-800/50">
-                  {plan.icon}
-                </div>
-                <div className="text-right">
+            <CardHeader className="pb-3 bg-midnight pt-4 rounded-t-xl">
+              <div className="flex justify-between">
+                <motion.div variants={itemVariants} className="flex-1">
+                  <div className="flex flex-col">
+                    <div className="mb-2 pl-2">
+                      <div className="h-14 w-14 flex items-center justify-center text-electric">
+                        {plan.icon}
+                      </div>
+                    </div>
+                    <h2 className="text-2xl font-bold text-white">{plan.name}</h2>
+                    <p className="text-gray-400 mt-1 text-base">{plan.description}</p>
+                  </div>
+                </motion.div>
+                
+                <motion.div variants={itemVariants} className="text-right">
                   {plan.monthlyPrice !== null ? (
                     <>
-                      <span className="text-sm text-gray-400">Starting at</span>
-                      <div className="font-bold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-white to-electric">
-                        €{currentPrice ? currentPrice.toFixed(2) : plan.monthlyPrice.toFixed(2)}
-                        <span className="text-base text-gray-400">/mo</span>
+                      <div className="text-gray-400 text-base">Starting at</div>
+                      <div>
+                        <div className="font-bold text-2xl text-white">
+                          €{currentPrice ? currentPrice.toFixed(2) : ""}
+                          <span className="text-xl text-gray-400">/mo</span>
+                        </div>
                       </div>
-                      {plan.monthlyPrice > 0 && (
+                      {plan.monthlyPrice > 0 && currentPrice !== plan.monthlyPrice && (
                         <motion.div 
-                          className="text-xs text-gray-500 line-through"
+                          className="text-base text-gray-500 line-through text-right"
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 0.7 }}
                           transition={{ delay: 0.3 }}
@@ -170,161 +176,175 @@ const AnimatedPlanCard: React.FC<PlanProps> = ({
                   ) : (
                     <div className="font-bold text-2xl text-white">Custom Pricing</div>
                   )}
-                </div>
-              </motion.div>
-              <motion.div variants={itemVariants}>
-                <CardTitle className="text-xl text-white">{plan.name}</CardTitle>
-                <CardDescription className="text-gray-400">{plan.description}</CardDescription>
-              </motion.div>
+                </motion.div>
+              </div>
             </CardHeader>
             
-            <CardContent className="pt-4 flex-grow">
-              <div className="space-y-4">
-                {/* Specs */}
-                <motion.div className="grid grid-cols-2 gap-2 text-sm" variants={itemVariants}>
-                  <motion.div 
-                    className="bg-gray-800/40 p-2 rounded flex flex-col items-center justify-center"
-                    variants={specVariants}
-                    whileHover="hover"
-                  >
-                    <span className="text-gray-400">CPU</span>
-                    <span className="text-white font-medium">{plan.specs.cpu}</span>
-                  </motion.div>
-                  <motion.div 
-                    className="bg-gray-800/40 p-2 rounded flex flex-col items-center justify-center"
-                    variants={specVariants}
-                    whileHover="hover"
-                  >
-                    <span className="text-gray-400">RAM</span>
-                    <span className="text-white font-medium">{plan.specs.ram}</span>
-                  </motion.div>
-                  <motion.div 
-                    className="bg-gray-800/40 p-2 rounded flex flex-col items-center justify-center"
-                    variants={specVariants}
-                    whileHover="hover"
-                  >
-                    <span className="text-gray-400">Storage</span>
-                    <span className="text-white font-medium">{plan.specs.storage}</span>
-                  </motion.div>
-                  <motion.div 
-                    className="bg-gray-800/40 p-2 rounded flex flex-col items-center justify-center"
-                    variants={specVariants}
-                    whileHover="hover"
-                  >
-                    <span className="text-gray-400">Bandwidth</span>
-                    <span className="text-white font-medium">{plan.specs.bandwidth || "Unlimited"}</span>
-                  </motion.div>
+            <CardContent className="pt-3 pb-2 flex-grow px-4">
+              <div className="space-y-3">
+                {/* Specs Grid */}
+                <motion.div className="grid grid-cols-2 gap-2" variants={itemVariants}>
+                  <div className="bg-[#101224] p-3 rounded-lg text-center border border-gray-800">
+                    <div className="text-gray-400 text-sm mb-1">CPU</div>
+                    <div className="text-white font-bold text-base">{plan.specs.cpu}</div>
+                  </div>
+                  <div className="bg-[#101224] p-3 rounded-lg text-center border border-gray-800">
+                    <div className="text-gray-400 text-sm mb-1">RAM</div>
+                    <div className="text-white font-bold text-base">{plan.specs.ram}</div>
+                  </div>
+                  <div className="bg-[#101224] p-3 rounded-lg text-center border border-gray-800">
+                    <div className="text-gray-400 text-sm mb-1">Storage</div>
+                    <div className="text-white font-bold text-base">{plan.specs.storage}</div>
+                  </div>
+                  <div className="bg-[#101224] p-3 rounded-lg text-center border border-gray-800">
+                    <div className="text-gray-400 text-sm mb-1">Bandwidth</div>
+                    <div className="text-white font-bold text-base">{plan.specs.bandwidth || "Unlimited"}</div>
+                  </div>
                 </motion.div>
                 
-                {/* Features */}
+                {/* Features List with Description split into points */}
                 <motion.div className="space-y-2" variants={itemVariants}>
-                  {(plan.features || []).map((feature, i) => (
-                    <motion.div 
-                      key={i} 
-                      className="flex items-center space-x-2"
-                      variants={itemVariants}
-                      custom={i}
-                      whileHover={{ x: 5 }}
-                      transition={{ type: "spring", stiffness: 300 }}
-                    >
-                      <Check className={`h-4 w-4 ${plan.isCustom ? 'text-cyber' : 'text-cyber'}`} />
-                      <span className="text-gray-300 text-sm">{feature}</span>
+                  {/* Split the description by commas and display each part as a bullet */}
+                  {/* {plan.description && plan.description.split(',').map((item, i) => (
+                    <motion.div key={i} className="flex items-center gap-2" variants={itemVariants}>
+                      <Check className="h-5 w-5 text-cyber flex-shrink-0" />
+                      <span className="text-gray-300 text-sm">{item.trim()}</span>
                     </motion.div>
-                  ))}
+                  ))} */}
+                  
+                  {/* Standard features */}
+                  <div className="grid grid-cols-2 gap-x-2 gap-y-2 mt-1">
+                    <motion.div className="flex items-center gap-2" variants={itemVariants}>
+                      <Check className="h-5 w-5 text-cyber flex-shrink-0" />
+                      <span className="text-gray-300 text-sm">24/7 Support</span>
+                    </motion.div>
+                    <motion.div className="flex items-center gap-2" variants={itemVariants}>
+                      <Check className="h-5 w-5 text-cyber flex-shrink-0" />
+                      <span className="text-gray-300 text-sm">Root Access</span>
+                    </motion.div>
+                    <motion.div className="flex items-center gap-2" variants={itemVariants}>
+                      <Check className="h-5 w-5 text-cyber flex-shrink-0" />
+                      <span className="text-gray-300 text-sm">99.9% Uptime</span>
+                    </motion.div>
+                    <motion.div className="flex items-center gap-2" variants={itemVariants}>
+                      <Check className="h-5 w-5 text-cyber flex-shrink-0" />
+                      <span className="text-gray-300 text-sm">{plan.name.includes('USA') ? 'USA' : 'EU'} Location</span>
+                    </motion.div>
+                    <motion.div className="flex items-center gap-2" variants={itemVariants}>
+                      <Check className="h-5 w-5 text-cyber flex-shrink-0" />
+                      <span className="text-gray-300 text-sm">1Gbps Network</span>
+                    </motion.div>
+                    <motion.div className="flex items-center gap-2" variants={itemVariants}>
+                      <Check className="h-5 w-5 text-cyber flex-shrink-0" />
+                      <span className="text-gray-300 text-sm">Dedicated IP</span>
+                    </motion.div>
+                  </div>
                 </motion.div>
               </div>
             </CardContent>
             
-            <CardFooter className="flex flex-col items-stretch pt-4 mt-auto relative z-10">
-              {/* Add Billing Cycle Selector INSIDE card, if not custom */}
+            <CardFooter className="flex flex-col items-stretch pt-2 px-4 pb-3 mt-auto relative z-10">
+              {/* Billing Cycle Selection */}
               {!plan.isCustom && (
                 <motion.div 
-                  className="w-full mb-4 p-1 bg-gray-800/50 rounded-md"
+                  className="w-full mb-3"
                   variants={itemVariants}
                 >
-                  <div className="grid grid-cols-1 gap-1">
-                    {plan.billingOptions && (
-                      <>
-                        <div className="flex flex-col space-y-2 mb-4 relative">
-                          <span className="text-sm text-gray-400">Billing Cycle</span>
-                          <div className="flex flex-wrap gap-1">
-                            <Button
-                              variant={billingCycle === 'monthly' ? 'default' : 'outline'}
-                              className={`h-auto py-1 px-2 text-xs flex-1 min-w-[70px] ${billingCycle === 'monthly' ? 'bg-electric text-midnight' : 'bg-transparent text-gray-300'}`}
-                              onClick={(e) => handleBillingCycleClick('monthly', e)}
-                            >
-                              Monthly
-                            </Button>
-                            <Button
-                              variant={billingCycle === 'quarterly' ? 'default' : 'outline'}
-                              className={`h-auto py-1 px-2 text-xs flex-1 min-w-[70px] ${billingCycle === 'quarterly' ? 'bg-electric text-midnight' : 'bg-transparent text-gray-300'}`}
-                              onClick={(e) => handleBillingCycleClick('quarterly', e)}
-                              disabled={!plan.billingOptions?.quarterly?.enabled}
-                            >
-                              <div className="flex flex-col items-center">
-                                <span>Quarterly</span>
-                                {plan.billingOptions?.quarterly?.enabled && (
-                                  <span className="bg-cyber text-midnight text-[10px] rounded px-1">-{plan.billingOptions.quarterly.discountPercentage}%</span>
-                                )}
-                              </div>
-                            </Button>
-                            <Button
-                              variant={billingCycle === 'annually' ? 'default' : 'outline'}
-                              className={`h-auto py-1 px-2 text-xs flex-1 min-w-[70px] ${billingCycle === 'annually' ? 'bg-electric text-midnight' : 'bg-transparent text-gray-300'}`}
-                              onClick={(e) => handleBillingCycleClick('annually', e)}
-                              disabled={!plan.billingOptions?.annual?.enabled}
-                            >
-                              <div className="flex flex-col items-center">
-                                <span>Annual</span>
-                                {plan.billingOptions?.annual?.enabled && (
-                                  <span className="bg-cyber text-midnight text-[10px] rounded px-1">-{plan.billingOptions.annual.discountPercentage}%</span>
-                                )}
-                              </div>
-                            </Button>
-                            <Button
-                              variant={billingCycle === 'biannually' ? 'default' : 'outline'}
-                              className={`h-auto py-1 px-2 text-xs flex-1 min-w-[70px] ${billingCycle === 'biannually' ? 'bg-electric text-midnight' : 'bg-transparent text-gray-300'}`}
-                              onClick={(e) => handleBillingCycleClick('biannually', e)}
-                              disabled={!plan.billingOptions?.biannual?.enabled}
-                            >
-                              <div className="flex flex-col items-center">
-                                <span>Biannual</span>
-                                {plan.billingOptions?.biannual?.enabled && (
-                                  <span className="bg-cyber text-midnight text-[10px] rounded px-1">-{plan.billingOptions.biannual.discountPercentage}%</span>
-                                )}
-                              </div>
-                            </Button>
-                          </div>
-                        </div>
-                        
-                        <div className="bg-gray-800/40 p-3 rounded-md mb-4">
-                          <div className="flex justify-between text-sm mb-1">
-                            <span>Monthly price:</span>
-                            <span>€{currentPrice ? currentPrice.toFixed(2) : ""}</span>
-                          </div>
-                          <div className="flex justify-between text-sm mb-1">
-                            <span>Billing period:</span>
-                            <span>{billingPeriodText}</span>
-                          </div>
-                          {discount > 0 && (
-                            <div className="flex justify-between text-sm mb-1">
-                              <span>Discount:</span>
-                              <span className="text-cyber">-{discount}%</span>
-                            </div>
-                          )}
-                          <div className="flex justify-between text-sm font-bold mt-2 pt-2 border-t border-gray-700">
-                            <span>Total due today:</span>
-                            <span>€{totalBilled.toFixed(2)}</span>
-                          </div>
-                          {discount > 0 && (
-                            <div className="flex justify-between text-sm text-cyber mt-1">
-                              <span>You save:</span>
-                              <span>€{totalSavings.toFixed(2)}</span>
-                            </div>
-                          )}
-                        </div>
-                      </>
-                    )}
+                  <div className="grid grid-cols-2 gap-2 mb-2">
+                    <Button
+                      variant="ghost"
+                      className={`rounded-xl px-2 py-2 text-xs transition-all duration-300 relative h-auto ${
+                        billingCycle === 'monthly' 
+                          ? 'bg-electric text-midnight shadow-sm' 
+                          : 'bg-[#101224] text-gray-200 hover:text-white hover:bg-[#101224]/80 border border-gray-800'
+                      }`}
+                      onClick={(e) => handleBillingCycleClick('monthly', e)}
+                    >
+                      <div className="flex flex-col items-center w-full">
+                        <span className="font-medium">Monthly</span>
+                        <span className="bg-cyber text-black text-[10px] px-2 py-0.5 rounded-full mt-1 font-bold">-5%</span>
+                      </div>
+                      {billingCycle === 'monthly' && (
+                        <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-electric opacity-50"></span>
+                          <span className="relative inline-flex rounded-full h-3 w-3 bg-electric"></span>
+                        </span>
+                      )}
+                    </Button>
+                    
+                    <Button
+                      variant="ghost"
+                      className={`rounded-xl px-2 py-2 text-xs transition-all duration-300 relative h-auto ${
+                        billingCycle === 'quarterly' 
+                          ? 'bg-electric text-midnight shadow-sm' 
+                          : 'bg-[#101224] text-gray-200 hover:text-white hover:bg-[#101224]/80 border border-gray-800'
+                      }`}
+                      onClick={(e) => handleBillingCycleClick('quarterly', e)}
+                    >
+                      <div className="flex flex-col items-center w-full">
+                        <span className="font-medium">
+                          <span className="hidden sm:inline">Quarterly</span>
+                          <span className="sm:hidden">3 Months</span>
+                        </span>
+                        <span className="bg-cyber text-black text-[10px] px-2 py-0.5 rounded-full mt-1 font-bold">-10%</span>
+                      </div>
+                      {billingCycle === 'quarterly' && (
+                        <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-electric opacity-50"></span>
+                          <span className="relative inline-flex rounded-full h-3 w-3 bg-electric"></span>
+                        </span>
+                      )}
+                    </Button>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-2">
+                    <Button
+                      variant="ghost"
+                      className={`rounded-xl px-2 py-2 text-xs transition-all duration-300 relative h-auto ${
+                        billingCycle === 'annually' 
+                          ? 'bg-electric text-midnight shadow-sm' 
+                          : 'bg-[#101224] text-gray-200 hover:text-white hover:bg-[#101224]/80 border border-gray-800'
+                      }`}
+                      onClick={(e) => handleBillingCycleClick('annually', e)}
+                    >
+                      <div className="flex flex-col items-center w-full">
+                        <span className="font-medium">
+                          <span className="hidden sm:inline">Annual</span>
+                          <span className="sm:hidden">1 Year</span>
+                        </span>
+                        <span className="bg-cyber text-black text-[10px] px-2 py-0.5 rounded-full mt-1 font-bold">-20%</span>
+                      </div>
+                      {billingCycle === 'annually' && (
+                        <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-electric opacity-50"></span>
+                          <span className="relative inline-flex rounded-full h-3 w-3 bg-electric"></span>
+                        </span>
+                      )}
+                    </Button>
+                    
+                    <Button
+                      variant="ghost"
+                      className={`rounded-xl px-2 py-2 text-xs transition-all duration-300 relative h-auto ${
+                        billingCycle === 'biannually' 
+                          ? 'bg-electric text-midnight shadow-sm' 
+                          : 'bg-[#101224] text-gray-200 hover:text-white hover:bg-[#101224]/80 border border-gray-800'
+                      }`}
+                      onClick={(e) => handleBillingCycleClick('biannually', e)}
+                    >
+                      <div className="flex flex-col items-center w-full">
+                        <span className="font-medium">
+                          <span className="hidden sm:inline">Biannual</span>
+                          <span className="sm:hidden">2 Years</span>
+                        </span>
+                        <span className="bg-cyber text-black text-[10px] px-2 py-0.5 rounded-full mt-1 font-bold">-30%</span>
+                      </div>
+                      {billingCycle === 'biannually' && (
+                        <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-electric opacity-50"></span>
+                          <span className="relative inline-flex rounded-full h-3 w-3 bg-electric"></span>
+                        </span>
+                      )}
+                    </Button>
                   </div>
                 </motion.div>
               )}
@@ -346,7 +366,7 @@ const AnimatedPlanCard: React.FC<PlanProps> = ({
                     whileHover="hover"
                   >
                     <Button 
-                      className={`w-full ${plan.isCustom ? 'bg-cyber hover:bg-cyber/80' : 'bg-electric hover:bg-electric/80'} text-charcoal font-medium`}
+                      className="w-full bg-electric hover:bg-electric/80 text-midnight font-bold py-2.5"
                     >
                       {plan.isCustom ? 'Configure Now' : 'Buy Now!'}
                     </Button>
@@ -354,13 +374,6 @@ const AnimatedPlanCard: React.FC<PlanProps> = ({
                 </a>
               </motion.div>
             </CardFooter>
-            
-            {/* Overlay glow effect */}
-            <motion.div 
-              className="absolute -inset-0.5 bg-gradient-to-r from-electric/0 via-electric/20 to-electric/0 rounded-xl opacity-0 blur-xl"
-              animate={{ opacity: plan.popular ? 0.4 : 0 }}
-              transition={{ duration: 2, repeat: Infinity, repeatType: "reverse" }}
-            />
           </motion.div>
         </Card>
       </motion.div>
@@ -368,4 +381,4 @@ const AnimatedPlanCard: React.FC<PlanProps> = ({
   );
 };
 
-export default AnimatedPlanCard; 
+export default AnimatedPlanCard;
