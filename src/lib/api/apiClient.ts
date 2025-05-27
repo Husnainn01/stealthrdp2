@@ -9,7 +9,7 @@ const getApiBaseUrl = () => {
   }
   
   // Fall back to environment variable or default
-  return process.env.VITE_API_URL || 'http://localhost:5001/api';
+  return process.env.VITE_API_URL || 'https://web-production-40fb0.up.railway.app/api' || 'http://localhost:5001/api';
 };
 
 const API_BASE_URL = getApiBaseUrl();
