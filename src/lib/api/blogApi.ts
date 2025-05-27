@@ -15,11 +15,11 @@ const getApiBaseUrl = () => {
   // Check if we're on production domain
   if (typeof window !== 'undefined' && 
       (window.location.hostname === 'www.stealthrdp.com' || window.location.hostname === 'stealthrdp.com')) {
-    return 'https://stealthrdp-production.up.railway.app/api';
+    return 'https://web-production-40fb0.up.railway.app/api';
   }
   
   // Fall back to environment variable or default
-  return process.env.VITE_API_URL || 'http://localhost:5001/api';
+  return process.env.VITE_API_URL || 'https://web-production-40fb0.up.railway.app/api' || 'http://localhost:5001/api';
 };
 
 const baseUrl = getApiBaseUrl();

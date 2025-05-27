@@ -43,7 +43,8 @@ app.use(cors({
       'https://stealthrdp.com',
       'https://www.stealthrdp.com',
       'https://stealthrdp-production.up.railway.app',
-      'https://stealthrdp2-production.up.railway.app'
+      'https://stealthrdp2-production.up.railway.app',
+      'https://web-production-40fb0.up.railway.app'
     ];
     
     // For local development or non-browser requests that don't send origin
@@ -73,7 +74,7 @@ app.use(cors({
 // Also set the Access-Control-Allow-Origin header explicitly for all responses
 app.use((req, res, next) => {
   const origin = req.headers.origin;
-  if (origin === 'https://www.stealthrdp.com' || origin === 'https://stealthrdp.com') {
+  if (origin === 'https://www.stealthrdp.com' || origin === 'https://stealthrdp.com' || origin === 'https://web-production-40fb0.up.railway.app') {
     res.header('Access-Control-Allow-Origin', origin);
   }
   next();
@@ -116,7 +117,7 @@ app.options('*', (req, res) => {
   
   // Set CORS headers for OPTIONS requests
   const origin = req.headers.origin;
-  if (origin === 'https://www.stealthrdp.com' || origin === 'https://stealthrdp.com') {
+  if (origin === 'https://www.stealthrdp.com' || origin === 'https://stealthrdp.com' || origin === 'https://web-production-40fb0.up.railway.app') {
     res.header('Access-Control-Allow-Origin', origin);
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Cache-Control, X-Access-Token, X-Refresh-Token');
