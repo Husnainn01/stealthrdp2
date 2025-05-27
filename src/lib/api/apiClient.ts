@@ -1,9 +1,28 @@
+// Function to clear old cached URLs
+const clearOldCachedUrls = () => {
+  if (typeof window !== 'undefined') {
+    const savedUrl = localStorage.getItem('api_base_url');
+    if (savedUrl && (savedUrl.includes('stealthrdp-production') || savedUrl.includes('stealthrdp2-production'))) {
+      console.log('Clearing old cached API URL:', savedUrl);
+      localStorage.removeItem('api_base_url');
+    }
+  }
+};
+
+// Clear old URLs on module load
+clearOldCachedUrls();
+
 // Base API URL - can be changed via environment variable or use stored working URL
 const getApiBaseUrl = () => {
   // First check if we have a saved API base URL from a successful connection
   if (typeof window !== 'undefined') {
     const savedUrl = localStorage.getItem('api_base_url');
-    if (savedUrl) {
+    
+    // Clear old URLs that are no longer valid
+    if (savedUrl && (savedUrl.includes('stealthrdp-production') || savedUrl.includes('stealthrdp2-production'))) {
+      console.log('Clearing old cached API URL:', savedUrl);
+      localStorage.removeItem('api_base_url');
+    } else if (savedUrl) {
       console.log('Using saved API base URL:', savedUrl);
       return `${savedUrl}/api`;
     }

@@ -40,12 +40,12 @@ const getApiBaseUrl = () => {
     
     // Check if we're on production domain
     if (window.location.hostname === 'www.stealthrdp.com' || window.location.hostname === 'stealthrdp.com') {
-      return 'https://stealthrdp-production.up.railway.app/api';
+      return 'https://web-production-40fb0.up.railway.app/api';
     }
   }
   
   // Fall back to environment variable or default
-  return process.env.VITE_API_URL || 'http://localhost:5001/api';
+  return process.env.VITE_API_URL || 'https://web-production-40fb0.up.railway.app/api' || 'http://localhost:5001/api';
 };
 
 // Important: In a real implementation, you would use a rich text editor like TipTap,
