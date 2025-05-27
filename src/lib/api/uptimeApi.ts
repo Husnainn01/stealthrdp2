@@ -5,7 +5,7 @@ const getApiBaseUrl = () => {
   // Check if we're on production domain
   if (typeof window !== 'undefined' && 
       (window.location.hostname === 'www.stealthrdp.com' || window.location.hostname === 'stealthrdp.com')) {
-    return 'https://stealthrdp2-production.up.railway.app/api/uptime';
+    return 'https://web-production-40fb0.up.railway.app/api/uptime';
   }
   
   // Fall back to environment variable or default
